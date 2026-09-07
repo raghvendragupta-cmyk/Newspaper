@@ -3,19 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ownly Operations Gazette</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+  <title>Ownly News Letter & Operations Gazette</title>
+  <!-- Chart.js library -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,900;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   
   <style>
     :root {
       --bg-canvas: #121214;
       --pink-primary: #FF2E93;
+      --pink-glow: rgba(255, 46, 147, 0.4);
       --text-dark: #1E1B18;
       --text-muted: #66605C;
       --card-bg: #FFFFFF;
       --book-bg: #FAF8F5;
       --alert-red-bg: #FFEBEB;
+      --alert-yellow-bg: #FEF3C7;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -33,7 +37,7 @@
     }
 
     /* =========================================
-       1. SCOOTER TEASER SCREEN (Exact Match)
+       1. TEASER SCREEN (SCREENSHOT 1 EXACT MATCH)
        ========================================= */
     #teaser-screen {
       display: flex;
@@ -47,74 +51,103 @@
       top: 0; left: 0;
       z-index: 1000;
       background: var(--bg-canvas);
-      transition: opacity 0.5s ease;
+      transition: opacity 0.4s ease;
+      overflow: hidden;
     }
 
-    .scooter-track {
+    /* Scooter Horizontal Drive Track */
+    .scooter-track-container {
       position: relative;
-      width: 400px;
-      height: 250px;
+      width: 100vw;
+      height: 220px;
+      overflow: hidden;
       display: flex;
-      justify-content: center;
       align-items: center;
     }
 
-    .scooter-wrapper {
-      position: relative;
-      width: 250px;
-      height: 180px;
-      animation: driveBounce 0.4s infinite alternate ease-in-out;
-      z-index: 5;
-    }
-
-    @keyframes driveBounce {
-      0% { transform: translateY(0px) rotate(0deg); }
-      100% { transform: translateY(-4px) rotate(1deg); }
-    }
-
-    .scooter-svg { width: 100%; height: 100%; }
-
-    /* Animated Wheels & Lines */
-    .wheel { animation: spinWheel 0.3s linear infinite; transform-origin: center; }
-    @keyframes spinWheel { 100% { transform: rotate(360deg); } }
-
-    .road-line {
+    .scooter-drive-line {
       position: absolute;
+      bottom: 30px;
+      width: 100%;
+      height: 2px;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    /* Stable, Smooth Horizontal Motion */
+    .scooter-glider {
+      position: absolute;
+      bottom: 25px;
+      width: 260px;
+      height: 180px;
+      animation: driveAcrossScreen 7s linear infinite;
+    }
+
+    @keyframes driveAcrossScreen {
+      0%   { left: -280px; }
+      100% { left: 100vw; }
+    }
+
+    .scooter-svg {
+      width: 100%;
+      height: 100%;
+      filter: drop-shadow(0 10px 15px rgba(0,0,0,0.5));
+    }
+
+    /* Spinning Wheels */
+    .wheel {
+      animation: spinWheel 0.35s linear infinite;
+    }
+    @keyframes spinWheel {
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Speed Dust Lines */
+    .speed-trail {
+      position: absolute;
+      left: -40px;
+      bottom: 30px;
+      width: 35px;
       height: 3px;
-      background: linear-gradient(90deg, transparent, #FF2E93, transparent);
-      border-radius: 2px;
-      animation: speedLine 0.8s infinite linear;
-      opacity: 0;
-    }
-    .line-1 { width: 100px; top: 75%; animation-delay: 0s; }
-    .line-2 { width: 60px; top: 40%; animation-delay: 0.3s; }
-    .line-3 { width: 140px; top: 60%; animation-delay: 0.6s; }
-
-    @keyframes speedLine {
-      0% { left: 100%; opacity: 1; }
-      100% { left: -20%; opacity: 0; }
+      background: var(--pink-primary);
+      border-radius: 3px;
+      box-shadow: -10px -15px 0 var(--pink-primary), -20px -30px 0 var(--pink-primary);
+      opacity: 0.6;
     }
 
+    /* Gradient Pill Banner Button */
     .teaser-banner {
       margin-top: 15px;
-      background: linear-gradient(90deg, #FF2E93, #FF6B00);
+      background: linear-gradient(135deg, #FF2E93, #FF6B00);
       color: white;
-      padding: 14px 40px;
+      padding: 16px 42px;
       border-radius: 50px;
       font-family: 'Playfair Display', serif;
       font-size: 24px;
       font-weight: 700;
-      box-shadow: 0 10px 25px rgba(255, 46, 147, 0.5);
-      z-index: 10;
+      box-shadow: 0 10px 30px var(--pink-glow);
+      letter-spacing: 0.5px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
       display: flex;
       align-items: center;
       gap: 10px;
+      z-index: 10;
     }
 
-    .teaser-hint { color: #A1A1AA; margin-top: 15px; font-size: 13px; z-index: 10; letter-spacing: 0.5px; }
+    #teaser-screen:hover .teaser-banner {
+      transform: scale(1.05);
+      box-shadow: 0 15px 40px rgba(255, 46, 147, 0.6);
+    }
+
+    .teaser-hint {
+      color: #A1A1AA;
+      margin-top: 16px;
+      font-size: 14px;
+      letter-spacing: 0.2px;
+      z-index: 10;
+    }
 
     /* =========================================
-       2. SINGLE-PAGE FLIP BOOK ENGINE
+       2. INTERACTIVE 3D BOOK & PAGE FLIP ENGINE
        ========================================= */
     #book-viewport {
       display: none;
@@ -124,187 +157,259 @@
       align-items: center;
       justify-content: center;
       position: relative;
+      background: var(--bg-canvas);
     }
 
-    .home-btn {
+    /* Back Button Top Left (Screenshot 2 Match) */
+    .back-btn {
       position: fixed;
-      top: 20px; left: 20px;
-      background: #27272A; color: white;
-      border: 1px solid #3F3F46; padding: 10px 18px;
-      border-radius: 30px; cursor: pointer; font-size: 13px; font-weight: 600;
-      z-index: 100; transition: background 0.2s;
+      top: 24px;
+      left: 24px;
+      background: #27272A;
+      color: white;
+      border: 1px solid #3F3F46;
+      padding: 10px 20px;
+      border-radius: 30px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      z-index: 200;
+      transition: all 0.2s ease;
     }
-    .home-btn:hover { background: var(--pink-primary); }
+    .back-btn:hover {
+      background: var(--pink-primary);
+      border-color: var(--pink-primary);
+    }
 
-    .book-container {
-      width: 650px;
-      height: 750px;
+    /* Top Subtitle Banner (Screenshot 2 Match) */
+    .viewport-top-header {
+      position: fixed;
+      top: 28px;
+      text-align: center;
+      color: #A1A1AA;
+      font-size: 12px;
+      letter-spacing: 2px;
+      font-weight: 600;
+      text-transform: uppercase;
+      z-index: 150;
+    }
+
+    /* Book Container */
+    #book-container {
       position: relative;
+      width: 980px;
+      height: 680px;
+      display: flex;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+      border-radius: 12px;
+    }
+
+    /* Transparent Click Navigation Zones */
+    .click-zone {
+      position: absolute;
+      top: 0;
+      width: 50%;
+      height: 100%;
+      z-index: 99;
+      cursor: pointer;
+    }
+    .click-zone.left { left: 0; }
+    .click-zone.right { right: 0; }
+
+    /* Page Leaf Structure */
+    .leaf {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: 50%;
+      height: 100%;
+      transform-origin: left center;
       transform-style: preserve-3d;
-      margin-left: 20%; /* Offsets it slightly so flip looks natural */
+      transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
+    }
+
+    .leaf.flipped {
+      transform: rotateY(-180deg);
     }
 
     .page {
       position: absolute;
       width: 100%;
       height: 100%;
-      top: 0;
-      left: 0;
-      background-color: var(--book-bg);
-      border-radius: 12px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-      transform-origin: left center;
-      transform-style: preserve-3d;
-      transition: transform 0.9s cubic-bezier(0.645, 0.045, 0.355, 1);
-      cursor: pointer;
-      user-select: none;
-      overflow: hidden;
-      border: 1px solid rgba(0,0,0,0.05);
-    }
-
-    /* Stacking order so Page 1 is on top */
-    #page-1 { z-index: 9; }
-    #page-2 { z-index: 8; }
-    #page-3 { z-index: 7; }
-    #page-4 { z-index: 6; }
-    #page-5 { z-index: 5; }
-    #page-6 { z-index: 4; }
-    #page-7 { z-index: 3; }
-    #page-8 { z-index: 2; }
-    #page-9 { z-index: 1; }
-
-    .page.flipped {
-      transform: rotateY(-180deg);
-      border-radius: 12px 0 0 12px;
-      box-shadow: inset -5px 0 20px rgba(0,0,0,0.1);
-    }
-
-    .page-content {
-      width: 100%;
-      height: 100%;
-      padding: 40px;
-      position: relative;
-      overflow-y: auto;
       backface-visibility: hidden;
+      background-color: var(--book-bg);
+      padding: 36px 32px;
+      overflow-y: auto;
+    }
+
+    .page.front {
+      transform: rotateY(0deg);
+      border-radius: 0 12px 12px 0;
+      border-left: 1px solid rgba(0,0,0,0.08);
+      background: linear-gradient(to right, #EBE6E0 0%, var(--book-bg) 5%, var(--book-bg) 100%);
+    }
+
+    .page.back {
+      transform: rotateY(180deg);
+      border-radius: 12px 0 0 12px;
+      border-right: 1px solid rgba(0,0,0,0.08);
+      background: linear-gradient(to left, #EBE6E0 0%, var(--book-bg) 5%, var(--book-bg) 100%);
+    }
+
+    /* Hard Cover Front */
+    .page.hard-cover {
+      background: linear-gradient(145deg, #1A1A1E, #2A2A30) !important;
+      color: white;
+    }
+
+    .cover-border {
+      border: 2px solid var(--pink-primary);
+      height: 100%;
+      border-radius: 8px;
+      padding: 30px;
       display: flex;
       flex-direction: column;
-    }
-
-    /* Hard Cover */
-    .page.hard-cover {
-      background: linear-gradient(145deg, #1A1A1E, #2A2A30);
-      color: #FFFFFF;
-      border-right: 4px solid #3F3F46;
-    }
-
-    .page-num {
-      position: absolute; bottom: 15px; right: 20px; font-size: 11px;
-      color: var(--text-muted); font-weight: 600;
-    }
-
-    /* =========================================
-       3. MAGNIFY EFFECT & CHARTS UI
-       ========================================= */
-    .mag-section {
-      background: var(--card-bg); 
-      padding: 16px; 
-      margin-bottom: 16px;
-      border-radius: 10px; 
-      border: 1px solid #E5E7EB;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.04);
-      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
-      cursor: zoom-in;
-    }
-
-    /* The Pop-up Magnify effect you requested */
-    .mag-section:hover {
-      transform: scale(1.05) translateY(-5px);
-      box-shadow: 0 15px 35px rgba(0,0,0,0.15);
-      z-index: 10;
-      position: relative;
-      border-color: var(--pink-primary);
-    }
-
-    .header-branding { text-align: center; border-bottom: 2px solid var(--text-dark); padding-bottom: 10px; margin-bottom: 20px; }
-    .header-branding h2 { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 900; }
-    .header-branding p { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); }
-
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    
-    .metric-card { text-align: center; padding: 12px; background: #F9FAFB; border-radius: 8px; border: 1px solid #F3F4F6;}
-    .metric-val { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 700; color: var(--pink-primary); }
-    .metric-lbl { font-size: 11px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; margin-top: 4px; }
-
-    .section-title { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; margin-bottom: 12px; color: var(--text-dark); }
-    .chart-box { position: relative; height: 180px; width: 100%; }
-    
-    .alert-box { padding: 14px; border-radius: 8px; font-size: 13px; margin-bottom: 16px; line-height: 1.5; }
-    .alert-danger { background: var(--alert-red-bg); border-left: 4px solid #EF4444; color: #991B1B; }
-
-    /* EXACT STYLING FOR LAST PAGE SCREENSHOT */
-    .final-page-header {
+      align-items: center;
+      justify-content: space-between;
       text-align: center;
+      background: radial-gradient(circle at center, rgba(255,46,147,0.12) 0%, transparent 70%);
+    }
+
+    /* MAGNIFIER / HOVER ZOOM EFFECT (ISSUE 3 FIX) */
+    .mag-card {
+      background: var(--card-bg);
+      padding: 16px;
+      border-radius: 10px;
+      border: 1px solid #E5E7EB;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+      cursor: pointer;
+    }
+
+    .mag-card:hover {
+      transform: scale(1.03) translateY(-3px);
+      box-shadow: 0 12px 25px rgba(255, 46, 147, 0.15), 0 4px 12px rgba(0,0,0,0.08);
+      border-color: rgba(255, 46, 147, 0.4);
+    }
+
+    /* CONTENT UI STYLES */
+    .header-branding {
+      text-align: center;
+      border-bottom: 2px solid var(--text-dark);
+      padding-bottom: 8px;
+      margin-bottom: 16px;
+    }
+    .header-branding h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      font-weight: 800;
+    }
+    .header-branding p {
       font-size: 10px;
+      color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 1px;
-      color: #71717A;
-      border-bottom: 1px solid #E4E4E7;
-      padding-bottom: 15px;
-      margin-bottom: 20px;
-    }
-    
-    .final-card {
-      background: white;
-      border-radius: 8px;
-      padding: 20px;
-      margin-bottom: 20px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-      border: 1px solid #F4F4F5;
     }
 
-    .final-card h3 {
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+
+    .metric-card {
+      text-align: center;
+      background: #F9FAFB;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #F3F4F6;
+    }
+    .metric-val {
       font-family: 'Playfair Display', serif;
-      font-size: 20px;
-      margin-bottom: 15px;
-      color: #18181B;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--pink-primary);
+    }
+    .metric-lbl {
+      font-size: 10px;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: var(--text-dark);
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
     }
 
-    .final-list {
-      list-style-type: disc;
-      padding-left: 20px;
-      font-size: 13px;
+    .chart-box {
+      position: relative;
+      height: 180px;
+      width: 100%;
+    }
+
+    .alert-box {
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+    .alert-danger { background-color: var(--alert-red-bg); border-left: 4px solid #EF4444; color: #991B1B; }
+    .alert-warning { background-color: var(--alert-yellow-bg); border-left: 4px solid #F59E0B; color: #92400E; }
+
+    .page-num {
+      position: absolute;
+      bottom: 12px;
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+    .page.front .page-num { right: 16px; }
+    .page.back .page-num { left: 16px; }
+
+    .blank-page {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #A1A1AA;
+      font-style: italic;
+    }
+
+    /* SCREENSHOT 2 SPECIFIC BULLET LIST STYLES */
+    .priority-list {
+      list-style: none;
+      padding: 0;
+    }
+    .priority-list li {
+      font-size: 12px;
       line-height: 1.6;
-      color: #3F3F46;
+      margin-bottom: 8px;
+      color: #27272A;
     }
-
-    .final-list li { margin-bottom: 6px; }
-    .final-list li strong { color: #18181B; }
-    
-    .road-list {
-      list-style-type: none;
-      padding-left: 0;
-      font-size: 13px;
-      line-height: 1.8;
-      color: #71717A;
+    .priority-list li strong {
+      color: #000;
     }
-    .road-list li::before { content: "•"; color: #A1A1AA; display: inline-block; width: 1em; margin-left: 5px;}
   </style>
 </head>
 <body>
 
   <!-- =========================================
-       SCENE 1: ANIMATED TEASER
+       1. TEASER SCREEN (EXACT SCREENSHOT 1)
        ========================================= -->
   <div id="teaser-screen" onclick="openBook()">
-    <div class="scooter-track">
-      <div class="road-line line-1"></div>
-      <div class="road-line line-2"></div>
-      <div class="road-line line-3"></div>
-
-      <div class="scooter-wrapper">
+    <div class="scooter-track-container">
+      <div class="scooter-drive-line"></div>
+      
+      <!-- Gliding Scooter -->
+      <div class="scooter-glider">
+        <div class="speed-trail"></div>
         <svg class="scooter-svg" viewBox="0 0 300 200" fill="none" xmlns="http://www.w3.org/2000/svg">
           <!-- Back Wheel -->
           <g class="wheel" style="transform-origin: 80px 150px;">
@@ -318,7 +423,7 @@
             <line x1="220" y1="128" x2="220" y2="172" stroke="#E4E4E7" stroke-width="2"/>
             <line x1="198" y1="150" x2="242" y2="150" stroke="#E4E4E7" stroke-width="2"/>
           </g>
-          <!-- Body -->
+          <!-- Scooter Body -->
           <path d="M80 150 L110 100 L160 100 L180 150 Z" fill="#FF2E93"/>
           <rect x="45" y="55" width="60" height="55" rx="6" fill="#FF2E93" stroke="#FFFFFF" stroke-width="2"/>
           <path d="M45 80 H105" stroke="#FFFFFF" stroke-width="2"/>
@@ -329,221 +434,316 @@
         </svg>
       </div>
     </div>
-    
+
     <div class="teaser-banner">
-      <span style="font-size: 20px;">🛵</span> Ownly News Letter
+      <span>🛵 Ownly News Letter</span>
     </div>
     <div class="teaser-hint">Click anywhere to open interactive edition</div>
   </div>
 
+
   <!-- =========================================
-       SCENE 2: INTERACTIVE PAGE STACK
+       2. INTERACTIVE BOOK ENGINE
        ========================================= -->
   <div id="book-viewport">
-    <button class="home-btn" onclick="closeBook()">← Back to Scooter</button>
+    <button class="back-btn" onclick="closeBook()">← Back to Scooter</button>
+    <div class="viewport-top-header">TECH ROADMAP & STRATEGIC PRIORITIES</div>
 
-    <div class="book-container">
+    <div id="book-container">
+      
+      <!-- Click Navigation Zones -->
+      <div class="click-zone left" onclick="flipPrev()" title="Click to flip back"></div>
+      <div class="click-zone right" onclick="flipNext()" title="Click to flip next"></div>
 
-      <!-- PAGE 1: HARD COVER -->
-      <div class="page hard-cover" id="page-1" onclick="turnNext()">
-        <div class="page-content" style="align-items: center; justify-content: center; text-align: center; border: 2px solid var(--pink-primary); margin: 30px; height: calc(100% - 60px); border-radius: 12px; background: radial-gradient(circle at center, rgba(255,46,147,0.1) 0%, transparent 70%);">
-            <div style="font-size: 14px; letter-spacing: 3px; color: #A1A1AA;">EXECUTIVE EDITION</div>
-            <h1 style="font-family: 'Playfair Display', serif; font-size: 46px; font-weight: 900; margin: 25px 0 15px; line-height: 1.1;">THE OPERATIONS GAZETTE</h1>
-            <div style="font-size: 18px; color: var(--pink-primary); font-weight: 600; letter-spacing: 2px;">August 2026 Digest</div>
-            <div style="width: 80px; height: 3px; background: var(--pink-primary); margin: 40px auto;"></div>
-            <p style="color: #D4D4D8; font-size: 14px; max-width: 400px; line-height: 1.6;">Click anywhere to flip through the report.</p>
+      <!-- LEAF 1 -->
+      <div class="leaf" id="leaf-1">
+        <!-- FRONT: COVER -->
+        <div class="page front hard-cover">
+          <div class="cover-border">
+            <div>
+              <div style="font-size: 11px; letter-spacing: 3px; color: #A1A1AA;">EXECUTIVE EDITION</div>
+              <h1 style="font-family: 'Playfair Display', serif; font-size: 34px; font-weight: 900; margin-top: 15px;">THE OPERATIONS GAZETTE</h1>
+              <div style="font-size: 14px; color: var(--pink-primary); font-weight: 600; letter-spacing: 2px; margin-top: 8px;">August 2026 Digest</div>
+            </div>
+            <div>
+              <p style="color: #D4D4D8; font-size: 12px; line-height: 1.6; max-width: 320px;">
+                Comprehensive metrics on Support Operations, Merchant Funnels, and September Strategic Roadmaps.
+              </p>
+            </div>
+            <div style="font-size: 11px; color: #A1A1AA;">Click right to flip page →</div>
+          </div>
         </div>
+        <!-- BACK: BLANK -->
+        <div class="page back"><div class="blank-page">[ Page Intentionally Left Blank ]</div><div class="page-num">2</div></div>
       </div>
 
-      <!-- PAGE 2: PLATFORM OVERVIEW -->
-      <div class="page" id="page-2" onclick="turnNext()">
-        <div class="page-content">
+      <!-- LEAF 2 -->
+      <div class="leaf" id="leaf-2">
+        <!-- FRONT: PAGE 3 -->
+        <div class="page front">
           <div class="header-branding">
             <h2>August at a Glance</h2><p>Platform Snapshot</p>
           </div>
-          <div class="mag-section grid-2">
+          <div class="mag-card grid-3">
             <div class="metric-card"><div class="metric-val">4.85M</div><div class="metric-lbl">Total Orders</div></div>
             <div class="metric-card"><div class="metric-val">341K</div><div class="metric-lbl">Chats</div></div>
+            <div class="metric-card"><div class="metric-val">127K</div><div class="metric-lbl">Calls</div></div>
           </div>
-          <div class="mag-section">
+          <div class="mag-card">
             <div class="section-title">📊 Contact Distribution</div>
-            <div class="chart-box"><canvas id="chart1"></canvas></div>
-          </div>
-        </div>
-        <div class="page-num">Page 2</div>
-      </div>
-
-      <!-- PAGE 3: CSAT ALERT -->
-      <div class="page" id="page-3" onclick="turnNext()">
-        <div class="page-content">
-          <div class="header-branding">
-            <h2>CSAT Emergency Alert</h2><p>Critical Action Required</p>
-          </div>
-          <div class="alert-box alert-danger mag-section">
-            <strong>⚠️ PRIORITY ONE:</strong> Customer satisfaction dropped sharply from 17% to 10% in August. Root cause investigation is mandatory for Sept.
-          </div>
-          <div class="mag-section">
-            <div class="section-title">🔻 Weekly CSAT Decline</div>
-            <div class="chart-box"><canvas id="chart2"></canvas></div>
-          </div>
-        </div>
-        <div class="page-num">Page 3</div>
-      </div>
-
-      <!-- PAGE 4: MERCHANT OPS -->
-      <div class="page" id="page-4" onclick="turnNext()">
-        <div class="page-content">
-          <div class="header-branding">
-            <h2>Merchant Operations</h2><p>Partner Call Volume</p>
-          </div>
-          <div class="mag-section grid-2">
-            <div class="metric-card"><div class="metric-val">18,925</div><div class="metric-lbl">Calls Offered</div></div>
-            <div class="metric-card"><div class="metric-val" style="color:#10B981;">92%</div><div class="metric-lbl">Merchant CSAT</div></div>
-          </div>
-          <div class="mag-section">
-            <div class="section-title">📊 Answer vs Offered Trend</div>
             <div class="chart-box"><canvas id="chart3"></canvas></div>
           </div>
+          <div class="page-num">3</div>
         </div>
-        <div class="page-num">Page 4</div>
+        <!-- BACK: PAGE 4 -->
+        <div class="page back">
+          <div class="header-branding">
+            <h2>Customer Support</h2><p>Performance & Volume</p>
+          </div>
+          <div class="mag-card grid-2">
+            <div class="metric-card"><div class="metric-val">341,216</div><div class="metric-lbl">Chats Offered</div></div>
+            <div class="metric-card"><div class="metric-val">171,542</div><div class="metric-lbl">Handled</div></div>
+          </div>
+          <div class="mag-card">
+            <div class="section-title">📉 Wait Time Trend (AWT)</div>
+            <div class="chart-box"><canvas id="chart4"></canvas></div>
+          </div>
+          <div class="page-num">4</div>
+        </div>
       </div>
 
-      <!-- PAGE 5: EXACT SCREENSHOT MATCH (Final Page) -->
-      <div class="page" id="page-5" onclick="turnPrev()">
-        <div class="page-content" style="background: #FAFAFA;">
-          <div class="final-page-header">TECH ROADMAP & STRATEGIC PRIORITIES</div>
-          
-          <div class="final-card mag-section">
-            <h3>🎯 September Key Priorities</h3>
-            <ul class="final-list">
-              <li><strong>#1 CSAT Investigation:</strong> Resolve root drivers for the 17% → 10% CSAT dip.</li>
-              <li><strong>#2 Clear Onboarding Backlog:</strong> Activate 10.7K stuck merchant queue.</li>
-              <li><strong>#3 Stabilize Week 4 Peaks:</strong> Enhance shift scheduling for Merchant & Driver channels.</li>
-              <li><strong>#4 Hyderabad Operations:</strong> Ensure smooth ops post-Sep 7 launch.</li>
+      <!-- LEAF 3 -->
+      <div class="leaf" id="leaf-3">
+        <!-- FRONT: PAGE 5 -->
+        <div class="page front">
+          <div class="header-branding">
+            <h2>CSAT Emergency Alert</h2><p>Action Required</p>
+          </div>
+          <div class="alert-box alert-danger mag-card">
+            <strong>⚠️ CRITICAL ALERT:</strong> CSAT dropped from 17% to 10% in August. Root cause investigation priority for Sept.
+          </div>
+          <div class="mag-card">
+            <div class="section-title">🔻 CSAT Weekly Decline</div>
+            <div class="chart-box"><canvas id="chart5"></canvas></div>
+          </div>
+          <div class="page-num">5</div>
+        </div>
+        <!-- BACK: PAGE 6 -->
+        <div class="page back">
+          <div class="header-branding">
+            <h2>Merchant Support</h2><p>Partner Call Operations</p>
+          </div>
+          <div class="mag-card grid-2">
+            <div class="metric-card"><div class="metric-val">18.9K</div><div class="metric-lbl">Calls Offered</div></div>
+            <div class="metric-card"><div class="metric-val" style="color:#10B981;">92%</div><div class="metric-lbl">CSAT</div></div>
+          </div>
+          <div class="mag-card">
+            <div class="section-title">📊 Weekly Call Volumes</div>
+            <div class="chart-box"><canvas id="chart6"></canvas></div>
+          </div>
+          <div class="page-num">6</div>
+        </div>
+      </div>
+
+      <!-- LEAF 4 -->
+      <div class="leaf" id="leaf-4">
+        <!-- FRONT: PAGE 7 -->
+        <div class="page front">
+          <div class="header-branding">
+            <h2>Delivery Support</h2><p>Rider Fleet Metrics</p>
+          </div>
+          <div class="mag-card grid-2">
+            <div class="metric-card"><div class="metric-val">108.6K</div><div class="metric-lbl">Calls Handled</div></div>
+            <div class="metric-card"><div class="metric-val" style="color:#10B981;">95%</div><div class="metric-lbl">CSAT</div></div>
+          </div>
+          <div class="alert-box alert-warning mag-card">
+            <strong>⚠️ Week 4 Peak:</strong> Rider contacts peaked at 30.8K in Week 4, causing 10s Service Level to dip to 54%.
+          </div>
+          <div class="page-num">7</div>
+        </div>
+
+        <!-- BACK: PAGE 8 (EXACT SCREENSHOT 2 MATCH) -->
+        <div class="page back">
+          <!-- CARD 1: September Key Priorities -->
+          <div class="mag-card">
+            <div class="section-title">
+              <span>🎯</span> September Key Priorities
+            </div>
+            <ul class="priority-list">
+              <li><strong>• #1 CSAT Investigation:</strong> Resolve root drivers for the 17% → 10% CSAT dip.</li>
+              <li><strong>• #2 Clear Onboarding Backlog:</strong> Activate 10.7K stuck merchant queue.</li>
+              <li><strong>• #3 Stabilize Week 4 Peaks:</strong> Enhance shift scheduling for Merchant & Driver channels.</li>
+              <li><strong>• #4 Hyderabad Operations:</strong> Ensure smooth ops post-Sep 7 launch.</li>
             </ul>
           </div>
 
-          <div class="final-card mag-section">
-            <h3>🚀 Tech Roadmap Highlights</h3>
-            <ul class="road-list">
-              <li>Real-Time Operational Dashboards</li>
-              <li>SLA Breach Automated Alerting</li>
-              <li>Chatwoot Calling & Profile Integration</li>
-              <li>AI-Powered Customer Refund Automations</li>
+          <!-- CARD 2: Tech Roadmap Highlights -->
+          <div class="mag-card">
+            <div class="section-title">
+              <span>🚀</span> Tech Roadmap Highlights
+            </div>
+            <ul class="priority-list" style="color: #4B5563;">
+              <li>• Real-Time Operational Dashboards</li>
+              <li>• SLA Breach Automated Alerting</li>
+              <li>• Chatwoot Calling & Profile Integration</li>
+              <li>• AI-Powered Customer Refund Automations</li>
             </ul>
           </div>
+          <div class="page-num">8</div>
         </div>
-        <div class="page-num">Page 5 (End)</div>
       </div>
 
     </div>
   </div>
 
+  <!-- =========================================
+       3. JAVASCRIPT ENGINE & CHARTS
+       ========================================= -->
   <script>
-    let currentStep = 1;
-    const maxSteps = 5;
-    let chartsRendered = false;
+    let currentLeaf = 0;
+    const totalLeaves = 4;
 
-    // Open Book
+    function initBookLayering() {
+      for (let i = 1; i <= totalLeaves; i++) {
+        const leaf = document.getElementById(`leaf-${i}`);
+        if (leaf) {
+          leaf.style.zIndex = totalLeaves - i + 1;
+        }
+      }
+    }
+    initBookLayering();
+
+    function flipNext() {
+      if (currentLeaf < totalLeaves) {
+        currentLeaf++;
+        const leaf = document.getElementById(`leaf-${currentLeaf}`);
+        leaf.classList.add('flipped');
+        setTimeout(() => {
+          leaf.style.zIndex = currentLeaf;
+        }, 400);
+      }
+    }
+
+    function flipPrev() {
+      if (currentLeaf > 0) {
+        const leaf = document.getElementById(`leaf-${currentLeaf}`);
+        leaf.classList.remove('flipped');
+        setTimeout(() => {
+          leaf.style.zIndex = totalLeaves - currentLeaf + 1;
+        }, 400);
+        currentLeaf--;
+      }
+    }
+
+    // SCENE TRANSITION & CHART LAUNCH
+    let chartsInitialized = false;
+
     function openBook() {
       document.getElementById('teaser-screen').style.opacity = '0';
       setTimeout(() => {
         document.getElementById('teaser-screen').style.display = 'none';
         document.getElementById('book-viewport').style.display = 'flex';
         
-        // Timeout ensures container has dimensions BEFORE charts draw, preventing them from being invisible
-        if (!chartsRendered) {
-            setTimeout(renderCharts, 200);
+        // Delay Chart Rendering slightly to ensure container display dimensions are non-zero
+        if (!chartsInitialized) {
+          requestAnimationFrame(() => {
+            setTimeout(initCharts, 100);
+          });
         }
-      }, 500);
+      }, 400);
     }
 
-    // Close Book
     function closeBook() {
-      // Unflip all pages
-      for (let i = 1; i <= maxSteps; i++) {
-        const p = document.getElementById(`page-${i}`);
-        if (p) p.classList.remove('flipped');
+      // Reset flips
+      while (currentLeaf > 0) {
+        flipPrev();
       }
-      currentStep = 1;
-
       document.getElementById('book-viewport').style.display = 'none';
       document.getElementById('teaser-screen').style.display = 'flex';
-      setTimeout(() => { document.getElementById('teaser-screen').style.opacity = '1'; }, 50);
+      setTimeout(() => {
+        document.getElementById('teaser-screen').style.opacity = '1';
+      }, 50);
     }
 
-    // Single Page Turn (The "Perfect" Flip)
-    function turnNext() {
-      if (currentStep < maxSteps) {
-        const pageToFlip = document.getElementById(`page-${currentStep}`);
-        if (pageToFlip) {
-          pageToFlip.classList.add('flipped');
-        }
-        currentStep++;
-      }
-    }
-
-    // Go Backwards if clicking final page
-    function turnPrev() {
-      if (currentStep > 1) {
-        currentStep--;
-        const pageToUnflip = document.getElementById(`page-${currentStep}`);
-        if (pageToUnflip) {
-          pageToUnflip.classList.remove('flipped');
-        }
-      }
-    }
-
-    // CHART RENDER ENGINE
-    function renderCharts() {
-      chartsRendered = true;
+    // CHART.JS INITIALIZATION (FIX FOR MISSING DIAGRAMS)
+    function initCharts() {
+      chartsInitialized = true;
       Chart.defaults.font.family = "'Plus Jakarta Sans', sans-serif";
-      
-      // Chart 1: Distribution
-      new Chart(document.getElementById('chart1'), {
-        type: 'doughnut',
-        data: {
-          labels: ['Customer', 'Driver', 'Merchant'],
-          datasets: [{ data: [72.8, 23.2, 4.0], backgroundColor: ['#FF2E93', '#3B82F6', '#10B981'] }]
-        },
-        options: { 
-            responsive: true, 
-            maintainAspectRatio: false,
-            animation: { duration: 2000, easing: 'easeOutQuart' }, // Pop-up animation
-            plugins: { legend: { position: 'right', labels:{boxWidth:10, font:{size:11}} } } 
-        }
-      });
 
-      // Chart 2: CSAT Decline
-      new Chart(document.getElementById('chart2'), {
-        type: 'line',
-        data: {
-          labels: ['W1', 'W2', 'W3', 'W4'],
-          datasets: [{ label: 'CSAT %', data: [17, 15, 12, 10], borderColor: '#EF4444', backgroundColor: 'rgba(239,68,68,0.15)', fill: true, tension: 0.3 }]
-        },
-        options: { 
-            responsive: true, 
+      // Chart Page 3
+      const c3 = document.getElementById('chart3');
+      if (c3) {
+        new Chart(c3, {
+          type: 'doughnut',
+          data: {
+            labels: ['Customer Chats', 'Driver Calls', 'Merchant Calls'],
+            datasets: [{
+              data: [72.8, 23.2, 4.0],
+              backgroundColor: ['#FF2E93', '#3B82F6', '#10B981']
+            }]
+          },
+          options: {
+            responsive: true,
             maintainAspectRatio: false,
-            animation: { duration: 2000, easing: 'easeOutQuart' } // Pop-up animation
-        }
-      });
+            plugins: { legend: { position: 'right', labels: { boxWidth: 10, font: { size: 10 } } } }
+          }
+        });
+      }
 
-      // Chart 3: Merchant Calls
-      new Chart(document.getElementById('chart3'), {
-        type: 'bar',
-        data: {
-          labels: ['W1', 'W2', 'W3', 'W4'],
-          datasets: [
-            { label: 'Offered', data: [4200, 4500, 5000, 5230], backgroundColor: '#3B82F6' },
-            { label: 'Answered', data: [3700, 3900, 4300, 4140], backgroundColor: '#10B981' }
-          ]
-        },
-        options: { 
-            responsive: true, 
-            maintainAspectRatio: false,
-            animation: { duration: 2000, easing: 'easeOutQuart' } // Pop-up animation
-        }
-      });
+      // Chart Page 4
+      const c4 = document.getElementById('chart4');
+      if (c4) {
+        new Chart(c4, {
+          type: 'line',
+          data: {
+            labels: ['W1', 'W2', 'W3', 'W4'],
+            datasets: [{
+              label: 'AWT (mins)',
+              data: [13.2, 12.1, 11.0, 7.8],
+              borderColor: '#FF2E93',
+              backgroundColor: 'rgba(255, 46, 147, 0.1)',
+              fill: true,
+              tension: 0.3
+            }]
+          },
+          options: { responsive: true, maintainAspectRatio: false }
+        });
+      }
+
+      // Chart Page 5
+      const c5 = document.getElementById('chart5');
+      if (c5) {
+        new Chart(c5, {
+          type: 'line',
+          data: {
+            labels: ['W1', 'W2', 'W3', 'W4'],
+            datasets: [{
+              label: 'CSAT %',
+              data: [17, 15, 12, 10],
+              borderColor: '#EF4444',
+              backgroundColor: 'rgba(239, 68, 68, 0.12)',
+              fill: true
+            }]
+          },
+          options: { responsive: true, maintainAspectRatio: false }
+        });
+      }
+
+      // Chart Page 6
+      const c6 = document.getElementById('chart6');
+      if (c6) {
+        new Chart(c6, {
+          type: 'bar',
+          data: {
+            labels: ['W1', 'W2', 'W3', 'W4'],
+            datasets: [
+              { label: 'Offered', data: [4200, 4500, 5000, 5230], backgroundColor: '#3B82F6' },
+              { label: 'Answered', data: [3700, 3900, 4300, 4140], backgroundColor: '#10B981' }
+            ]
+          },
+          options: { responsive: true, maintainAspectRatio: false }
+        });
+      }
     }
   </script>
 </body>
