@@ -3,602 +3,543 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ownly — Operations Gazette (August 2026)</title>
-
-  <!-- GSAP for Smooth Zoom Animations -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-  <!-- Chart.js for Interactive Metrics Visualizations -->
+  <title>Ownly — Operations Newsletter (August 2026)</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <!-- Page Flip Engine for 3D Newspaper Turning Effects -->
-  <script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.js"></script>
-
   <style>
     :root {
-      --bg: #2a2a2a;
-      --paper: #FAF7F2;
-      --ink: #1F2421;
-      --accent: #D9381E;
-      --subtle: #7A7A7A;
-      --pink-badge: #FFF0F3;
-      --pink-border: #FFB3C1;
-      --alert-bg: #FDF0ED;
-      --alert-border: #E07A5F;
+      --bg-color: #f3efe6;
+      --paper-color: #fcfbfa;
+      --primary: #c2185b;
+      --primary-light: #f8bbd0;
+      --text-dark: #2c2c2c;
+      --accent-gold: #d4af37;
+      --border-color: #e0dace;
+      --hard-cover-bg: linear-gradient(135deg, #1c1c1c 0%, #2d2d2d 100%);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
     body {
-      background-color: var(--bg);
-      color: var(--ink);
-      font-family: 'Times New Roman', Times, serif;
-      margin: 0;
-      padding: 0;
+      background-color: var(--bg-color);
+      font-family: 'Georgia', 'Times New Roman', serif;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      min-height: 100vh;
+      justify-content: center;
       overflow-x: hidden;
     }
 
-    /* Navigation Bar */
-    .controls {
-      margin: 20px 0;
+    /* --- SCOOTER LAUNCHER SCREEN --- */
+    #scooter-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: #fce4ec;
+      z-index: 9999;
       display: flex;
-      gap: 15px;
-      z-index: 20;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      transition: opacity 0.8s ease, visibility 0.8s;
     }
 
-    .btn-page {
-      background: #ffffff;
-      border: 1px solid #111;
-      padding: 10px 20px;
-      font-weight: bold;
+    .road {
+      position: absolute;
+      bottom: 25%;
+      width: 100%;
+      height: 60px;
+      background: #424242;
+      border-top: 4px solid #fff;
+      border-bottom: 4px solid #fff;
+    }
+
+    .road-line {
+      position: absolute;
+      top: 50%;
+      width: 100%;
+      height: 4px;
+      background: repeating-linear-gradient(90deg, #fff 0px, #fff 30px, transparent 30px, transparent 60px);
+    }
+
+    .scooter-wrapper {
+      position: absolute;
+      bottom: 25%;
+      left: -300px;
       cursor: pointer;
-      text-transform: uppercase;
-      font-size: 13px;
-      letter-spacing: 1px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-      transition: all 0.2s;
+      animation: drive 10s infinite linear;
+      display: flex;
+      align-items: center;
     }
 
-    .btn-page:hover {
-      background: #111;
-      color: #fff;
+    .scooter-banner {
+      background: var(--primary);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-family: sans-serif;
+      font-weight: bold;
+      font-size: 16px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      white-space: nowrap;
+      margin-right: 10px;
+      animation: bounce 1s infinite alternate;
     }
 
-    /* Flipbook Container */
-    .flipbook-container {
-      width: 1000px;
-      height: 700px;
+    .scooter-svg {
+      width: 100px;
+      height: 80px;
+      filter: drop-shadow(0 5px 5px rgba(0,0,0,0.3));
+    }
+
+    .click-hint {
+      position: absolute;
+      bottom: 15%;
+      font-family: sans-serif;
+      font-size: 18px;
+      color: var(--primary);
+      font-weight: bold;
+      animation: pulse 1.5s infinite alternate;
+    }
+
+    @keyframes drive {
+      0% { left: -300px; }
+      100% { left: 100vw; }
+    }
+
+    @keyframes bounce {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-6px); }
+    }
+
+    @keyframes pulse {
+      0% { opacity: 0.6; transform: scale(0.98); }
+      100% { opacity: 1; transform: scale(1.02); }
+    }
+
+    /* --- BOOK STYLING & 3D ENGINE --- */
+    .book-container {
+      perspective: 2000px;
+      width: 900px;
+      height: 600px;
       position: relative;
-      margin-bottom: 40px;
+      margin: 20px auto;
+      display: none;
+    }
+
+    .book {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.5s ease;
     }
 
     .page {
-      background-color: var(--paper);
-      padding: 25px 30px;
-      box-sizing: border-box;
-      border: 1px solid #dcd7ce;
-      overflow: hidden;
-    }
-
-    /* Masthead & Section Headers */
-    .masthead {
-      text-align: center;
-      border-bottom: 3px double var(--ink);
-      padding-bottom: 8px;
-      margin-bottom: 15px;
-    }
-
-    .masthead h1 {
-      font-size: 40px;
-      text-transform: uppercase;
-      margin: 0;
-      letter-spacing: 2px;
-      font-weight: 900;
-    }
-
-    .sub-head {
-      display: flex;
-      justify-content: space-between;
-      border-top: 1px solid var(--ink);
-      border-bottom: 1px solid var(--ink);
-      padding: 4px 8px;
-      font-size: 10px;
-      margin-top: 6px;
-      font-family: sans-serif;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    /* Key Numbers Bar */
-    .kpi-strip {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      background: #f0ebe1;
-      padding: 10px;
-      border: 1px dashed #aaa;
-      margin-bottom: 15px;
-      text-align: center;
-    }
-
-    .kpi-card h3 { margin: 0; font-size: 20px; color: var(--accent); }
-    .kpi-card p { margin: 0; font-size: 11px; font-family: sans-serif; }
-
-    /* Newspaper Layout Columns */
-    .newspaper-layout {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-    }
-
-    .article-box {
-      border: 1px solid transparent;
-      padding: 8px;
+      position: absolute;
+      width: 450px;
+      height: 100%;
+      top: 0;
+      right: 0;
+      transform-origin: left center;
+      transform-style: preserve-3d;
+      transition: transform 1.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+      border-radius: 0 12px 12px 0;
+      background-color: var(--paper-color);
+      box-shadow: inset 0 0 30px rgba(0,0,0,0.05), 0 5px 15px rgba(0,0,0,0.1);
       cursor: pointer;
-      border-radius: 4px;
-      transition: background 0.2s, border-color 0.2s;
     }
 
-    .article-box:hover {
-      background: #eae4d8;
-      border-color: var(--accent);
+    .page-front, .page-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      backface-visibility: hidden;
+      padding: 30px;
+      overflow-y: auto;
     }
 
-    .headline-main {
-      font-size: 22px;
-      line-height: 1.1;
-      margin: 0 0 8px 0;
-      font-weight: bold;
+    .page-back {
+      transform: rotateY(180deg);
+      border-radius: 12px 0 0 12px;
     }
 
-    .body-copy {
-      font-size: 12px;
-      line-height: 1.4;
-      text-align: justify;
-      color: #222;
+    /* Cover Page (Hard 3D Effect) */
+    .page.hard-cover {
+      transform-origin: left center;
+      transition: transform 1.5s cubic-bezier(0.2, 0.8, 0.2, 1);
     }
-
-    .chart-box {
-      height: 150px;
-      margin: 8px 0;
-      background: #fff;
-      padding: 6px;
-      border: 1px solid #ccc;
-    }
-
-    .alert-banner {
-      background-color: var(--alert-bg);
-      border: 1px solid var(--alert-border);
-      padding: 8px 12px;
-      margin-bottom: 12px;
-      font-family: sans-serif;
-      font-size: 11px;
-    }
-
-    .alert-banner strong { color: var(--accent); }
-
-    /* Zoom Overlay */
-    .zoom-overlay {
-      position: fixed;
-      top: 0; left: 0; width: 100vw; height: 100vh;
-      background: rgba(0,0,0,0.85);
-      z-index: 100;
-      display: none;
-      opacity: 0;
+    
+    .page.hard-cover .page-front {
+      background: var(--hard-cover-bg);
+      color: #fff;
+      border: 4px solid var(--accent-gold);
+      box-shadow: inset 0 0 50px rgba(0,0,0,0.8), 10px 10px 25px rgba(0,0,0,0.5);
+      display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
-      padding: 20px;
-      box-sizing: border-box;
+      text-align: center;
     }
 
-    .zoomed-card {
-      background: var(--paper);
-      max-width: 650px;
-      width: 100%;
-      max-height: 85vh;
-      overflow-y: auto;
-      padding: 30px;
-      border: 2px solid #111;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-      position: relative;
+    /* Soft inner page curl effect */
+    .page.soft-page {
+      transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    .feedback-box {
-      margin-top: 20px;
+    .page.flipped {
+      transform: rotateY(-180deg);
+    }
+
+    /* --- CONTENT FADE-IN & POPUP ANIMATIONS --- */
+    .page-content {
+      opacity: 0;
+      transition: opacity 0.8s ease-in;
+    }
+
+    .page.active-visible .page-content {
+      opacity: 1;
+      transition-delay: 1s; /* 1 sec delay before content appears */
+    }
+
+    /* Section Magnification on Hover */
+    .magnify-box {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border-radius: 8px;
+      background: #ffffff;
       padding: 15px;
-      background: #fff;
-      border: 1px dashed var(--accent);
-      font-family: sans-serif;
+      margin-bottom: 15px;
+      border: 1px solid var(--border-color);
     }
 
-    .feedback-box textarea {
-      width: 100%;
-      height: 60px;
-      margin-top: 8px;
-      padding: 8px;
-      box-sizing: border-box;
+    .magnify-box:hover {
+      transform: scale(1.04) translateZ(10px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+      z-index: 10;
     }
 
-    .btn-submit {
-      background: var(--ink);
-      color: #fff;
+    /* 3D Diagram/Chart Popout */
+    .chart-3d-wrapper {
+      transform-style: preserve-3d;
+      transition: transform 0.8s ease, opacity 0.8s ease;
+      opacity: 0;
+      transform: translateY(20px) scale(0.9);
+    }
+
+    .page.active-visible .chart-3d-wrapper {
+      opacity: 1;
+      transform: translateY(0) scale(1) translateZ(15px);
+      transition-delay: 1.2s;
+    }
+
+    /* Typography & Metrics */
+    h1 { font-size: 28px; color: var(--primary); margin-bottom: 10px; }
+    h2 { font-size: 20px; color: var(--text-dark); margin-bottom: 15px; }
+    p { font-size: 13px; color: #555; line-height: 1.5; }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+
+    .stat-card {
+      background: #fdf2f5;
+      border-left: 4px solid var(--primary);
+      padding: 10px;
+      border-radius: 4px;
+    }
+    .stat-val { font-size: 18px; font-weight: bold; color: var(--primary); }
+    .stat-label { font-size: 11px; color: #666; }
+
+    /* Navigation Controls */
+    .nav-controls {
+      margin-top: 15px;
+      display: flex;
+      gap: 20px;
+    }
+    .nav-btn {
+      background: var(--primary);
+      color: white;
       border: none;
-      padding: 8px 15px;
-      margin-top: 8px;
+      padding: 10px 20px;
+      border-radius: 20px;
       cursor: pointer;
-      text-transform: uppercase;
-      font-size: 11px;
-    }
-
-    .btn-close {
-      position: absolute;
-      top: 15px;
-      right: 15px;
-      background: var(--accent);
-      color: #fff;
-      border: none;
-      padding: 6px 12px;
-      cursor: pointer;
-      font-size: 12px;
       font-weight: bold;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
+    .nav-btn:hover { background: #a3134c; }
   </style>
 </head>
 <body>
 
-  <!-- Controls -->
-  <div class="controls">
-    <button class="btn-page" onclick="flipBook.flipPrev()">◄ Turn Previous Page</button>
-    <button class="btn-page" onclick="flipBook.flipNext()">Turn Next Page ►</button>
+  <div id="scooter-screen">
+    <div class="road"><div class="road-line"></div></div>
+    <div class="scooter-wrapper" id="scooter-btn">
+      <div class="scooter-banner">Ownly Newsletter</div>
+      <svg class="scooter-svg" viewBox="0 0 100 80">
+        <path d="M 20 60 A 10 10 0 1 0 40 60 A 10 10 0 1 0 20 60" fill="#333" />
+        <path d="M 70 60 A 10 10 0 1 0 90 60 A 10 10 0 1 0 70 60" fill="#333" />
+        <path d="M 30 60 L 50 60 L 60 40 L 35 40 Z" fill="#e91e63" />
+        <path d="M 55 40 L 75 40 L 80 60 L 65 60 Z" fill="#c2185b" />
+        <rect x="20" y="25" width="20" height="15" fill="#e91e63" rx="3" />
+        <circle cx="82" cy="30" r="4" fill="#fff" />
+      </svg>
+    </div>
+    <div class="click-hint">👈 Click the Pink Delivery Scooter to Open the Magazine</div>
   </div>
 
-  <!-- 3D Newspaper Flipbook Container -->
-  <div class="flipbook-container" id="newspaperBook">
-    
-    <!-- PAGE 1: AUGUST AT A GLANCE & OVERVIEW -->
-    <div class="page" data-density="hard">
-      <div class="masthead">
-        <h1>ownly — Operations Gazette</h1>
-        <div class="sub-head">
-          <span>AUGUST 2026 EDITION</span>
-          <span>RAPIDO'S ZERO-COMMISSION FOOD DELIVERY APP</span>
-          <span>CLICK ARTICLES TO ZOOM</span>
-        </div>
-      </div>
+  <div class="book-container" id="book-container">
+    <div class="book" id="book">
 
-      <div class="kpi-strip">
-        <div class="kpi-card">
-          <h3>4,857,752</h3>
-          <p>Total Orders (All-Time)</p>
-        </div>
-        <div class="kpi-card">
-          <h3>341K</h3>
-          <p>Chat Sessions</p>
-        </div>
-        <div class="kpi-card">
-          <h3>127K</h3>
-          <p>Total Calls (Driver + Merchant)</p>
-        </div>
-      </div>
-
-      <div class="newspaper-layout">
-        <div class="article-box" onclick="openZoom('art_overview')">
-          <h2 class="headline-main">August Operations Snapshot</h2>
-          <p class="body-copy">Ownly's August operations spanned three distinct support verticals. Customer chat dominated at 72.79% of total contact volume, followed by Driver calls at 23.17%, and Merchant calls at 4.04%.</p>
-          <div class="chart-box">
-            <canvas id="volSplitChart"></canvas>
+      <div class="page hard-cover" id="page1" style="z-index: 10;">
+        <div class="page-front" onclick="turnPage(1)">
+          <h1 style="color: var(--accent-gold); font-size: 36px;">THE OPERATIONS GAZETTE</h1>
+          <p style="color: #ccc; margin-top: 10px;">August 2026 Digest • Special Edition</p>
+          <div style="margin-top: 80px; padding: 15px; border: 1px solid var(--accent-gold); border-radius: 8px;">
+            <p style="color: #fff; font-weight: bold;">OWNLY PERFORMANCE REPORT</p>
+            <p style="color: #aaa; font-size: 11px; margin-top: 5px;">Click anywhere on cover to unfold 3D issue</p>
           </div>
-          <small style="color: var(--accent);"><b>[Click to zoom breakdown & comment]</b></small>
         </div>
-
-        <div class="article-box" onclick="openZoom('art_csat_alert')">
-          <div class="alert-banner">
-            <strong>⚠️ ACTION REQUIRED: CSAT Alert</strong><br>
-            Customer satisfaction declined significantly (17% → 10%). Primary priority for September.
+        <div class="page-back">
           </div>
-          <h3 class="headline-main">Customer CSAT Drops 41% Relative</h3>
-          <p class="body-copy">Despite operational speed wins, CSAT dropped steadily through Week 4. Root cause analysis begins Week 1 of September to fix experience quality drivers.</p>
-          <div class="chart-box">
-            <canvas id="csatDropChart"></canvas>
-          </div>
-          <small style="color: var(--accent);"><b>[Click to zoom action plan]</b></small>
-        </div>
-      </div>
-    </div>
-
-    <!-- PAGE 2: CUSTOMER SUPPORT & AWT BREAKTHROUGH -->
-    <div class="page">
-      <div class="masthead">
-        <h2 style="margin:0; font-size: 26px; text-transform: uppercase;">Customer Support Performance</h2>
       </div>
 
-      <div class="newspaper-layout">
-        <div class="article-box" onclick="openZoom('art_cust_ops')">
-          <h2 class="headline-main">Record Volume Peak & AWT Breakthrough</h2>
-          <p class="body-copy">Week 4 orders peaked at 562K (+40% vs W3), driving customer chats to 115K. Despite this record volume, Average Wait Time (AWT) dropped from 12:20 to 7:53 in Week 4!</p>
-          <div class="chart-box">
-            <canvas id="awtChart"></canvas>
+      <div class="page soft-page" id="page2" style="z-index: 9;">
+        <div class="page-front">
           </div>
-          <small style="color: var(--accent);"><b>[Click to zoom metrics]</b></small>
-        </div>
-
-        <div class="article-box" onclick="openZoom('art_bot_split')">
-          <h2 class="headline-main">BOT Resolution Hits 53% Efficiency</h2>
-          <p class="body-copy">BOT resolution reached a monthly peak of 53.33% in Week 4. Agent productivity (CPA) reached 65 chats/agent during peak volume with 86 agents logged in.</p>
-          <div class="chart-box">
-            <canvas id="botSplitChart"></canvas>
+        <div class="page-back">
+          <div class="page-content">
+            <h1>August at a Glance</h1>
+            <p>Platform-wide snapshot across all metrics.</p>
+            <div class="grid-2" style="margin-top: 15px;">
+              <div class="magnify-box stat-card">
+                <div class="stat-val">4.85M+</div>
+                <div class="stat-label">Total Orders</div>
+              </div>
+              <div class="magnify-box stat-card">
+                <div class="stat-val">341K</div>
+                <div class="stat-label">Chat Sessions</div>
+              </div>
+              <div class="magnify-box stat-card">
+                <div class="stat-val">127K</div>
+                <div class="stat-label">Total Calls</div>
+              </div>
+              <div class="magnify-box stat-card">
+                <div class="stat-val">34,971</div>
+                <div class="stat-label">Restaurants Onboarded</div>
+              </div>
+            </div>
+            <div class="magnify-box chart-3d-wrapper" style="margin-top: 15px;">
+              <canvas id="chartP3" height="150"></canvas>
+            </div>
           </div>
-          <small style="color: var(--accent);"><b>[Click to zoom BOT analysis]</b></small>
         </div>
       </div>
-    </div>
 
-    <!-- PAGE 3: MERCHANT & DELIVERY SUPPORT -->
-    <div class="page">
-      <div class="masthead">
-        <h2 style="margin:0; font-size: 26px; text-transform: uppercase;">Partner Operations: Merchant & Driver</h2>
-      </div>
-
-      <div class="newspaper-layout">
-        <div class="article-box" onclick="openZoom('art_merchant')">
-          <h2 class="headline-main">Merchant CSAT Solid at 92%</h2>
-          <p class="body-copy">Handled 18,925 calls offered (16,037 answered) with an 85% Answer Level and 4m 31s AHT. <b>Watch point:</b> Service level crashed to 54% in Week 4 due to volume spikes.</p>
-          <div class="chart-box">
-            <canvas id="merchantChart"></canvas>
+      <div class="page soft-page" id="page3" style="z-index: 8;">
+        <div class="page-front">
+          <div class="page-content">
+            <h1>Customer Support</h1>
+            <div class="grid-2">
+              <div class="magnify-box stat-card">
+                <div class="stat-val">341,216</div>
+                <div class="stat-label">Chats Offered</div>
+              </div>
+              <div class="magnify-box stat-card">
+                <div class="stat-val">171,542</div>
+                <div class="stat-label">Agent Handled</div>
+              </div>
+            </div>
+            <div class="magnify-box chart-3d-wrapper" style="margin-top: 15px;">
+              <canvas id="chartP4" height="160"></canvas>
+            </div>
           </div>
-          <small style="color: var(--accent);"><b>[Click to zoom Merchant Ops]</b></small>
         </div>
-
-        <div class="article-box" onclick="openZoom('art_driver')">
-          <h2 class="headline-main">Driver CSAT Touches 95% Peak</h2>
-          <p class="body-copy">108,607 driver calls offered (88,382 answered). AHT improved to 3m 53s. Drivers maintained 95% satisfaction despite Week 4 queue pressure (30.8K contacts).</p>
-          <div class="chart-box">
-            <canvas id="driverChart"></canvas>
+        <div class="page-back">
+          <div class="page-content">
+            <h1 style="color: #d32f2f;">⚠️ CSAT Alert</h1>
+            <div class="magnify-box" style="border-left: 4px solid #d32f2f; background: #ffebee;">
+              <p style="color: #b71c1c; font-weight: bold;">Customer CSAT Dropped to 10%</p>
+              <p>Significant decline observed during Week 4 peak order surge.</p>
+            </div>
+            <div class="magnify-box chart-3d-wrapper" style="margin-top: 15px;">
+              <canvas id="chartP5" height="160"></canvas>
+            </div>
           </div>
-          <small style="color: var(--accent);"><b>[Click to zoom Driver Ops]</b></small>
         </div>
       </div>
-    </div>
 
-    <!-- PAGE 4: ONBOARDING, EXPANSION & ROADMAP -->
-    <div class="page">
-      <div class="masthead">
-        <h2 style="margin:0; font-size: 26px; text-transform: uppercase;">Expansion & September Roadmap</h2>
-      </div>
-
-      <div class="newspaper-layout">
-        <div class="article-box" onclick="openZoom('art_onboarding')">
-          <h2 class="headline-main">34,971 Restaurants Onboarded</h2>
-          <p class="body-copy">24,191 currently active. Out of 52,108 leads worked, Ownly hit a 67% conversion rate. 10,780 restaurants are currently stuck in onboarding—clearance is September priority #2.</p>
-          <div class="chart-box">
-            <canvas id="onboardingFunnelChart"></canvas>
+      <div class="page soft-page" id="page4" style="z-index: 7;">
+        <div class="page-front">
+          <div class="page-content">
+            <h1>Merchant Support</h1>
+            <div class="grid-3">
+              <div class="magnify-box stat-card"><div class="stat-val">18.9K</div><div class="stat-label">Offered</div></div>
+              <div class="magnify-box stat-card"><div class="stat-val">85%</div><div class="stat-label">Answer Rate</div></div>
+              <div class="magnify-box stat-card"><div class="stat-val">92%</div><div class="stat-label">CSAT</div></div>
+            </div>
+            <div class="magnify-box chart-3d-wrapper" style="margin-top: 15px;">
+              <canvas id="chartP6" height="150"></canvas>
+            </div>
           </div>
-          <small style="color: var(--accent);"><b>[Click to zoom Onboarding Funnel]</b></small>
         </div>
-
-        <div class="article-box" onclick="openZoom('art_highlights')">
-          <h3 class="headline-main">Hyderabad LIVE & Tech Roadmap</h3>
-          <p class="body-copy">
-            • <b>Hyderabad Launched:</b> Live on Sep 7, 2026!<br>
-            • <b>Partnerships:</b> NRAI partnership & BPOC onboarded.<br>
-            • <b>24x7 Operations:</b> Fully expanded across cities.<br>
-            • <b>Tech Upgrades:</b> Real-time SLA dashboards & Chatwoot voice calling.
-          </p>
-          <small style="color: var(--accent);"><b>[Click to zoom September Priorities]</b></small>
+        <div class="page-back">
+          <div class="page-content">
+            <h1>Delivery Support</h1>
+            <div class="grid-3">
+              <div class="magnify-box stat-card"><div class="stat-val">108.6K</div><div class="stat-label">Offered</div></div>
+              <div class="magnify-box stat-card"><div class="stat-val">81%</div><div class="stat-label">Answer Rate</div></div>
+              <div class="magnify-box stat-card"><div class="stat-val">95%</div><div class="stat-label">CSAT</div></div>
+            </div>
+            <div class="magnify-box chart-3d-wrapper" style="margin-top: 15px;">
+              <canvas id="chartP7" height="150"></canvas>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
 
-  </div>
+      <div class="page soft-page" id="page5" style="z-index: 6;">
+        <div class="page-front">
+          <div class="page-content">
+            <h1>Onboarding Funnel</h1>
+            <div class="magnify-box stat-card">
+              <div class="stat-val">67% Conversion</div>
+              <div class="stat-label">Leads Worked → Onboarded</div>
+            </div>
+            <div class="magnify-box chart-3d-wrapper" style="margin-top: 15px;">
+              <canvas id="chartP8" height="150"></canvas>
+            </div>
+          </div>
+        </div>
+        <div class="page-back">
+          <div class="page-content">
+            <h1>September Plan</h1>
+            <div class="magnify-box" style="border-left: 4px solid #388e3c;">
+              <p style="font-weight: bold; color: #2e7d32;">#1 Priority: Fix Customer CSAT</p>
+              <p>Root cause analysis & response workflow optimization.</p>
+            </div>
+            <div class="magnify-box" style="border-left: 4px solid #1976d2;">
+              <p style="font-weight: bold; color: #1565c0;">#2 Hyderabad Expansion</p>
+              <p>Operational live launch starting September 7, 2026.</p>
+            </div>
+          </div>
+        </div>
+      </div>
 
-  <!-- Zoom Article Modal Overlay -->
-  <div class="zoom-overlay" id="zoomModal">
-    <div class="zoomed-card" id="zoomedCardContent">
-      <button class="btn-close" onclick="closeZoom()">✕ CLOSE</button>
-      <div id="modalBody"></div>
     </div>
   </div>
 
-  <!-- Article Hidden Repository for Zoom Views -->
-  <div id="articleData" style="display: none;">
-    <div id="art_overview">
-      <h1 class="headline-main">August Platform Overview</h1>
-      <p class="body-copy">Across all verticals combined, Ownly processed 4,857,752 total orders to date. Total customer chat volume stood at 341,216 sessions, with 127K calls split between drivers (108.6K) and merchants (18.9K).</p>
-      <div class="feedback-box">
-        <strong>Leave Feedback / Questions for Executive Team:</strong>
-        <textarea placeholder="Type your comment here..."></textarea>
-        <button class="btn-submit" onclick="alert('Feedback recorded!')">Submit Feedback</button>
-      </div>
-    </div>
-
-    <div id="art_csat_alert">
-      <h1 class="headline-main">Customer CSAT Alert & Triaging</h1>
-      <p class="body-copy">Customer satisfaction dropped from 17% in Week 1 down to 10% in Week 4 (a 41% relative decline). Total DSAT responses hit 7,887 MTD. Operational productivity and speed actually improved, indicating the CSAT drop is driven by product/experience quality, not wait times.</p>
-      <div class="feedback-box">
-        <strong>Suggest Root Cause Hypotheses:</strong>
-        <textarea placeholder="What do you think caused the CSAT dip?"></textarea>
-        <button class="btn-submit" onclick="alert('Action plan feedback submitted!')">Submit Hypothesis</button>
-      </div>
-    </div>
-
-    <div id="art_cust_ops">
-      <h1 class="headline-main">Customer Support Breakthroughs</h1>
-      <p class="body-copy">Contact ratio averaged 20% of total orders. First response time was maintained at near-instant 0m 23s. Average Wait Time (AWT) dropped dramatically from 12:20 in Week 1 to 7:53 in Week 4 despite chat volume reaching 115K during peak week.</p>
-      <div class="feedback-box">
-        <strong>Feedback on CS Operations:</strong>
-        <textarea placeholder="Type feedback..."></textarea>
-        <button class="btn-submit" onclick="alert('Submitted!')">Submit</button>
-      </div>
-    </div>
-
-    <div id="art_bot_split">
-      <h1 class="headline-main">BOT vs Agent Automation Split</h1>
-      <p class="body-copy">171,542 sessions were handled by human agents. BOT resolution handled 51.33% to 53% of queries. Agent productivity (CPA) reached 71 chats/agent across the month and peaked at 65 in Week 4 with 86 agents logged in.</p>
-      <div class="feedback-box">
-        <strong>Suggest New Automation Scenarios:</strong>
-        <textarea placeholder="Which queries should the BOT handle next?"></textarea>
-        <button class="btn-submit" onclick="alert('Bot suggestion submitted!')">Submit Suggestion</button>
-      </div>
-    </div>
-
-    <div id="art_merchant">
-      <h1 class="headline-main">Merchant Support Performance & Danger Zones</h1>
-      <p class="body-copy">Contact ratio was 1.1%. Answer level averaged 85%. Week 4 created a major service level crash down to 54% as abandoned calls spiked to 815 (+226% vs W3). Surge scheduling models will be introduced in September.</p>
-      <div class="feedback-box">
-        <strong>Merchant Ops Feedback:</strong>
-        <textarea placeholder="Type comment..."></textarea>
-        <button class="btn-submit" onclick="alert('Submitted!')">Submit</button>
-      </div>
-    </div>
-
-    <div id="art_driver">
-      <h1 class="headline-main">Delivery Partner Support Peak Analysis</h1>
-      <p class="body-copy">Driver contact ratio was 6.41%. Overall answer rate was 81% with 49 CPA per agent. Drivers gave a strong 95% CSAT score throughout August. Predictive staffing models will be introduced to curb Week 4 AL drops (74%).</p>
-      <div class="feedback-box">
-        <strong>Driver Ops Feedback:</strong>
-        <textarea placeholder="Type comment..."></textarea>
-        <button class="btn-submit" onclick="alert('Submitted!')">Submit</button>
-      </div>
-    </div>
-
-    <div id="art_onboarding">
-      <h1 class="headline-main">Restaurant Onboarding & Activation Queue</h1>
-      <p class="body-copy">52,108 leads worked yielded 34,971 onboarded restaurants (67% pipeline conversion rate). 31,659 menus were pushed. 10,780 restaurants remain stuck in onboarding. Clear this queue is September Priority #2 to add 3K active restaurants.</p>
-      <div class="feedback-box">
-        <strong>Onboarding Bottleneck Feedback:</strong>
-        <textarea placeholder="Feedback on activation backlog..."></textarea>
-        <button class="btn-submit" onclick="alert('Submitted!')">Submit</button>
-      </div>
-    </div>
-
-    <div id="art_highlights">
-      <h1 class="headline-main">Expansion & Tech Priorities (September)</h1>
-      <p class="body-copy">
-        1. <b>Fix Customer CSAT:</b> Root cause analysis on DSAT drivers.<br>
-        2. <b>Clear Backlog:</b> Activate 10.7K stuck restaurants.<br>
-        3. <b>Stabilize Peaks:</b> Improve shift scheduling for W4.<br>
-        4. <b>Hyderabad Expansion:</b> Ensure smooth operations from Day 1.<br>
-        5. <b>Tech Roadmap:</b> SLA breach alerts, Chatwoot calling, and AI automations for order status & refunds.
-      </p>
-      <div class="feedback-box">
-        <strong>September Roadmap Feedback:</strong>
-        <textarea placeholder="Type your suggestion..."></textarea>
-        <button class="btn-submit" onclick="alert('Submitted!')">Submit</button>
-      </div>
-    </div>
+  <div class="nav-controls" id="nav-controls" style="display:none;">
+    <button class="nav-btn" onclick="prevPage()">◀ Previous Page</button>
+    <button class="nav-btn" onclick="nextPage()">Next Page ▶</button>
   </div>
 
   <script>
-    let flipBook;
+    let currentPage = 0;
+    const pages = [
+      document.getElementById('page1'),
+      document.getElementById('page2'),
+      document.getElementById('page3'),
+      document.getElementById('page4'),
+      document.getElementById('page5')
+    ];
 
-    window.onload = function() {
-      // Initialize Page Flip Library
-      const pageFlip = new St.PageFlip(
-        document.getElementById("newspaperBook"),
-        {
-          width: 500,
-          height: 700,
-          size: "fixed",
-          minWidth: 300,
-          maxWidth: 1000,
-          minHeight: 400,
-          maxHeight: 700,
-          maxShadowOpacity: 0.5,
-          showCover: false,
-          mobileScrollSupport: false
-        }
-      );
+    // Scooter Launcher trigger
+    document.getElementById('scooter-btn').addEventListener('click', () => {
+      document.getElementById('scooter-screen').style.opacity = '0';
+      setTimeout(() => {
+        document.getElementById('scooter-screen').style.display = 'none';
+        document.getElementById('book-container').style.display = 'block';
+        document.getElementById('nav-controls').style.display = 'flex';
+        initCharts();
+      }, 800);
+    });
 
-      pageFlip.loadFromHTML(document.querySelectorAll(".page"));
-      flipBook = pageFlip;
-
-      // Render Charts with Precise Data
-      new Chart(document.getElementById('volSplitChart'), {
-        type: 'doughnut',
-        data: {
-          labels: ['Customer Chats (72.8%)', 'Driver Calls (23.2%)', 'Merchant Calls (4%)'],
-          datasets: [{ data: [72.79, 23.17, 4.04], backgroundColor: ['#E07A5F', '#3D405B', '#81B29A'] }]
-        },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
-      });
-
-      new Chart(document.getElementById('csatDropChart'), {
-        type: 'line',
-        data: {
-          labels: ['W1', 'W2', 'W3', 'W4'],
-          datasets: [{ label: 'CSAT %', data: [17, 15, 12, 10], borderColor: '#D9381E', backgroundColor: '#D9381E', fill: false }]
-        },
-        options: { responsive: true, maintainAspectRatio: false }
-      });
-
-      new Chart(document.getElementById('awtChart'), {
-        type: 'line',
-        data: {
-          labels: ['W1', 'W2', 'W3', 'W4'],
-          datasets: [{ label: 'AWT (Mins)', data: [13.8, 13.0, 12.3, 7.88], borderColor: '#2A9D8F', fill: false }]
-        },
-        options: { responsive: true, maintainAspectRatio: false }
-      });
-
-      new Chart(document.getElementById('botSplitChart'), {
-        type: 'pie',
-        data: {
-          labels: ['BOT Resolved (51.3%)', 'Agent Resolved (48.7%)'],
-          datasets: [{ data: [51.33, 48.67], backgroundColor: ['#1F2421', '#E07A5F'] }]
-        },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
-      });
-
-      new Chart(document.getElementById('merchantChart'), {
-        type: 'bar',
-        data: {
-          labels: ['W1', 'W2', 'W3', 'W4'],
-          datasets: [
-            { label: 'Offered', data: [4.2, 4.5, 5.0, 5.23], backgroundColor: '#3D405B' },
-            { label: 'Answered', data: [3.7, 3.9, 4.3, 4.14], backgroundColor: '#81B29A' }
-          ]
-        },
-        options: { responsive: true, maintainAspectRatio: false }
-      });
-
-      new Chart(document.getElementById('driverChart'), {
-        type: 'bar',
-        data: {
-          labels: ['W1', 'W2', 'W3', 'W4'],
-          datasets: [
-            { label: 'Offered (k)', data: [22, 25, 30.8, 30.8], backgroundColor: '#E07A5F' },
-            { label: 'Answered (k)', data: [18.5, 21, 25.5, 23.4], backgroundColor: '#F2CC8F' }
-          ]
-        },
-        options: { responsive: true, maintainAspectRatio: false }
-      });
-
-      new Chart(document.getElementById('onboardingFunnelChart'), {
-        type: 'bar',
-        data: {
-          labels: ['Leads', 'Onboarded', 'Menus', 'Active', 'Stuck'],
-          datasets: [{ label: 'Count (k)', data: [52.1, 35, 31.7, 24.2, 10.8], backgroundColor: '#3D405B' }]
-        },
-        options: { responsive: true, maintainAspectRatio: false, indexAxis: 'y' }
-      });
-    };
-
-    // Zoom Functions
-    function openZoom(articleId) {
-      const modal = document.getElementById('zoomModal');
-      const modalBody = document.getElementById('modalBody');
-      const content = document.getElementById(articleId).innerHTML;
-
-      modalBody.innerHTML = content;
-      modal.style.display = 'flex';
-
-      gsap.to(modal, { opacity: 1, duration: 0.3 });
-      gsap.fromTo('#zoomedCardContent', { scale: 0.8 }, { scale: 1, duration: 0.4, ease: "back.out(1.7)" });
+    function turnPage(index) {
+      if (index === currentPage && index < pages.length) {
+        pages[index].classList.add('flipped');
+        pages[index].classList.add('active-visible');
+        currentPage++;
+      }
     }
 
-    function closeZoom() {
-      const modal = document.getElementById('zoomModal');
-      gsap.to(modal, { opacity: 0, duration: 0.2, onComplete: () => { modal.style.display = 'none'; } });
+    function nextPage() {
+      if (currentPage < pages.length) {
+        pages[currentPage].classList.add('flipped');
+        pages[currentPage].classList.add('active-visible');
+        currentPage++;
+      }
+    }
+
+    function prevPage() {
+      if (currentPage > 0) {
+        currentPage--;
+        pages[currentPage].classList.remove('flipped');
+        pages[currentPage].classList.remove('active-visible');
+      }
+    }
+
+    // Chart Initialization Engine
+    function initCharts() {
+      new Chart(document.getElementById('chartP3'), {
+        type: 'doughnut',
+        data: {
+          labels: ['Customer Chats', 'Driver Calls', 'Merchant Calls'],
+          datasets: [{ data: [72.8, 23.1, 4.1], backgroundColor: ['#c2185b', '#f8bbd0', '#e0e0e0'] }]
+        },
+        options: { responsive: true, plugins: { title: { display: true, text: 'Support Contact Volume Split (%)' } } }
+      });
+
+      new Chart(document.getElementById('chartP4'), {
+        type: 'line',
+        data: {
+          labels: ['W1', 'W2', 'W3', 'W4'],
+          datasets: [{ label: 'AWT (Mins)', data: [13.2, 12.1, 11.5, 7.9], borderColor: '#c2185b', fill: true, backgroundColor: 'rgba(194,24,91,0.1)' }]
+        },
+        options: { responsive: true, plugins: { title: { display: true, text: 'Wait Time Trend (AWT Breakdown)' } } }
+      });
+
+      new Chart(document.getElementById('chartP5'), {
+        type: 'line',
+        data: {
+          labels: ['W1', 'W2', 'W3', 'W4'],
+          datasets: [{ label: 'CSAT %', data: [17, 15, 12, 10], borderColor: '#d32f2f', backgroundColor: 'rgba(211,47,47,0.1)' }]
+        },
+        options: { responsive: true, plugins: { title: { display: true, text: 'CSAT Decline Alert Curve' } } }
+      });
+
+      new Chart(document.getElementById('chartP6'), {
+        type: 'bar',
+        data: {
+          labels: ['W1', 'W2', 'W3', 'W4'],
+          datasets: [{ label: 'Calls Offered', data: [4200, 4500, 5000, 5230], backgroundColor: '#c2185b' }]
+        },
+        options: { responsive: true, plugins: { title: { display: true, text: 'Merchant Call Volume Peak' } } }
+      });
+
+      new Chart(document.getElementById('chartP7'), {
+        type: 'bar',
+        data: {
+          labels: ['W1', 'W2', 'W3', 'W4'],
+          datasets: [{ label: 'Driver Contacts', data: [22000, 25000, 30800, 30800], backgroundColor: '#f8bbd0' }]
+        },
+        options: { responsive: true, plugins: { title: { display: true, text: 'Driver Support Weekly Spike' } } }
+      });
+
+      new Chart(document.getElementById('chartP8'), {
+        type: 'bar',
+        data: {
+          labels: ['Leads', 'Onboarded', 'Menus Pushed', 'Active'],
+          datasets: [{ label: 'Restaurants', data: [52108, 34971, 31659, 24191], backgroundColor: '#c2185b' }]
+        },
+        options: { responsive: true, plugins: { title: { display: true, text: 'August Onboarding Pipeline' } } }
+      });
     }
   </script>
 </body>
