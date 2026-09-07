@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Operations Gazette — August 2026 Edition</title>
+  
+  <!-- GSAP for Smooth Animations -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <!-- Chart.js for Data Visualizations -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    :root {
+      --paper-bg: #f4f1ea;
+      --ink: #111111;
+      --accent-red: #8b0000;
+      --border-line: #222222;
+      --card-bg: #ffffff;
+    }
+
+    body {
+      background-color: var(--paper-bg);
+      color: var(--ink);
+      font-family: 'Georgia', serif;
+      margin: 0;
+      padding: 20px;
+      overflow-x: hidden;
+    }
+
+    /* Masthead */
+    .masthead {
+      text-align: center;
+      border-bottom: 4px double var(--border-line);
+      padding-bottom: 15px;
+      margin-bottom: 30px;
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .masthead h1 {
+      font-size: 54px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin: 0;
+      font-family: 'Times New Roman', serif;
+    }
+
+    .masthead .sub-bar {
+      display: flex;
+      justify-content: space-between;
+      border-top: 1px solid var(--border-line);
+      border-bottom: 1px solid var(--border-line);
+      padding: 5px 15px;
+      margin-top: 10px;
+      font-size: 13px;
+      font-style: italic;
+    }
+
+    /* Newspaper Grid */
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 25px;
+      max-width: 1200px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    @media (max-width: 900px) {
+      .grid-container { grid-template-columns: 1fr; }
+    }
+
+    .article-card {
+      background: var(--card-bg);
+      border: 1px solid #ccc;
+      padding: 20px;
+      cursor: pointer;
+      position: relative;
+      z-index: 1;
+      box-shadow: 2px 2px 8px rgba(0,0,0,0.05);
+      transform-origin: center center;
+    }
+
+    .article-card:hover {
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+
+    .kicker {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--accent-red);
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .headline {
+      font-size: 20px;
+      margin: 0 0 10px 0;
+      line-height: 1.2;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 8px;
+    }
+
+    .snippet {
+      font-size: 14px;
+      line-height: 1.5;
+      color: #333;
+    }
+
+    .chart-container {
+      margin-top: 15px;
+      height: 180px;
+      position: relative;
+    }
+
+    /* Expanded Content State */
+    .expanded-content {
+      display: none;
+      opacity: 0;
+      margin-top: 20px;
+      font-size: 15px;
+      line-height: 1.6;
+      border-top: 2px solid var(--ink);
+      padding-top: 15px;
+    }
+
+    .feedback-box {
+      margin-top: 20px;
+      padding: 15px;
+      background: #f9f9f9;
+      border: 1px dashed #666;
+    }
+
+    .feedback-box textarea {
+      width: 100%;
+      height: 60px;
+      margin-top: 8px;
+      padding: 8px;
+      box-sizing: border-box;
+      font-family: inherit;
+    }
+
+    .btn {
+      background: var(--ink);
+      color: #fff;
+      border: none;
+      padding: 8px 14px;
+      font-size: 12px;
+      text-transform: uppercase;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+
+    .btn-close {
+      background: var(--accent-red);
+      float: right;
+    }
+
+    /* Backdrop Dimmer */
+    .backdrop {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(0, 0, 0, 0.6);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    .backdrop.active {
+      pointer-events: auto;
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="backdrop" id="backdrop"></div>
+
+  <div class="masthead">
+    <h1>The Operations Gazette</h1>
+    <div class="sub-bar">
+      <span>Vol. VIII No. 8</span>
+      <span>MONTHLY PERFORMANCE REPORT — AUGUST 2026</span>
+      <span>SPECIAL EDITION</span>
+    </div>
+  </div>
+
+  <div class="grid-container">
+
+    <!-- Article 1: Customer Support -->
+    <article class="article-card" onclick="zoomCard(this)">
+      <div class="kicker">Customer Support • Deep Dive</div>
+      <h2 class="headline">Order Surge Tests CSAT as Automation Steps Up</h2>
+      <p class="snippet">August saw order volumes touch 4.8M+, with Week 4 peaking at 562K orders (+40% surge). Wait times improved dramatically, though CSAT faces core pressure...</p>
+      
+      <div class="chart-container">
+        <canvas id="csatChart"></canvas>
+      </div>
+
+      <div class="expanded-content">
+        <p><strong>Operational Highlights:</strong></p>
+        <ul>
+          <li><strong>Total Orders:</strong> 4,857,752 (August peak week hit 562K)</li>
+          <li><strong>Total Sessions:</strong> 341,216 chats offered; 171,542 answered by agents (50% level).</li>
+          <li><strong>Efficiency:</strong> BOT resolution achieved 53% of total sessions. Average Wait Time (AWT) dropped sharply from 12:20 to 7:53.</li>
+          <li><strong>Contact Ratio:</strong> 20% | <strong>First Response Time:</strong> 0 mins 23 secs.</li>
+        </ul>
+        <p><em>Insight:</em> While operational productivity and wait times improved sharply, customer satisfaction experienced significant pressure (CSAT dropped from 17% to 10%, with DSAT rising to 7,887). Resolving core drivers remains the top operational target.</p>
+        
+        <div class="feedback-box" onclick="event.stopPropagation()">
+          <strong>Send Feedback to CS Ops Team:</strong>
+          <textarea placeholder="Write your thoughts on CS performance..."></textarea>
+          <button class="btn" onclick="alert('Feedback recorded!')">Submit</button>
+        </div>
+        <button class="btn btn-close" onclick="resetCard(event, this.parentElement.parentElement)">Close Article</button>
+      </div>
+    </article>
+
+    <!-- Article 2: Support Channels (Merchant & Delivery) -->
+    <article class="article-card" onclick="zoomCard(this)">
+      <div class="kicker">Partner Network • Call Analytics</div>
+      <h2 class="headline">Merchant & Delivery Support Hold High CSAT Amid Volume Spikes</h2>
+      <p class="snippet">Merchant CSAT reached 92% and Driver CSAT touched 95%, despite severe end-of-month queue surges across partner channels...</p>
+      
+      <div class="chart-container">
+        <canvas id="partnerChart"></canvas>
+      </div>
+
+      <div class="expanded-content">
+        <p><strong>Merchant Support Metrics:</strong></p>
+        <ul>
+          <li><strong>Calls Offered / Answered:</strong> 18,925 / 16,037 (85% Answer Level)</li>
+          <li><strong>Contact Ratio:</strong> 1.1% | <strong>AHT:</strong> Reduced to 4m 31s</li>
+          <li><strong>CSAT:</strong> 92% strong satisfaction rating.</li>
+        </ul>
+        <p><strong>Delivery Partner Support Metrics:</strong></p>
+        <ul>
+          <li><strong>Calls Offered / Answered:</strong> 108,607 / 88,382 (81% Answer Level)</li>
+          <li><strong>Contact Ratio:</strong> 6.41% | <strong>AHT:</strong> Down to 3m 53s</li>
+          <li><strong>CSAT:</strong> 95% rating despite peak Week 4 pressure.</li>
+        </ul>
+
+        <div class="feedback-box" onclick="event.stopPropagation()">
+          <strong>Send Feedback on Partner Ops:</strong>
+          <textarea placeholder="Write feedback on Merchant/Driver support..."></textarea>
+          <button class="btn" onclick="alert('Feedback recorded!')">Submit</button>
+        </div>
+        <button class="btn btn-close" onclick="resetCard(event, this.parentElement.parentElement)">Close Article</button>
+      </div>
+    </article>
+
+    <!-- Article 3: Onboarding & Expansion -->
+    <article class="article-card" onclick="zoomCard(this)">
+      <div class="kicker">Expansion & Network Growth</div>
+      <h2 class="headline">Network Expands with 34K+ Onboarded & Hyderabad Launch</h2>
+      <p class="snippet">Rapid commercial expansion sees 67% lead conversion, strategic partnership with NRAI, and live operations launching in Hyderabad...</p>
+      
+      <div class="chart-container">
+        <canvas id="onboardChart"></canvas>
+      </div>
+
+      <div class="expanded-content">
+        <p><strong>Growth Breakdown:</strong></p>
+        <ul>
+          <li><strong>Total Onboarded:</strong> 34,971 Total Restaurants (24,191 Active, 10,780 in progress).</li>
+          <li><strong>August Onboarding:</strong> 3,749 Brands & 7,231 Outlets added.</li>
+          <li><strong>Pipeline Lead Efficiency:</strong> 52,108 total leads processed with a 67% conversion rate.</li>
+        </ul>
+        <p><strong>Key Strategic Highlights:</strong></p>
+        <ul>
+          <li>Partnered with <strong>NRAI</strong> for national restaurant collaboration.</li>
+          <li><strong>Hyderabad Live:</strong> Operational from Sept 7, alongside BPOC handling delivery support.</li>
+          <li><strong>Partnered with Mervis:</strong> Extended customer support coverage.</li>
+          <li><strong>Operational Hours:</strong> Upgraded from (7 AM - 3 AM) to full <strong>24*7</strong>.</li>
+        </ul>
+
+        <div class="feedback-box" onclick="event.stopPropagation()">
+          <strong>Send Feedback on Expansion:</strong>
+          <textarea placeholder="Comments on onboarding & expansion..."></textarea>
+          <button class="btn" onclick="alert('Feedback recorded!')">Submit</button>
+        </div>
+        <button class="btn btn-close" onclick="resetCard(event, this.parentElement.parentElement)">Close Article</button>
+      </div>
+    </article>
+
+  </div>
+
+  <script>
+    // --- GSAP Interactive Card Expansion Engine ---
+    let activeCard = null;
+
+    function zoomCard(card) {
+      if (activeCard) return;
+      activeCard = card;
+
+      const backdrop = document.getElementById('backdrop');
+      backdrop.classList.add('active');
+
+      gsap.set(card, { zIndex: 10 });
+      gsap.to(card, { scale: 1.1, duration: 0.4, ease: "power2.out" });
+
+      const expandedContent = card.querySelector('.expanded-content');
+      expandedContent.style.display = 'block';
+      gsap.to(expandedContent, { opacity: 1, duration: 0.3, delay: 0.1 });
+    }
+
+    function resetCard(e, card) {
+      e.stopPropagation();
+      const backdrop = document.getElementById('backdrop');
+      backdrop.classList.remove('active');
+
+      const expandedContent = card.querySelector('.expanded-content');
+      gsap.to(expandedContent, {
+        opacity: 0,
+        duration: 0.2,
+        onComplete: () => {
+          expandedContent.style.display = 'none';
+        }
+      });
+
+      gsap.to(card, {
+        scale: 1,
+        duration: 0.3,
+        ease: "power2.inOut",
+        onComplete: () => {
+          gsap.set(card, { zIndex: 1 });
+          activeCard = null;
+        }
+      });
+    }
+
+    // --- Chart.js Data Visualizations ---
+    window.onload = function() {
+      // 1. CSAT / Resolution Gauge
+      new Chart(document.getElementById('csatChart'), {
+        type: 'doughnut',
+        data: {
+          labels: ['Bot Resolution', 'Agent Resolution'],
+          datasets: [{
+            data: [53, 47],
+            backgroundColor: ['#111111', '#8b0000']
+          }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+      });
+
+      // 2. Partner CSAT Bar Comparison
+      new Chart(document.getElementById('partnerChart'), {
+        type: 'bar',
+        data: {
+          labels: ['Merchant Support', 'Driver Support'],
+          datasets: [{
+            label: 'CSAT Rating %',
+            data: [92, 95],
+            backgroundColor: ['#222222', '#666666']
+          }]
+        },
+        options: { responsive: true, maintainAspectRatio: false, scales: { y: { max: 100 } } }
+      });
+
+      // 3. Onboarding Status Breakdown
+      new Chart(document.getElementById('onboardChart'), {
+        type: 'pie',
+        data: {
+          labels: ['Active Stores', 'Stuck In Progress'],
+          datasets: [{
+            data: [24191, 10780],
+            backgroundColor: ['#111111', '#ccc']
+          }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+      });
+    };
+  </script>
+</body>
+</html>
