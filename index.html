@@ -16,7 +16,6 @@
       --card-bg: #FFFFFF;
       --book-bg: #FAF8F5;
       --alert-red-bg: #FFEBEB;
-      --alert-green-bg: #EAF8F0;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -34,7 +33,7 @@
     }
 
     /* =========================================
-       1. SCOOTER TEASER SCREEN
+       1. SCOOTER TEASER SCREEN (Exact Match)
        ========================================= */
     #teaser-screen {
       display: flex;
@@ -60,27 +59,25 @@
       align-items: center;
     }
 
-    /* Driving Bounce Animation */
     .scooter-wrapper {
       position: relative;
-      width: 280px;
-      height: 200px;
-      animation: driveBounce 0.35s infinite alternate ease-in-out;
+      width: 250px;
+      height: 180px;
+      animation: driveBounce 0.4s infinite alternate ease-in-out;
       z-index: 5;
     }
 
     @keyframes driveBounce {
       0% { transform: translateY(0px) rotate(0deg); }
-      100% { transform: translateY(-5px) rotate(1deg); }
+      100% { transform: translateY(-4px) rotate(1deg); }
     }
 
-    .scooter-svg { width: 100%; height: 100%; filter: drop-shadow(0 15px 12px rgba(0,0,0,0.6)); }
+    .scooter-svg { width: 100%; height: 100%; }
 
-    /* Spinning Wheels */
-    .wheel { animation: spinWheel 0.3s linear infinite; }
+    /* Animated Wheels & Lines */
+    .wheel { animation: spinWheel 0.3s linear infinite; transform-origin: center; }
     @keyframes spinWheel { 100% { transform: rotate(360deg); } }
 
-    /* Animated Speed Lines for Illusion of Movement */
     .road-line {
       position: absolute;
       height: 3px;
@@ -89,9 +86,9 @@
       animation: speedLine 0.8s infinite linear;
       opacity: 0;
     }
-    .line-1 { width: 120px; top: 80%; animation-delay: 0s; }
-    .line-2 { width: 80px; top: 40%; animation-delay: 0.2s; }
-    .line-3 { width: 160px; top: 60%; animation-delay: 0.4s; }
+    .line-1 { width: 100px; top: 75%; animation-delay: 0s; }
+    .line-2 { width: 60px; top: 40%; animation-delay: 0.3s; }
+    .line-3 { width: 140px; top: 60%; animation-delay: 0.6s; }
 
     @keyframes speedLine {
       0% { left: 100%; opacity: 1; }
@@ -99,28 +96,29 @@
     }
 
     .teaser-banner {
-      margin-top: 10px;
-      background: linear-gradient(135deg, #FF2E93, #FF6B00);
+      margin-top: 15px;
+      background: linear-gradient(90deg, #FF2E93, #FF6B00);
       color: white;
-      padding: 16px 40px;
+      padding: 14px 40px;
       border-radius: 50px;
       font-family: 'Playfair Display', serif;
       font-size: 24px;
       font-weight: 700;
-      box-shadow: 0 10px 30px rgba(255, 46, 147, 0.4);
-      transition: transform 0.3s ease;
+      box-shadow: 0 10px 25px rgba(255, 46, 147, 0.5);
       z-index: 10;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
 
-    #teaser-screen:hover .teaser-banner { transform: scale(1.05); }
-    .teaser-hint { color: #A1A1AA; margin-top: 14px; font-size: 14px; z-index: 10; }
+    .teaser-hint { color: #A1A1AA; margin-top: 15px; font-size: 13px; z-index: 10; letter-spacing: 0.5px; }
 
     /* =========================================
-       2. REAL 3D BOOK ENGINE
+       2. SINGLE-PAGE FLIP BOOK ENGINE
        ========================================= */
     #book-viewport {
       display: none;
-      perspective: 1800px;
+      perspective: 2000px;
       width: 100vw;
       height: 100vh;
       align-items: center;
@@ -138,118 +136,161 @@
     }
     .home-btn:hover { background: var(--pink-primary); }
 
-    #book-container {
+    .book-container {
+      width: 650px;
+      height: 750px;
       position: relative;
-      width: 960px; 
-      height: 650px;
-      display: flex;
-    }
-
-    /* Interactive Click Zones */
-    .click-zone {
-      position: absolute;
-      top: 0; width: 50%; height: 100%;
-      z-index: 50; cursor: pointer;
-    }
-    .click-zone.left { left: 0; }
-    .click-zone.right { right: 0; }
-    
-    /* Hint arrows */
-    .turn-hint {
-      position: absolute; top: 50%; transform: translateY(-50%);
-      background: rgba(0,0,0,0.6); color: white;
-      padding: 15px; border-radius: 50%;
-      opacity: 0; transition: opacity 0.3s; pointer-events: none;
-    }
-    .click-zone.left:hover .turn-hint { opacity: 1; left: 20px; }
-    .click-zone.right:hover .turn-hint { opacity: 1; right: 20px; }
-
-    /* The individual leaves of the book */
-    .leaf {
-      position: absolute;
-      top: 0; left: 50%;
-      width: 50%; height: 100%;
-      transform-origin: left center;
       transform-style: preserve-3d;
-      transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
+      margin-left: 20%; /* Offsets it slightly so flip looks natural */
     }
 
-    .leaf.flipped { transform: rotateY(-180deg); }
-
-    /* Front and Back of each leaf */
     .page {
       position: absolute;
-      width: 100%; height: 100%;
-      backface-visibility: hidden;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
       background-color: var(--book-bg);
-      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      transform-origin: left center;
+      transform-style: preserve-3d;
+      transition: transform 0.9s cubic-bezier(0.645, 0.045, 0.355, 1);
+      cursor: pointer;
+      user-select: none;
       overflow: hidden;
-      box-shadow: inset 0 0 20px rgba(0,0,0,0.02);
+      border: 1px solid rgba(0,0,0,0.05);
     }
 
-    .page.front {
-      transform: rotateY(0deg);
-      border-radius: 0 12px 12px 0;
-      background: linear-gradient(to right, #E5E0DB 0%, var(--book-bg) 4%, var(--book-bg) 100%);
-    }
+    /* Stacking order so Page 1 is on top */
+    #page-1 { z-index: 9; }
+    #page-2 { z-index: 8; }
+    #page-3 { z-index: 7; }
+    #page-4 { z-index: 6; }
+    #page-5 { z-index: 5; }
+    #page-6 { z-index: 4; }
+    #page-7 { z-index: 3; }
+    #page-8 { z-index: 2; }
+    #page-9 { z-index: 1; }
 
-    .page.back {
-      transform: rotateY(180deg);
+    .page.flipped {
+      transform: rotateY(-180deg);
       border-radius: 12px 0 0 12px;
-      background: linear-gradient(to left, #E5E0DB 0%, var(--book-bg) 4%, var(--book-bg) 100%);
+      box-shadow: inset -5px 0 20px rgba(0,0,0,0.1);
     }
 
-    /* Hard Cover Styling */
-    .page.hard-cover {
-      background: linear-gradient(145deg, #1A1A1E, #2A2A30) !important;
-      color: white;
-      border: 2px solid #3F3F46;
+    .page-content {
+      width: 100%;
+      height: 100%;
+      padding: 40px;
+      position: relative;
+      overflow-y: auto;
+      backface-visibility: hidden;
+      display: flex;
+      flex-direction: column;
     }
-    
-    .cover-inner {
-      border: 2px solid var(--pink-primary);
-      height: 100%; border-radius: 8px; padding: 30px;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      text-align: center;
-      background: radial-gradient(circle at center, rgba(255,46,147,0.1) 0%, transparent 70%);
+
+    /* Hard Cover */
+    .page.hard-cover {
+      background: linear-gradient(145deg, #1A1A1E, #2A2A30);
+      color: #FFFFFF;
+      border-right: 4px solid #3F3F46;
     }
 
     .page-num {
-      position: absolute; bottom: 15px; font-size: 11px;
+      position: absolute; bottom: 15px; right: 20px; font-size: 11px;
       color: var(--text-muted); font-weight: 600;
     }
-    .page.front .page-num { right: 20px; }
-    .page.back .page-num { left: 20px; }
 
     /* =========================================
-       3. CONTENT & CHARTS UI
+       3. MAGNIFY EFFECT & CHARTS UI
        ========================================= */
-    .header-branding { border-bottom: 2px solid var(--text-dark); padding-bottom: 10px; margin-bottom: 16px; text-align: center; }
-    .header-branding h2 { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 900; }
-    .header-branding p { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); }
-
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-    
     .mag-section {
-      background: var(--card-bg); padding: 14px; margin-bottom: 14px;
-      border-radius: 8px; border: 1px solid #E5E7EB;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+      background: var(--card-bg); 
+      padding: 16px; 
+      margin-bottom: 16px;
+      border-radius: 10px; 
+      border: 1px solid #E5E7EB;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+      cursor: zoom-in;
     }
 
-    .metric-card { text-align: center; padding: 10px; background: #F9FAFB; border-radius: 6px; border: 1px solid #F3F4F6;}
-    .metric-val { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: var(--pink-primary); }
-    .metric-lbl { font-size: 10px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; margin-top: 4px; }
+    /* The Pop-up Magnify effect you requested */
+    .mag-section:hover {
+      transform: scale(1.05) translateY(-5px);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+      z-index: 10;
+      position: relative;
+      border-color: var(--pink-primary);
+    }
 
-    .section-title { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; margin-bottom: 10px; color: var(--text-dark); }
+    .header-branding { text-align: center; border-bottom: 2px solid var(--text-dark); padding-bottom: 10px; margin-bottom: 20px; }
+    .header-branding h2 { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 900; }
+    .header-branding p { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     
+    .metric-card { text-align: center; padding: 12px; background: #F9FAFB; border-radius: 8px; border: 1px solid #F3F4F6;}
+    .metric-val { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 700; color: var(--pink-primary); }
+    .metric-lbl { font-size: 11px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; margin-top: 4px; }
+
+    .section-title { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; margin-bottom: 12px; color: var(--text-dark); }
     .chart-box { position: relative; height: 180px; width: 100%; }
     
-    .alert-box { padding: 12px; border-radius: 6px; font-size: 12px; margin-bottom: 14px; line-height: 1.4; }
+    .alert-box { padding: 14px; border-radius: 8px; font-size: 13px; margin-bottom: 16px; line-height: 1.5; }
     .alert-danger { background: var(--alert-red-bg); border-left: 4px solid #EF4444; color: #991B1B; }
-    .alert-warning { background: #FEF3C7; border-left: 4px solid #F59E0B; color: #92400E; }
+
+    /* EXACT STYLING FOR LAST PAGE SCREENSHOT */
+    .final-page-header {
+      text-align: center;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #71717A;
+      border-bottom: 1px solid #E4E4E7;
+      padding-bottom: 15px;
+      margin-bottom: 20px;
+    }
     
-    .blank-page { height: 100%; display: flex; align-items: center; justify-content: center; color: #A1A1AA; font-style: italic; }
+    .final-card {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+      border: 1px solid #F4F4F5;
+    }
+
+    .final-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      margin-bottom: 15px;
+      color: #18181B;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .final-list {
+      list-style-type: disc;
+      padding-left: 20px;
+      font-size: 13px;
+      line-height: 1.6;
+      color: #3F3F46;
+    }
+
+    .final-list li { margin-bottom: 6px; }
+    .final-list li strong { color: #18181B; }
+    
+    .road-list {
+      list-style-type: none;
+      padding-left: 0;
+      font-size: 13px;
+      line-height: 1.8;
+      color: #71717A;
+    }
+    .road-list li::before { content: "•"; color: #A1A1AA; display: inline-block; width: 1em; margin-left: 5px;}
   </style>
 </head>
 <body>
@@ -289,97 +330,69 @@
       </div>
     </div>
     
-    <div class="teaser-banner">🛵 Ownly News Letter</div>
-    <div class="teaser-hint">Click anywhere to open the report</div>
+    <div class="teaser-banner">
+      <span style="font-size: 20px;">🛵</span> Ownly News Letter
+    </div>
+    <div class="teaser-hint">Click anywhere to open interactive edition</div>
   </div>
 
   <!-- =========================================
-       SCENE 2: INTERACTIVE 3D BOOK
+       SCENE 2: INTERACTIVE PAGE STACK
        ========================================= -->
   <div id="book-viewport">
-    <button class="home-btn" onclick="closeBook()">← Back to Start</button>
+    <button class="home-btn" onclick="closeBook()">← Back to Scooter</button>
 
-    <div id="book-container">
-      
-      <!-- Click controls mapping over the book -->
-      <div class="click-zone left" onclick="flipPrev()">
-        <div class="turn-hint">← Prev</div>
-      </div>
-      <div class="click-zone right" onclick="flipNext()">
-        <div class="turn-hint">Next →</div>
-      </div>
+    <div class="book-container">
 
-      <!-- LEAF 1 -->
-      <div class="leaf" id="leaf-1">
-        <!-- FRONT: Cover -->
-        <div class="page front hard-cover">
-          <div class="cover-inner">
-            <div style="font-size: 12px; letter-spacing: 3px; color: #A1A1AA;">EXECUTIVE EDITION</div>
-            <h1 style="font-family: 'Playfair Display', serif; font-size: 38px; font-weight: 900; margin: 20px 0 10px;">THE OPERATIONS GAZETTE</h1>
-            <div style="font-size: 16px; color: var(--pink-primary); font-weight: 600; letter-spacing: 2px;">August 2026 Digest</div>
-            <div style="width: 60px; height: 3px; background: var(--pink-primary); margin: 30px auto;"></div>
-            <p style="color: #D4D4D8; font-size: 13px; max-width: 300px; line-height: 1.6;">
-              Deep-dive operational analysis covering Order Surges, Customer Support, and Expansion Roadmaps.
-            </p>
-          </div>
+      <!-- PAGE 1: HARD COVER -->
+      <div class="page hard-cover" id="page-1" onclick="turnNext()">
+        <div class="page-content" style="align-items: center; justify-content: center; text-align: center; border: 2px solid var(--pink-primary); margin: 30px; height: calc(100% - 60px); border-radius: 12px; background: radial-gradient(circle at center, rgba(255,46,147,0.1) 0%, transparent 70%);">
+            <div style="font-size: 14px; letter-spacing: 3px; color: #A1A1AA;">EXECUTIVE EDITION</div>
+            <h1 style="font-family: 'Playfair Display', serif; font-size: 46px; font-weight: 900; margin: 25px 0 15px; line-height: 1.1;">THE OPERATIONS GAZETTE</h1>
+            <div style="font-size: 18px; color: var(--pink-primary); font-weight: 600; letter-spacing: 2px;">August 2026 Digest</div>
+            <div style="width: 80px; height: 3px; background: var(--pink-primary); margin: 40px auto;"></div>
+            <p style="color: #D4D4D8; font-size: 14px; max-width: 400px; line-height: 1.6;">Click anywhere to flip through the report.</p>
         </div>
-        <!-- BACK: Blank -->
-        <div class="page back"><div class="blank-page">[ Page Intentionally Blank ]</div></div>
       </div>
 
-      <!-- LEAF 2 -->
-      <div class="leaf" id="leaf-2">
-        <!-- FRONT: Page 3 - Platform -->
-        <div class="page front">
+      <!-- PAGE 2: PLATFORM OVERVIEW -->
+      <div class="page" id="page-2" onclick="turnNext()">
+        <div class="page-content">
           <div class="header-branding">
             <h2>August at a Glance</h2><p>Platform Snapshot</p>
           </div>
-          <div class="mag-section grid-3">
+          <div class="mag-section grid-2">
             <div class="metric-card"><div class="metric-val">4.85M</div><div class="metric-lbl">Total Orders</div></div>
             <div class="metric-card"><div class="metric-val">341K</div><div class="metric-lbl">Chats</div></div>
-            <div class="metric-card"><div class="metric-val">127K</div><div class="metric-lbl">Calls</div></div>
           </div>
           <div class="mag-section">
             <div class="section-title">📊 Contact Distribution</div>
             <div class="chart-box"><canvas id="chart1"></canvas></div>
           </div>
-          <div class="page-num">Page 3</div>
         </div>
-        <!-- BACK: Page 4 - Customer Support -->
-        <div class="page back">
-          <div class="header-branding">
-            <h2>Customer Support</h2><p>Performance Metrics</p>
-          </div>
-          <div class="mag-section grid-2">
-            <div class="metric-card"><div class="metric-val">341,216</div><div class="metric-lbl">Chats Offered</div></div>
-            <div class="metric-card"><div class="metric-val">171,542</div><div class="metric-lbl">Handled</div></div>
-          </div>
-          <div class="mag-section">
-            <div class="section-title">📉 Wait Time Trend (AWT)</div>
-            <div class="chart-box"><canvas id="chart2"></canvas></div>
-          </div>
-          <div class="page-num">Page 4</div>
-        </div>
+        <div class="page-num">Page 2</div>
       </div>
 
-      <!-- LEAF 3 -->
-      <div class="leaf" id="leaf-3">
-        <!-- FRONT: Page 5 - CSAT Alert -->
-        <div class="page front">
+      <!-- PAGE 3: CSAT ALERT -->
+      <div class="page" id="page-3" onclick="turnNext()">
+        <div class="page-content">
           <div class="header-branding">
             <h2>CSAT Emergency Alert</h2><p>Critical Action Required</p>
           </div>
-          <div class="alert-box alert-danger">
+          <div class="alert-box alert-danger mag-section">
             <strong>⚠️ PRIORITY ONE:</strong> Customer satisfaction dropped sharply from 17% to 10% in August. Root cause investigation is mandatory for Sept.
           </div>
           <div class="mag-section">
             <div class="section-title">🔻 Weekly CSAT Decline</div>
-            <div class="chart-box"><canvas id="chart3"></canvas></div>
+            <div class="chart-box"><canvas id="chart2"></canvas></div>
           </div>
-          <div class="page-num">Page 5</div>
         </div>
-        <!-- BACK: Page 6 - Merchant -->
-        <div class="page back">
+        <div class="page-num">Page 3</div>
+      </div>
+
+      <!-- PAGE 4: MERCHANT OPS -->
+      <div class="page" id="page-4" onclick="turnNext()">
+        <div class="page-content">
           <div class="header-branding">
             <h2>Merchant Operations</h2><p>Partner Call Volume</p>
           </div>
@@ -388,142 +401,104 @@
             <div class="metric-card"><div class="metric-val" style="color:#10B981;">92%</div><div class="metric-lbl">Merchant CSAT</div></div>
           </div>
           <div class="mag-section">
-            <div class="section-title">📊 Answer vs Offered</div>
-            <div class="chart-box"><canvas id="chart4"></canvas></div>
+            <div class="section-title">📊 Answer vs Offered Trend</div>
+            <div class="chart-box"><canvas id="chart3"></canvas></div>
           </div>
-          <div class="page-num">Page 6</div>
         </div>
+        <div class="page-num">Page 4</div>
       </div>
 
-      <!-- LEAF 4 -->
-      <div class="leaf" id="leaf-4">
-        <!-- FRONT: Page 7 - Rider Support -->
-        <div class="page front">
-          <div class="header-branding">
-            <h2>Delivery Support</h2><p>Rider Fleet Operations</p>
-          </div>
-          <div class="mag-section grid-2">
-            <div class="metric-card"><div class="metric-val">108.6K</div><div class="metric-lbl">Calls Handled</div></div>
-            <div class="metric-card"><div class="metric-val" style="color:#10B981;">95%</div><div class="metric-lbl">Rider CSAT</div></div>
-          </div>
-          <div class="alert-box alert-warning mag-section">
-            <strong>⚠️ Week 4 Pressure:</strong> Rider contacts peaked at 30.8K in Week 4, dropping the 10s Service Level SLA down to 54%.
-          </div>
-          <div class="page-num">Page 7</div>
-        </div>
-        <!-- BACK: Page 8 - Onboarding -->
-        <div class="page back">
-          <div class="header-branding">
-            <h2>Network Onboarding</h2><p>Restaurant Funnel</p>
-          </div>
-          <div class="alert-box alert-danger">
-            <strong>📍 Backlog Bottleneck:</strong> 10,780 restaurants are stuck in the onboarding queue waiting for activation.
-          </div>
-          <div class="mag-section">
-            <div class="section-title">🔻 Onboarding Funnel</div>
-            <div class="chart-box"><canvas id="chart5"></canvas></div>
-          </div>
-          <div class="page-num">Page 8</div>
-        </div>
-      </div>
-
-      <!-- LEAF 5 -->
-      <div class="leaf" id="leaf-5">
-        <!-- FRONT: Page 9 - Roadmap -->
-        <div class="page front">
-          <div class="header-branding">
-            <h2>September Plan</h2><p>Strategic Priorities</p>
-          </div>
-          <div class="mag-section">
-            <div class="section-title">🎯 Top 3 Priorities</div>
-            <ul style="padding-left: 18px; font-size: 13px; line-height: 1.8;">
-              <li><strong>CSAT Recovery:</strong> Resolve root drivers for the 17% → 10% dip.</li>
-              <li><strong>Clear Backlog:</strong> Push the 10.7K stuck merchant queue.</li>
-              <li><strong>Hyderabad Ops:</strong> Stabilize scaling post-Sep 7 launch.</li>
+      <!-- PAGE 5: EXACT SCREENSHOT MATCH (Final Page) -->
+      <div class="page" id="page-5" onclick="turnPrev()">
+        <div class="page-content" style="background: #FAFAFA;">
+          <div class="final-page-header">TECH ROADMAP & STRATEGIC PRIORITIES</div>
+          
+          <div class="final-card mag-section">
+            <h3>🎯 September Key Priorities</h3>
+            <ul class="final-list">
+              <li><strong>#1 CSAT Investigation:</strong> Resolve root drivers for the 17% → 10% CSAT dip.</li>
+              <li><strong>#2 Clear Onboarding Backlog:</strong> Activate 10.7K stuck merchant queue.</li>
+              <li><strong>#3 Stabilize Week 4 Peaks:</strong> Enhance shift scheduling for Merchant & Driver channels.</li>
+              <li><strong>#4 Hyderabad Operations:</strong> Ensure smooth ops post-Sep 7 launch.</li>
             </ul>
           </div>
-          <div class="mag-section">
-            <div class="section-title">🚀 Tech Rollouts</div>
-            <div style="font-size: 12px; color: var(--text-muted); line-height: 1.6;">
-              • Real-Time Operation Dashboards<br>
-              • SLA Automated Alerting<br>
-              • Chatwoot Profile Integration
-            </div>
-          </div>
-          <div class="page-num">Page 9</div>
-        </div>
-        <!-- BACK: Back Cover -->
-        <div class="page back hard-cover">
-          <div class="cover-inner" style="border:none; justify-content: flex-end;">
-            <div style="font-size: 24px; font-family: 'Playfair Display'; margin-bottom: 5px;">OWNLY</div>
-            <div style="color: var(--pink-primary); font-size: 12px; letter-spacing: 2px;">CONFIDENTIAL</div>
+
+          <div class="final-card mag-section">
+            <h3>🚀 Tech Roadmap Highlights</h3>
+            <ul class="road-list">
+              <li>Real-Time Operational Dashboards</li>
+              <li>SLA Breach Automated Alerting</li>
+              <li>Chatwoot Calling & Profile Integration</li>
+              <li>AI-Powered Customer Refund Automations</li>
+            </ul>
           </div>
         </div>
+        <div class="page-num">Page 5 (End)</div>
       </div>
 
     </div>
   </div>
 
   <script>
-    // --- 3D BOOK ENGINE LOGIC ---
-    let currentLeaf = 0;
-    const totalLeaves = 5;
-
-    // Initialize Z-indexes securely so right stack looks correct
-    function initBook() {
-      for (let i = 1; i <= totalLeaves; i++) {
-        document.getElementById(`leaf-${i}`).style.zIndex = totalLeaves - i + 1;
-      }
-    }
-    initBook();
-
-    function flipNext() {
-      if (currentLeaf < totalLeaves) {
-        currentLeaf++;
-        let leaf = document.getElementById(`leaf-${currentLeaf}`);
-        leaf.classList.add('flipped');
-        
-        // Change Z-index exactly halfway through the CSS transition (400ms) 
-        // to prevent clipping against other pages.
-        setTimeout(() => { leaf.style.zIndex = currentLeaf; }, 400);
-      }
-    }
-
-    function flipPrev() {
-      if (currentLeaf > 0) {
-        let leaf = document.getElementById(`leaf-${currentLeaf}`);
-        leaf.classList.remove('flipped');
-        
-        setTimeout(() => { leaf.style.zIndex = totalLeaves - currentLeaf + 1; }, 400);
-        currentLeaf--;
-      }
-    }
-
-    // --- SCENE TRANSITIONS & CHARTS ---
+    let currentStep = 1;
+    const maxSteps = 5;
     let chartsRendered = false;
 
+    // Open Book
     function openBook() {
       document.getElementById('teaser-screen').style.opacity = '0';
       setTimeout(() => {
         document.getElementById('teaser-screen').style.display = 'none';
         document.getElementById('book-viewport').style.display = 'flex';
-        if (!chartsRendered) renderCharts();
+        
+        // Timeout ensures container has dimensions BEFORE charts draw, preventing them from being invisible
+        if (!chartsRendered) {
+            setTimeout(renderCharts, 200);
+        }
       }, 500);
     }
 
+    // Close Book
     function closeBook() {
-      // Unflip all pages back to start
-      for (let i = currentLeaf; i > 0; i--) flipPrev();
-      
+      // Unflip all pages
+      for (let i = 1; i <= maxSteps; i++) {
+        const p = document.getElementById(`page-${i}`);
+        if (p) p.classList.remove('flipped');
+      }
+      currentStep = 1;
+
       document.getElementById('book-viewport').style.display = 'none';
       document.getElementById('teaser-screen').style.display = 'flex';
       setTimeout(() => { document.getElementById('teaser-screen').style.opacity = '1'; }, 50);
     }
 
+    // Single Page Turn (The "Perfect" Flip)
+    function turnNext() {
+      if (currentStep < maxSteps) {
+        const pageToFlip = document.getElementById(`page-${currentStep}`);
+        if (pageToFlip) {
+          pageToFlip.classList.add('flipped');
+        }
+        currentStep++;
+      }
+    }
+
+    // Go Backwards if clicking final page
+    function turnPrev() {
+      if (currentStep > 1) {
+        currentStep--;
+        const pageToUnflip = document.getElementById(`page-${currentStep}`);
+        if (pageToUnflip) {
+          pageToUnflip.classList.remove('flipped');
+        }
+      }
+    }
+
+    // CHART RENDER ENGINE
     function renderCharts() {
       chartsRendered = true;
       Chart.defaults.font.family = "'Plus Jakarta Sans', sans-serif";
-
+      
       // Chart 1: Distribution
       new Chart(document.getElementById('chart1'), {
         type: 'doughnut',
@@ -531,31 +506,30 @@
           labels: ['Customer', 'Driver', 'Merchant'],
           datasets: [{ data: [72.8, 23.2, 4.0], backgroundColor: ['#FF2E93', '#3B82F6', '#10B981'] }]
         },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels:{boxWidth:10, font:{size:10}} } } }
+        options: { 
+            responsive: true, 
+            maintainAspectRatio: false,
+            animation: { duration: 2000, easing: 'easeOutQuart' }, // Pop-up animation
+            plugins: { legend: { position: 'right', labels:{boxWidth:10, font:{size:11}} } } 
+        }
       });
 
-      // Chart 2: Wait Time
+      // Chart 2: CSAT Decline
       new Chart(document.getElementById('chart2'), {
         type: 'line',
         data: {
           labels: ['W1', 'W2', 'W3', 'W4'],
-          datasets: [{ label: 'Wait Time (m)', data: [13.2, 12.1, 11.0, 7.8], borderColor: '#FF2E93', backgroundColor: 'rgba(255,46,147,0.1)', fill: true, tension: 0.4 }]
+          datasets: [{ label: 'CSAT %', data: [17, 15, 12, 10], borderColor: '#EF4444', backgroundColor: 'rgba(239,68,68,0.15)', fill: true, tension: 0.3 }]
         },
-        options: { responsive: true, maintainAspectRatio: false }
+        options: { 
+            responsive: true, 
+            maintainAspectRatio: false,
+            animation: { duration: 2000, easing: 'easeOutQuart' } // Pop-up animation
+        }
       });
 
-      // Chart 3: CSAT Decline
+      // Chart 3: Merchant Calls
       new Chart(document.getElementById('chart3'), {
-        type: 'line',
-        data: {
-          labels: ['W1', 'W2', 'W3', 'W4'],
-          datasets: [{ label: 'CSAT %', data: [17, 15, 12, 10], borderColor: '#EF4444', backgroundColor: 'rgba(239,68,68,0.1)', fill: true }]
-        },
-        options: { responsive: true, maintainAspectRatio: false }
-      });
-
-      // Chart 4: Merchant Calls
-      new Chart(document.getElementById('chart4'), {
         type: 'bar',
         data: {
           labels: ['W1', 'W2', 'W3', 'W4'],
@@ -564,17 +538,11 @@
             { label: 'Answered', data: [3700, 3900, 4300, 4140], backgroundColor: '#10B981' }
           ]
         },
-        options: { responsive: true, maintainAspectRatio: false }
-      });
-
-      // Chart 5: Onboarding Funnel
-      new Chart(document.getElementById('chart5'), {
-        type: 'bar',
-        data: {
-          labels: ['Leads', 'Active', 'Stuck'],
-          datasets: [{ label: 'Count', data: [52108, 24191, 10780], backgroundColor: ['#6366F1', '#10B981', '#EF4444'] }]
-        },
-        options: { responsive: true, maintainAspectRatio: false, indexAxis: 'y' } // Horizontal funnel style
+        options: { 
+            responsive: true, 
+            maintainAspectRatio: false,
+            animation: { duration: 2000, easing: 'easeOutQuart' } // Pop-up animation
+        }
       });
     }
   </script>
