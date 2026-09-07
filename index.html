@@ -3,26 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ownly Operations Gazette - August 2026</title>
+  <title>Ownly Operations Gazette</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,900;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
   <style>
     :root {
       --bg-canvas: #121214;
       --pink-primary: #FF2E93;
-      --pink-soft: #FFF0F6;
-      --pink-border: #FFCCE1;
       --text-dark: #1E1B18;
       --text-muted: #66605C;
       --card-bg: #FFFFFF;
       --book-bg: #FAF8F5;
       --alert-red-bg: #FFEBEB;
-      --alert-red-border: #FFB3B3;
       --alert-green-bg: #EAF8F0;
-      --alert-green-border: #A3E4BF;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    
     body {
       background-color: var(--bg-canvas);
       font-family: 'Plus Jakarta Sans', sans-serif;
@@ -31,74 +29,98 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      overflow-x: hidden;
+      overflow: hidden;
       color: var(--text-dark);
     }
 
-    /* INITIAL TEASER SCREEN */
+    /* =========================================
+       1. SCOOTER TEASER SCREEN
+       ========================================= */
     #teaser-screen {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       min-height: 100vh;
-      width: 100%;
+      width: 100vw;
       cursor: pointer;
-      position: relative;
+      position: absolute;
+      top: 0; left: 0;
+      z-index: 1000;
+      background: var(--bg-canvas);
+      transition: opacity 0.5s ease;
     }
 
-    .scooter-container {
+    .scooter-track {
       position: relative;
-      width: 320px;
-      height: 220px;
-      animation: driveScooter 3s ease-in-out infinite alternate;
+      width: 400px;
+      height: 250px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
-    @keyframes driveScooter {
+    /* Driving Bounce Animation */
+    .scooter-wrapper {
+      position: relative;
+      width: 280px;
+      height: 200px;
+      animation: driveBounce 0.35s infinite alternate ease-in-out;
+      z-index: 5;
+    }
+
+    @keyframes driveBounce {
       0% { transform: translateY(0px) rotate(0deg); }
-      50% { transform: translateY(-8px) rotate(1deg); }
-      100% { transform: translateY(2px) rotate(-1deg); }
+      100% { transform: translateY(-5px) rotate(1deg); }
     }
 
-    .scooter-svg {
-      width: 100%;
-      height: 100%;
-      filter: drop-shadow(0 15px 10px rgba(0,0,0,0.5));
+    .scooter-svg { width: 100%; height: 100%; filter: drop-shadow(0 15px 12px rgba(0,0,0,0.6)); }
+
+    /* Spinning Wheels */
+    .wheel { animation: spinWheel 0.3s linear infinite; }
+    @keyframes spinWheel { 100% { transform: rotate(360deg); } }
+
+    /* Animated Speed Lines for Illusion of Movement */
+    .road-line {
+      position: absolute;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, #FF2E93, transparent);
+      border-radius: 2px;
+      animation: speedLine 0.8s infinite linear;
+      opacity: 0;
+    }
+    .line-1 { width: 120px; top: 80%; animation-delay: 0s; }
+    .line-2 { width: 80px; top: 40%; animation-delay: 0.2s; }
+    .line-3 { width: 160px; top: 60%; animation-delay: 0.4s; }
+
+    @keyframes speedLine {
+      0% { left: 100%; opacity: 1; }
+      100% { left: -20%; opacity: 0; }
     }
 
     .teaser-banner {
-      margin-top: 25px;
+      margin-top: 10px;
       background: linear-gradient(135deg, #FF2E93, #FF6B00);
       color: white;
-      padding: 16px 36px;
+      padding: 16px 40px;
       border-radius: 50px;
       font-family: 'Playfair Display', serif;
       font-size: 24px;
       font-weight: 700;
       box-shadow: 0 10px 30px rgba(255, 46, 147, 0.4);
-      letter-spacing: 1px;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      display: flex;
-      align-items: center;
-      gap: 12px;
+      transition: transform 0.3s ease;
+      z-index: 10;
     }
 
-    #teaser-screen:hover .teaser-banner {
-      transform: scale(1.05);
-      box-shadow: 0 15px 40px rgba(255, 46, 147, 0.6);
-    }
+    #teaser-screen:hover .teaser-banner { transform: scale(1.05); }
+    .teaser-hint { color: #A1A1AA; margin-top: 14px; font-size: 14px; z-index: 10; }
 
-    .teaser-hint {
-      color: #A1A1AA;
-      margin-top: 12px;
-      font-size: 14px;
-      letter-spacing: 0.5px;
-    }
-
-    /* BOOK VIEWPORT & 3D WRAPPER */
+    /* =========================================
+       2. REAL 3D BOOK ENGINE
+       ========================================= */
     #book-viewport {
       display: none;
-      perspective: 2200px;
+      perspective: 1800px;
       width: 100vw;
       height: 100vh;
       align-items: center;
@@ -106,679 +128,437 @@
       position: relative;
     }
 
-    .book-container {
-      width: 820px;
-      height: 960px;
+    .home-btn {
+      position: fixed;
+      top: 20px; left: 20px;
+      background: #27272A; color: white;
+      border: 1px solid #3F3F46; padding: 10px 18px;
+      border-radius: 30px; cursor: pointer; font-size: 13px; font-weight: 600;
+      z-index: 100; transition: background 0.2s;
+    }
+    .home-btn:hover { background: var(--pink-primary); }
+
+    #book-container {
       position: relative;
-      transform-style: preserve-3d;
-      transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+      width: 960px; 
+      height: 650px;
+      display: flex;
     }
 
-    /* PAGES GENERAL */
-    .page {
+    /* Interactive Click Zones */
+    .click-zone {
       position: absolute;
-      width: 100%;
-      height: 100%;
-      top: 0;
-      left: 0;
-      background-color: var(--book-bg);
-      border-radius: 4px 16px 16px 4px;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+      top: 0; width: 50%; height: 100%;
+      z-index: 50; cursor: pointer;
+    }
+    .click-zone.left { left: 0; }
+    .click-zone.right { right: 0; }
+    
+    /* Hint arrows */
+    .turn-hint {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      background: rgba(0,0,0,0.6); color: white;
+      padding: 15px; border-radius: 50%;
+      opacity: 0; transition: opacity 0.3s; pointer-events: none;
+    }
+    .click-zone.left:hover .turn-hint { opacity: 1; left: 20px; }
+    .click-zone.right:hover .turn-hint { opacity: 1; right: 20px; }
+
+    /* The individual leaves of the book */
+    .leaf {
+      position: absolute;
+      top: 0; left: 50%;
+      width: 50%; height: 100%;
       transform-origin: left center;
       transform-style: preserve-3d;
-      transition: transform 1.2s cubic-bezier(0.645, 0.045, 0.355, 1);
-      cursor: pointer;
-      overflow: hidden;
-      user-select: none;
+      transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
     }
 
-    .page-content {
-      width: 100%;
-      height: 100%;
-      padding: 40px;
-      position: relative;
-      overflow-y: auto;
+    .leaf.flipped { transform: rotateY(-180deg); }
+
+    /* Front and Back of each leaf */
+    .page {
+      position: absolute;
+      width: 100%; height: 100%;
       backface-visibility: hidden;
-    }
-
-    /* HARD COVER PAGE (PAGE 1) */
-    .page.hard-cover {
-      background: linear-gradient(145deg, #1A1A1E, #2A2A30);
-      border: 4px solid #3F3F46;
-      box-shadow: 0 25px 60px rgba(0,0,0,0.8), inset 0 0 20px rgba(0,0,0,0.8);
-      border-radius: 6px 18px 18px 6px;
-      color: #FFFFFF;
-    }
-
-    .hard-cover .cover-border {
-      border: 2px solid var(--pink-primary);
-      height: 100%;
-      border-radius: 12px;
-      padding: 40px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: space-between;
-      text-align: center;
-      background: radial-gradient(circle at center, rgba(255,46,147,0.08) 0%, transparent 70%);
-    }
-
-    .cover-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 52px;
-      font-weight: 900;
-      letter-spacing: -1px;
-      color: #FFFFFF;
-      line-height: 1.1;
-      text-transform: uppercase;
-      margin-top: 40px;
-    }
-
-    .cover-subtitle {
-      font-size: 20px;
-      color: var(--pink-primary);
-      font-weight: 600;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      margin-top: 15px;
-    }
-
-    .cover-footer {
-      font-size: 14px;
-      color: #A1A1AA;
-      letter-spacing: 1px;
-    }
-
-    .hard-turn-indicator {
-      background: rgba(255,255,255,0.1);
-      padding: 10px 20px;
-      border-radius: 20px;
-      font-size: 12px;
-      border: 1px solid rgba(255,255,255,0.2);
-    }
-
-    /* SOFT PAGES (PAGE 2 TO 9) */
-    .page.soft-page {
       background-color: var(--book-bg);
-      border-left: 2px solid rgba(0,0,0,0.1);
+      padding: 40px;
+      overflow: hidden;
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.02);
     }
 
-    /* PAGE FLIP STATES */
-    .page.flipped {
-      transform: rotateY(-180deg);
+    .page.front {
+      transform: rotateY(0deg);
+      border-radius: 0 12px 12px 0;
+      background: linear-gradient(to right, #E5E0DB 0%, var(--book-bg) 4%, var(--book-bg) 100%);
     }
 
-    /* MAGNIFIER HOVER EFFECT ON SECTIONS */
-    .mag-section {
-      transition: transform 0.3s ease, box-shadow 0.3s ease, z-index 0.3s ease;
-      position: relative;
-      border-radius: 12px;
-      background: var(--card-bg);
-      padding: 16px;
-      margin-bottom: 16px;
-      border: 1px solid rgba(0,0,0,0.06);
+    .page.back {
+      transform: rotateY(180deg);
+      border-radius: 12px 0 0 12px;
+      background: linear-gradient(to left, #E5E0DB 0%, var(--book-bg) 4%, var(--book-bg) 100%);
     }
 
-    .mag-section:hover {
-      transform: scale(1.03);
-      box-shadow: 0 12px 30px rgba(0,0,0,0.15);
-      z-index: 10;
+    /* Hard Cover Styling */
+    .page.hard-cover {
+      background: linear-gradient(145deg, #1A1A1E, #2A2A30) !important;
+      color: white;
+      border: 2px solid #3F3F46;
     }
-
-    /* POPUP ANIMATION FOR CHARTS */
-    .chart-popup-target {
-      opacity: 0;
-      transform: scale(0.85) translateY(20px);
-      transition: opacity 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-
-    .page.active-page .chart-popup-target {
-      opacity: 1;
-      transform: scale(1) translateY(0);
-    }
-
-    /* CONTENT UI STYLES */
-    .header-branding {
+    
+    .cover-inner {
+      border: 2px solid var(--pink-primary);
+      height: 100%; border-radius: 8px; padding: 30px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
       text-align: center;
-      border-bottom: 2px solid var(--text-dark);
-      padding-bottom: 12px;
-      margin-bottom: 20px;
-    }
-
-    .header-branding h2 {
-      font-family: 'Playfair Display', serif;
-      font-size: 32px;
-      font-weight: 900;
-      color: var(--text-dark);
-    }
-
-    .header-branding p {
-      font-size: 12px;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-    .grid-4 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-
-    .metric-card {
-      text-align: center;
-      background: var(--card-bg);
-      padding: 14px;
-      border-radius: 10px;
-      border: 1px solid #E5E7EB;
-    }
-
-    .metric-val {
-      font-family: 'Playfair Display', serif;
-      font-size: 28px;
-      font-weight: 700;
-      color: var(--pink-primary);
-    }
-
-    .metric-lbl {
-      font-size: 11px;
-      color: var(--text-muted);
-      font-weight: 600;
-      text-transform: uppercase;
-      margin-top: 4px;
-    }
-
-    .alert-box {
-      padding: 14px;
-      border-radius: 8px;
-      font-size: 13px;
-      margin-bottom: 16px;
-      line-height: 1.4;
-    }
-
-    .alert-danger {
-      background-color: var(--alert-red-bg);
-      border-left: 4px solid #EF4444;
-      color: #991B1B;
-    }
-
-    .alert-warning {
-      background-color: #FEF3C7;
-      border-left: 4px solid #F59E0B;
-      color: #92400E;
-    }
-
-    .section-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 20px;
-      font-weight: 700;
-      margin-bottom: 12px;
-      color: var(--text-dark);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .chart-box {
-      position: relative;
-      height: 220px;
-      width: 100%;
-    }
-
-    .blank-page-notice {
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #A1A1AA;
-      font-style: italic;
-      font-family: 'Playfair Display', serif;
+      background: radial-gradient(circle at center, rgba(255,46,147,0.1) 0%, transparent 70%);
     }
 
     .page-num {
-      position: absolute;
-      bottom: 15px;
-      right: 20px;
-      font-size: 12px;
-      color: var(--text-muted);
-      font-weight: 600;
+      position: absolute; bottom: 15px; font-size: 11px;
+      color: var(--text-muted); font-weight: 600;
+    }
+    .page.front .page-num { right: 20px; }
+    .page.back .page-num { left: 20px; }
+
+    /* =========================================
+       3. CONTENT & CHARTS UI
+       ========================================= */
+    .header-branding { border-bottom: 2px solid var(--text-dark); padding-bottom: 10px; margin-bottom: 16px; text-align: center; }
+    .header-branding h2 { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 900; }
+    .header-branding p { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    
+    .mag-section {
+      background: var(--card-bg); padding: 14px; margin-bottom: 14px;
+      border-radius: 8px; border: 1px solid #E5E7EB;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.03);
     }
 
-    /* BACK BUTTON TO RETURN TO SCOOTER */
-    .home-btn {
-      position: fixed;
-      top: 20px;
-      left: 20px;
-      background: #27272A;
-      color: white;
-      border: 1px solid #3F3F46;
-      padding: 10px 18px;
-      border-radius: 30px;
-      cursor: pointer;
-      font-size: 13px;
-      font-weight: 600;
-      z-index: 100;
-      transition: background 0.2s;
-    }
+    .metric-card { text-align: center; padding: 10px; background: #F9FAFB; border-radius: 6px; border: 1px solid #F3F4F6;}
+    .metric-val { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: var(--pink-primary); }
+    .metric-lbl { font-size: 10px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; margin-top: 4px; }
 
-    .home-btn:hover { background: var(--pink-primary); }
+    .section-title { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; margin-bottom: 10px; color: var(--text-dark); }
+    
+    .chart-box { position: relative; height: 180px; width: 100%; }
+    
+    .alert-box { padding: 12px; border-radius: 6px; font-size: 12px; margin-bottom: 14px; line-height: 1.4; }
+    .alert-danger { background: var(--alert-red-bg); border-left: 4px solid #EF4444; color: #991B1B; }
+    .alert-warning { background: #FEF3C7; border-left: 4px solid #F59E0B; color: #92400E; }
+    
+    .blank-page { height: 100%; display: flex; align-items: center; justify-content: center; color: #A1A1AA; font-style: italic; }
   </style>
 </head>
 <body>
 
+  <!-- =========================================
+       SCENE 1: ANIMATED TEASER
+       ========================================= -->
   <div id="teaser-screen" onclick="openBook()">
-    <div class="scooter-container">
-      <svg class="scooter-svg" viewBox="0 0 300 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M50 150 C50 165 65 175 80 175 C95 175 110 165 110 150" stroke="#FF2E93" stroke-width="8" stroke-linecap="round"/>
-        <circle cx="80" cy="150" r="22" fill="#27272A" stroke="#E4E4E7" stroke-width="6"/>
-        <circle cx="220" cy="150" r="22" fill="#27272A" stroke="#E4E4E7" stroke-width="6"/>
-        <path d="M80 150 L110 100 L160 100 L180 150 Z" fill="#FF2E93"/>
-        <rect x="50" y="60" width="55" height="50" rx="6" fill="#FF2E93" stroke="#FFFFFF" stroke-width="2"/>
-        <path d="M50 80 H105" stroke="#FFFFFF" stroke-width="2"/>
-        <text x="56" y="75" fill="#FFFFFF" font-size="10" font-weight="bold" font-family="sans-serif">OWNLY</text>
-        <path d="M120 95 C140 95 155 105 165 120 H115 Z" fill="#18181B"/>
-        <path d="M220 150 L200 80 L180 75" stroke="#D4D4D8" stroke-width="6" stroke-linecap="round"/>
-        <circle cx="180" cy="75" r="8" fill="#FF2E93"/>
-        <path d="M20 100 H35 M10 120 H30 M25 140 H40" stroke="#FF2E93" stroke-width="3" stroke-linecap="round"/>
-      </svg>
-    </div>
+    <div class="scooter-track">
+      <div class="road-line line-1"></div>
+      <div class="road-line line-2"></div>
+      <div class="road-line line-3"></div>
 
-    <div class="teaser-banner">
-      <span>🛵 Ownly News Letter</span>
+      <div class="scooter-wrapper">
+        <svg class="scooter-svg" viewBox="0 0 300 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Back Wheel -->
+          <g class="wheel" style="transform-origin: 80px 150px;">
+            <circle cx="80" cy="150" r="22" fill="#27272A" stroke="#E4E4E7" stroke-width="6"/>
+            <line x1="80" y1="128" x2="80" y2="172" stroke="#E4E4E7" stroke-width="2"/>
+            <line x1="58" y1="150" x2="102" y2="150" stroke="#E4E4E7" stroke-width="2"/>
+          </g>
+          <!-- Front Wheel -->
+          <g class="wheel" style="transform-origin: 220px 150px;">
+            <circle cx="220" cy="150" r="22" fill="#27272A" stroke="#E4E4E7" stroke-width="6"/>
+            <line x1="220" y1="128" x2="220" y2="172" stroke="#E4E4E7" stroke-width="2"/>
+            <line x1="198" y1="150" x2="242" y2="150" stroke="#E4E4E7" stroke-width="2"/>
+          </g>
+          <!-- Body -->
+          <path d="M80 150 L110 100 L160 100 L180 150 Z" fill="#FF2E93"/>
+          <rect x="45" y="55" width="60" height="55" rx="6" fill="#FF2E93" stroke="#FFFFFF" stroke-width="2"/>
+          <path d="M45 80 H105" stroke="#FFFFFF" stroke-width="2"/>
+          <text x="52" y="72" fill="#FFFFFF" font-size="11" font-weight="bold" font-family="sans-serif">OWNLY</text>
+          <path d="M120 95 C140 95 155 105 165 120 H115 Z" fill="#18181B"/>
+          <path d="M220 150 L200 80 L180 75" stroke="#D4D4D8" stroke-width="6" stroke-linecap="round"/>
+          <circle cx="180" cy="75" r="8" fill="#FF2E93"/>
+        </svg>
+      </div>
     </div>
-    <div class="teaser-hint">Click anywhere to open interactive edition</div>
+    
+    <div class="teaser-banner">🛵 Ownly News Letter</div>
+    <div class="teaser-hint">Click anywhere to open the report</div>
   </div>
 
+  <!-- =========================================
+       SCENE 2: INTERACTIVE 3D BOOK
+       ========================================= -->
   <div id="book-viewport">
-    <button class="home-btn" onclick="closeBook()">← Back to Scooter</button>
+    <button class="home-btn" onclick="closeBook()">← Back to Start</button>
 
-    <div class="book-container" id="bookContainer">
-
-      <div class="page hard-cover active-page" id="page-1" onclick="turnPage(1)">
-        <div class="page-content">
-          <div class="cover-border">
-            <div>
-              <div style="font-size: 14px; letter-spacing: 3px; color: #A1A1AA;">SPECIAL EXECUTIVE EDITION</div>
-              <div class="cover-title">THE OPERATIONS GAZETTE</div>
-              <div class="cover-subtitle">August 2026 Monthly Digest</div>
-            </div>
-            
-            <div style="margin: 40px 0;">
-              <div style="width: 80px; height: 3px; background: var(--pink-primary); margin: 0 auto 20px auto;"></div>
-              <p style="color: #D4D4D8; font-size: 15px; max-width: 400px; line-height: 1.6;">
-                Comprehensive operational analysis covering Order Surges, Customer Support Metrics, Partner Networks, and Expansion Roadmaps.
-              </p>
-            </div>
-
-            <div>
-              <div class="hard-turn-indicator">Click anywhere to flip cover →</div>
-              <div class="cover-footer" style="margin-top: 20px;">Vol. VIII No. 8 • Rapido Zero-Commission Model</div>
-            </div>
-          </div>
-        </div>
-        <div class="page-num">Cover</div>
+    <div id="book-container">
+      
+      <!-- Click controls mapping over the book -->
+      <div class="click-zone left" onclick="flipPrev()">
+        <div class="turn-hint">← Prev</div>
+      </div>
+      <div class="click-zone right" onclick="flipNext()">
+        <div class="turn-hint">Next →</div>
       </div>
 
-      <div class="page soft-page" id="page-2" onclick="turnPage(2)">
-        <div class="page-content">
-          <div class="blank-page-notice">
-            [ Page 2 — Intentionally Left Blank ]
+      <!-- LEAF 1 -->
+      <div class="leaf" id="leaf-1">
+        <!-- FRONT: Cover -->
+        <div class="page front hard-cover">
+          <div class="cover-inner">
+            <div style="font-size: 12px; letter-spacing: 3px; color: #A1A1AA;">EXECUTIVE EDITION</div>
+            <h1 style="font-family: 'Playfair Display', serif; font-size: 38px; font-weight: 900; margin: 20px 0 10px;">THE OPERATIONS GAZETTE</h1>
+            <div style="font-size: 16px; color: var(--pink-primary); font-weight: 600; letter-spacing: 2px;">August 2026 Digest</div>
+            <div style="width: 60px; height: 3px; background: var(--pink-primary); margin: 30px auto;"></div>
+            <p style="color: #D4D4D8; font-size: 13px; max-width: 300px; line-height: 1.6;">
+              Deep-dive operational analysis covering Order Surges, Customer Support, and Expansion Roadmaps.
+            </p>
           </div>
         </div>
-        <div class="page-num">2</div>
+        <!-- BACK: Blank -->
+        <div class="page back"><div class="blank-page">[ Page Intentionally Blank ]</div></div>
       </div>
 
-      <div class="page soft-page" id="page-3" onclick="turnPage(3)">
-        <div class="page-content">
+      <!-- LEAF 2 -->
+      <div class="leaf" id="leaf-2">
+        <!-- FRONT: Page 3 - Platform -->
+        <div class="page front">
           <div class="header-branding">
-            <h2>August at a Glance</h2>
-            <p>Platform-Wide Snapshot — All Verticals Combined</p>
+            <h2>August at a Glance</h2><p>Platform Snapshot</p>
           </div>
-
           <div class="mag-section grid-3">
-            <div class="metric-card">
-              <div class="metric-val">4.85M+</div>
-              <div class="metric-lbl">Total Orders</div>
-            </div>
-            <div class="metric-card">
-              <div class="metric-val">341K</div>
-              <div class="metric-lbl">Chat Sessions</div>
-            </div>
-            <div class="metric-card">
-              <div class="metric-val">127K</div>
-              <div class="metric-lbl">Total Calls</div>
-            </div>
+            <div class="metric-card"><div class="metric-val">4.85M</div><div class="metric-lbl">Total Orders</div></div>
+            <div class="metric-card"><div class="metric-val">341K</div><div class="metric-lbl">Chats</div></div>
+            <div class="metric-card"><div class="metric-val">127K</div><div class="metric-lbl">Calls</div></div>
           </div>
-
           <div class="mag-section">
-            <div class="section-title">📊 Support Contact Distribution</div>
-            <div class="chart-box chart-popup-target">
-              <canvas id="chartPage3"></canvas>
-            </div>
+            <div class="section-title">📊 Contact Distribution</div>
+            <div class="chart-box"><canvas id="chart1"></canvas></div>
           </div>
-
-          <div class="mag-section grid-2">
-            <div class="metric-card">
-              <div class="metric-val" style="color: #10B981;">34,971</div>
-              <div class="metric-lbl">Restaurants Onboarded</div>
-            </div>
-            <div class="metric-card">
-              <div class="metric-val" style="color: #3B82F6;">Sep 7</div>
-              <div class="metric-lbl">Hyderabad Launch</div>
-            </div>
-          </div>
+          <div class="page-num">Page 3</div>
         </div>
-        <div class="page-num">3</div>
+        <!-- BACK: Page 4 - Customer Support -->
+        <div class="page back">
+          <div class="header-branding">
+            <h2>Customer Support</h2><p>Performance Metrics</p>
+          </div>
+          <div class="mag-section grid-2">
+            <div class="metric-card"><div class="metric-val">341,216</div><div class="metric-lbl">Chats Offered</div></div>
+            <div class="metric-card"><div class="metric-val">171,542</div><div class="metric-lbl">Handled</div></div>
+          </div>
+          <div class="mag-section">
+            <div class="section-title">📉 Wait Time Trend (AWT)</div>
+            <div class="chart-box"><canvas id="chart2"></canvas></div>
+          </div>
+          <div class="page-num">Page 4</div>
+        </div>
       </div>
 
-      <div class="page soft-page" id="page-4" onclick="turnPage(4)">
-        <div class="page-content">
+      <!-- LEAF 3 -->
+      <div class="leaf" id="leaf-3">
+        <!-- FRONT: Page 5 - CSAT Alert -->
+        <div class="page front">
           <div class="header-branding">
-            <h2>Customer Support</h2>
-            <p>Performance & Volume Analysis</p>
+            <h2>CSAT Emergency Alert</h2><p>Critical Action Required</p>
           </div>
-
-          <div class="mag-section grid-2">
-            <div class="metric-card">
-              <div class="metric-val">341,216</div>
-              <div class="metric-lbl">Chats Offered</div>
-            </div>
-            <div class="metric-card">
-              <div class="metric-val">171,542</div>
-              <div class="metric-lbl">Agent Handled</div>
-            </div>
+          <div class="alert-box alert-danger">
+            <strong>⚠️ PRIORITY ONE:</strong> Customer satisfaction dropped sharply from 17% to 10% in August. Root cause investigation is mandatory for Sept.
           </div>
-
-          <div class="mag-section grid-2">
-            <div class="metric-card">
-              <div class="metric-val">20%</div>
-              <div class="metric-lbl">Contact Ratio</div>
-            </div>
-            <div class="metric-card">
-              <div class="metric-val">7m 53s</div>
-              <div class="metric-lbl">Week 4 AWT</div>
-            </div>
-          </div>
-
           <div class="mag-section">
-            <div class="section-title">📉 Wait Time Trend (AWT Breakthrough)</div>
-            <div class="chart-box chart-popup-target">
-              <canvas id="chartPage4"></canvas>
-            </div>
+            <div class="section-title">🔻 Weekly CSAT Decline</div>
+            <div class="chart-box"><canvas id="chart3"></canvas></div>
           </div>
+          <div class="page-num">Page 5</div>
         </div>
-        <div class="page-num">4</div>
+        <!-- BACK: Page 6 - Merchant -->
+        <div class="page back">
+          <div class="header-branding">
+            <h2>Merchant Operations</h2><p>Partner Call Volume</p>
+          </div>
+          <div class="mag-section grid-2">
+            <div class="metric-card"><div class="metric-val">18,925</div><div class="metric-lbl">Calls Offered</div></div>
+            <div class="metric-card"><div class="metric-val" style="color:#10B981;">92%</div><div class="metric-lbl">Merchant CSAT</div></div>
+          </div>
+          <div class="mag-section">
+            <div class="section-title">📊 Answer vs Offered</div>
+            <div class="chart-box"><canvas id="chart4"></canvas></div>
+          </div>
+          <div class="page-num">Page 6</div>
+        </div>
       </div>
 
-      <div class="page soft-page" id="page-5" onclick="turnPage(5)">
-        <div class="page-content">
+      <!-- LEAF 4 -->
+      <div class="leaf" id="leaf-4">
+        <!-- FRONT: Page 7 - Rider Support -->
+        <div class="page front">
           <div class="header-branding">
-            <h2>Customer CSAT Alert</h2>
-            <p>Critical Action Required</p>
+            <h2>Delivery Support</h2><p>Rider Fleet Operations</p>
           </div>
-
-          <div class="alert-box alert-danger mag-section">
-            <strong>⚠️ CRITICAL ALERT:</strong> Customer satisfaction declined significantly during August. Root cause investigation is the primary priority for September.
-          </div>
-
-          <div class="mag-section">
-            <div class="section-title">🔻 CSAT Weekly Decline (17% → 10%)</div>
-            <div class="chart-box chart-popup-target">
-              <canvas id="chartPage5"></canvas>
-            </div>
-          </div>
-
           <div class="mag-section grid-2">
-            <div class="metric-card">
-              <div class="metric-val" style="color: #EF4444;">7,887</div>
-              <div class="metric-lbl">DSAT Responses</div>
-            </div>
-            <div class="metric-card">
-              <div class="metric-val">41%</div>
-              <div class="metric-lbl">Relative Drop</div>
-            </div>
+            <div class="metric-card"><div class="metric-val">108.6K</div><div class="metric-lbl">Calls Handled</div></div>
+            <div class="metric-card"><div class="metric-val" style="color:#10B981;">95%</div><div class="metric-lbl">Rider CSAT</div></div>
           </div>
-        </div>
-        <div class="page-num">5</div>
-      </div>
-
-      <div class="page soft-page" id="page-6" onclick="turnPage(6)">
-        <div class="page-content">
-          <div class="header-branding">
-            <h2>Merchant Support</h2>
-            <p>Partner Call Operations</p>
-          </div>
-
-          <div class="mag-section grid-4">
-            <div class="metric-card">
-              <div class="metric-val">18,925</div>
-              <div class="metric-lbl">Calls Offered</div>
-            </div>
-            <div class="metric-card">
-              <div class="metric-val">85%</div>
-              <div class="metric-lbl">Answer Level</div>
-            </div>
-            <div class="metric-card">
-              <div class="metric-val">4m 31s</div>
-              <div class="metric-lbl">Avg Handle Time</div>
-            </div>
-            <div class="metric-card">
-              <div class="metric-val" style="color: #10B981;">92%</div>
-              <div class="metric-lbl">Merchant CSAT</div>
-            </div>
-          </div>
-
-          <div class="mag-section">
-            <div class="section-title">📊 Weekly Call Volumes & Answered</div>
-            <div class="chart-box chart-popup-target">
-              <canvas id="chartPage6"></canvas>
-            </div>
-          </div>
-        </div>
-        <div class="page-num">6</div>
-      </div>
-
-      <div class="page soft-page" id="page-7" onclick="turnPage(7)">
-        <div class="page-content">
-          <div class="header-branding">
-            <h2>Delivery Support</h2>
-            <p>Rider Fleet Performance</p>
-          </div>
-
-          <div class="mag-section grid-4">
-            <div class="metric-card">
-              <div class="metric-val">108,607</div>
-              <div class="metric-lbl">Calls Offered</div>
-            </div>
-            <div class="metric-card">
-              <div class="metric-val">81%</div>
-              <div class="metric-lbl">Answer Rate</div>
-            </div>
-            <div class="metric-card">
-              <div class="metric-val">3m 53s</div>
-              <div class="metric-lbl">Avg Handle Time</div>
-            </div>
-            <div class="metric-card">
-              <div class="metric-val" style="color: #10B981;">95%</div>
-              <div class="metric-lbl">Rider CSAT</div>
-            </div>
-          </div>
-
           <div class="alert-box alert-warning mag-section">
-            <strong>⚠️ Week 4 Pressure Point:</strong> Rider contacts peaked at 30.8K in Week 4, causing 10s Service Level to drop to 54%.
+            <strong>⚠️ Week 4 Pressure:</strong> Rider contacts peaked at 30.8K in Week 4, dropping the 10s Service Level SLA down to 54%.
           </div>
+          <div class="page-num">Page 7</div>
         </div>
-        <div class="page-num">7</div>
+        <!-- BACK: Page 8 - Onboarding -->
+        <div class="page back">
+          <div class="header-branding">
+            <h2>Network Onboarding</h2><p>Restaurant Funnel</p>
+          </div>
+          <div class="alert-box alert-danger">
+            <strong>📍 Backlog Bottleneck:</strong> 10,780 restaurants are stuck in the onboarding queue waiting for activation.
+          </div>
+          <div class="mag-section">
+            <div class="section-title">🔻 Onboarding Funnel</div>
+            <div class="chart-box"><canvas id="chart5"></canvas></div>
+          </div>
+          <div class="page-num">Page 8</div>
+        </div>
       </div>
 
-      <div class="page soft-page" id="page-8" onclick="turnPage(8)">
-        <div class="page-content">
+      <!-- LEAF 5 -->
+      <div class="leaf" id="leaf-5">
+        <!-- FRONT: Page 9 - Roadmap -->
+        <div class="page front">
           <div class="header-branding">
-            <h2>Restaurant Onboarding</h2>
-            <p>Merchant Network Expansion</p>
+            <h2>September Plan</h2><p>Strategic Priorities</p>
           </div>
-
-          <div class="mag-section grid-2">
-            <div class="metric-card">
-              <div class="metric-val">52,108</div>
-              <div class="metric-lbl">Leads Worked</div>
-            </div>
-            <div class="metric-card">
-              <div class="metric-val" style="color: #10B981;">67%</div>
-              <div class="metric-lbl">Conversion Rate</div>
-            </div>
-          </div>
-
           <div class="mag-section">
-            <div class="section-title">🔻 Onboarding Funnel Breakdown</div>
-            <div class="chart-box chart-popup-target">
-              <canvas id="chartPage8"></canvas>
-            </div>
-          </div>
-
-          <div class="alert-box alert-danger mag-section">
-            <strong>📍 Backlog Focus:</strong> 10,780 restaurants are currently stuck in the onboarding queue. Priority focus for September.
-          </div>
-        </div>
-        <div class="page-num">8</div>
-      </div>
-
-      <div class="page soft-page" id="page-9" onclick="turnPage(9)">
-        <div class="page-content">
-          <div class="header-branding">
-            <h2>September Plan</h2>
-            <p>Tech Roadmap & Strategic Priorities</p>
-          </div>
-
-          <div class="mag-section">
-            <div class="section-title">🎯 September Key Priorities</div>
-            <ul style="padding-left: 20px; font-size: 13px; line-height: 1.8; color: var(--text-dark);">
-              <li><strong>#1 CSAT Investigation:</strong> Resolve root drivers for the 17% → 10% CSAT dip.</li>
-              <li><strong>#2 Clear Onboarding Backlog:</strong> Activate 10.7K stuck merchant queue.</li>
-              <li><strong>#3 Stabilize Week 4 Peaks:</strong> Enhance shift scheduling for Merchant & Driver channels.</li>
-              <li><strong>#4 Hyderabad Operations:</strong> Ensure smooth ops post-Sep 7 launch.</li>
+            <div class="section-title">🎯 Top 3 Priorities</div>
+            <ul style="padding-left: 18px; font-size: 13px; line-height: 1.8;">
+              <li><strong>CSAT Recovery:</strong> Resolve root drivers for the 17% → 10% dip.</li>
+              <li><strong>Clear Backlog:</strong> Push the 10.7K stuck merchant queue.</li>
+              <li><strong>Hyderabad Ops:</strong> Stabilize scaling post-Sep 7 launch.</li>
             </ul>
           </div>
-
           <div class="mag-section">
-            <div class="section-title">🚀 Tech Roadmap Highlights</div>
+            <div class="section-title">🚀 Tech Rollouts</div>
             <div style="font-size: 12px; color: var(--text-muted); line-height: 1.6;">
-              • Real-Time Operational Dashboards<br>
-              • SLA Breach Automated Alerting<br>
-              • Chatwoot Calling & Profile Integration<br>
-              • AI-Powered Customer Refund Automations
+              • Real-Time Operation Dashboards<br>
+              • SLA Automated Alerting<br>
+              • Chatwoot Profile Integration
             </div>
           </div>
+          <div class="page-num">Page 9</div>
         </div>
-        <div class="page-num">9</div>
+        <!-- BACK: Back Cover -->
+        <div class="page back hard-cover">
+          <div class="cover-inner" style="border:none; justify-content: flex-end;">
+            <div style="font-size: 24px; font-family: 'Playfair Display'; margin-bottom: 5px;">OWNLY</div>
+            <div style="color: var(--pink-primary); font-size: 12px; letter-spacing: 2px;">CONFIDENTIAL</div>
+          </div>
+        </div>
       </div>
 
     </div>
   </div>
 
   <script>
-    let currentPage = 1;
-    const totalPages = 9;
+    // --- 3D BOOK ENGINE LOGIC ---
+    let currentLeaf = 0;
+    const totalLeaves = 5;
+
+    // Initialize Z-indexes securely so right stack looks correct
+    function initBook() {
+      for (let i = 1; i <= totalLeaves; i++) {
+        document.getElementById(`leaf-${i}`).style.zIndex = totalLeaves - i + 1;
+      }
+    }
+    initBook();
+
+    function flipNext() {
+      if (currentLeaf < totalLeaves) {
+        currentLeaf++;
+        let leaf = document.getElementById(`leaf-${currentLeaf}`);
+        leaf.classList.add('flipped');
+        
+        // Change Z-index exactly halfway through the CSS transition (400ms) 
+        // to prevent clipping against other pages.
+        setTimeout(() => { leaf.style.zIndex = currentLeaf; }, 400);
+      }
+    }
+
+    function flipPrev() {
+      if (currentLeaf > 0) {
+        let leaf = document.getElementById(`leaf-${currentLeaf}`);
+        leaf.classList.remove('flipped');
+        
+        setTimeout(() => { leaf.style.zIndex = totalLeaves - currentLeaf + 1; }, 400);
+        currentLeaf--;
+      }
+    }
+
+    // --- SCENE TRANSITIONS & CHARTS ---
+    let chartsRendered = false;
 
     function openBook() {
-      document.getElementById('teaser-screen').style.display = 'none';
-      document.getElementById('book-viewport').style.display = 'flex';
-      initCharts();
+      document.getElementById('teaser-screen').style.opacity = '0';
+      setTimeout(() => {
+        document.getElementById('teaser-screen').style.display = 'none';
+        document.getElementById('book-viewport').style.display = 'flex';
+        if (!chartsRendered) renderCharts();
+      }, 500);
     }
 
     function closeBook() {
+      // Unflip all pages back to start
+      for (let i = currentLeaf; i > 0; i--) flipPrev();
+      
       document.getElementById('book-viewport').style.display = 'none';
       document.getElementById('teaser-screen').style.display = 'flex';
-      // Reset book state
-      for (let i = 1; i <= totalPages; i++) {
-        const p = document.getElementById(`page-${i}`);
-        p.classList.remove('flipped', 'active-page');
-      }
-      currentPage = 1;
-      document.getElementById('page-1').classList.add('active-page');
+      setTimeout(() => { document.getElementById('teaser-screen').style.opacity = '1'; }, 50);
     }
 
-    function turnPage(pageIndex) {
-      if (pageIndex === currentPage) {
-        // Forward Turn
-        const pageEl = document.getElementById(`page-${pageIndex}`);
-        pageEl.classList.add('flipped');
-        pageEl.classList.remove('active-page');
+    function renderCharts() {
+      chartsRendered = true;
+      Chart.defaults.font.family = "'Plus Jakarta Sans', sans-serif";
 
-        currentPage++;
-        if (currentPage <= totalPages) {
-          const nextPageEl = document.getElementById(`page-${currentPage}`);
-          nextPageEl.classList.add('active-page');
-        }
-      } else if (pageIndex === currentPage - 1) {
-        // Backward Turn
-        const pageEl = document.getElementById(`page-${pageIndex}`);
-        pageEl.classList.remove('flipped');
-        pageEl.classList.add('active-page');
-
-        const oldActive = document.getElementById(`page-${currentPage}`);
-        if(oldActive) oldActive.classList.remove('active-page');
-
-        currentPage--;
-      }
-    }
-
-    // INITIALIZE ALL 3D ANIMATED CHARTS
-    let chartsInitialized = false;
-    function initCharts() {
-      if (chartsInitialized) return;
-      chartsInitialized = true;
-
-      // Page 3 Chart (Donut Distribution)
-      new Chart(document.getElementById('chartPage3'), {
+      // Chart 1: Distribution
+      new Chart(document.getElementById('chart1'), {
         type: 'doughnut',
         data: {
-          labels: ['Customer Chats (72.8%)', 'Driver Calls (23.2%)', 'Merchant Calls (4.0%)'],
-          datasets: [{
-            data: [72.8, 23.2, 4.0],
-            backgroundColor: ['#FF2E93', '#3B82F6', '#10B981']
-          }]
+          labels: ['Customer', 'Driver', 'Merchant'],
+          datasets: [{ data: [72.8, 23.2, 4.0], backgroundColor: ['#FF2E93', '#3B82F6', '#10B981'] }]
         },
-        options: { responsive: true, maintainAspectRatio: false }
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels:{boxWidth:10, font:{size:10}} } } }
       });
 
-      // Page 4 Chart (AWT Trend)
-      new Chart(document.getElementById('chartPage4'), {
+      // Chart 2: Wait Time
+      new Chart(document.getElementById('chart2'), {
         type: 'line',
         data: {
-          labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
-          datasets: [{
-            label: 'Avg Wait Time (mins)',
-            data: [13.2, 12.1, 11.0, 7.88],
-            borderColor: '#FF2E93',
-            backgroundColor: 'rgba(255, 46, 147, 0.1)',
-            fill: true,
-            tension: 0.4
-          }]
+          labels: ['W1', 'W2', 'W3', 'W4'],
+          datasets: [{ label: 'Wait Time (m)', data: [13.2, 12.1, 11.0, 7.8], borderColor: '#FF2E93', backgroundColor: 'rgba(255,46,147,0.1)', fill: true, tension: 0.4 }]
         },
         options: { responsive: true, maintainAspectRatio: false }
       });
 
-      // Page 5 Chart (CSAT Drop)
-      new Chart(document.getElementById('chartPage5'), {
+      // Chart 3: CSAT Decline
+      new Chart(document.getElementById('chart3'), {
         type: 'line',
         data: {
-          labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
-          datasets: [{
-            label: 'CSAT %',
-            data: [17, 15, 12, 10],
-            borderColor: '#EF4444',
-            backgroundColor: 'rgba(239, 68, 68, 0.15)',
-            fill: true,
-            tension: 0.2
-          }]
+          labels: ['W1', 'W2', 'W3', 'W4'],
+          datasets: [{ label: 'CSAT %', data: [17, 15, 12, 10], borderColor: '#EF4444', backgroundColor: 'rgba(239,68,68,0.1)', fill: true }]
         },
         options: { responsive: true, maintainAspectRatio: false }
       });
 
-      // Page 6 Chart (Merchant Calls)
-      new Chart(document.getElementById('chartPage6'), {
+      // Chart 4: Merchant Calls
+      new Chart(document.getElementById('chart4'), {
         type: 'bar',
         data: {
-          labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+          labels: ['W1', 'W2', 'W3', 'W4'],
           datasets: [
             { label: 'Offered', data: [4200, 4500, 5000, 5230], backgroundColor: '#3B82F6' },
             { label: 'Answered', data: [3700, 3900, 4300, 4140], backgroundColor: '#10B981' }
@@ -787,18 +567,14 @@
         options: { responsive: true, maintainAspectRatio: false }
       });
 
-      // Page 8 Chart (Funnel)
-      new Chart(document.getElementById('chartPage8'), {
+      // Chart 5: Onboarding Funnel
+      new Chart(document.getElementById('chart5'), {
         type: 'bar',
         data: {
-          labels: ['Leads', 'Onboarded', 'Menus Pushed', 'Active', 'Stuck'],
-          datasets: [{
-            label: 'Count',
-            data: [52108, 34971, 31659, 24191, 10780],
-            backgroundColor: ['#6366F1', '#8B5CF6', '#EC4899', '#10B981', '#EF4444']
-          }]
+          labels: ['Leads', 'Active', 'Stuck'],
+          datasets: [{ label: 'Count', data: [52108, 24191, 10780], backgroundColor: ['#6366F1', '#10B981', '#EF4444'] }]
         },
-        options: { responsive: true, maintainAspectRatio: false }
+        options: { responsive: true, maintainAspectRatio: false, indexAxis: 'y' } // Horizontal funnel style
       });
     }
   </script>
