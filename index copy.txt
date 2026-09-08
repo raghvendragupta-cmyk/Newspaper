@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ownly Operations Gazette - August 2026 Edition</title>
+  
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,900;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-canvas: #121214;
+      --pink-primary: #FF2E93;
+      --pink-glow: rgba(255, 46, 147, 0.4);
+      --text-dark: #1E1B18;
+      --text-muted: #66605C;
+      --card-bg: #FFFFFF;
+      --book-bg: #FAF8F5;
+      --alert-red: #EF4444;
+      --alert-yellow: #F59E0B;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      background-color: var(--bg-canvas);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      color: var(--text-dark);
+      user-select: none;
+    }
+
+    /* =========================================
+       1. TEASER SCREEN (SCOOTER HIGHWAY)
+       ========================================= */
+    #teaser-screen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      width: 100vw;
+      cursor: pointer;
+      position: absolute;
+      top: 0; left: 0;
+      z-index: 1000;
+      background: var(--bg-canvas);
+      transition: opacity 0.5s ease;
+      overflow: hidden;
+    }
+
+    .highway-container {
+      position: relative;
+      width: 100vw;
+      height: 200px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+    }
+
+    .road-line {
+      position: absolute;
+      bottom: 20px;
+      width: 100%;
+      height: 2px;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .scooter-glider {
+      position: absolute;
+      bottom: 18px;
+      width: 240px;
+      height: 160px;
+      animation: driveSmooth 6s linear infinite;
+    }
+
+    @keyframes driveSmooth {
+      0%   { left: -260px; }
+      100% { left: 100vw; }
+    }
+
+    .wheel { animation: spinWheel 0.3s linear infinite; transform-origin: center; }
+    @keyframes spinWheel { 100% { transform: rotate(360deg); } }
+
+    .teaser-banner {
+      margin-top: 20px;
+      background: linear-gradient(135deg, #FF2E93, #FF6B00);
+      color: white;
+      padding: 16px 44px;
+      border-radius: 50px;
+      font-family: 'Playfair Display', serif;
+      font-size: 24px;
+      font-weight: 700;
+      box-shadow: 0 10px 30px var(--pink-glow);
+      transition: transform 0.3s ease;
+      z-index: 10;
+    }
+
+    #teaser-screen:hover .teaser-banner { transform: scale(1.06); }
+    .teaser-hint { color: #A1A1AA; margin-top: 14px; font-size: 14px; z-index: 10; }
+
+    /* =========================================
+       2. 3D BOOK & PAGE FLIP ENGINE
+       ========================================= */
+    #book-viewport {
+      display: none;
+      perspective: 2200px;
+      width: 100vw;
+      height: 100vh;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      background: #0D0D0F;
+    }
+
+    .top-header-title {
+      position: fixed;
+      top: 20px;
+      color: #A1A1AA;
+      font-size: 12px;
+      letter-spacing: 2px;
+      font-weight: 700;
+      text-transform: uppercase;
+      z-index: 100;
+    }
+
+    .nav-btn-top {
+      position: fixed;
+      top: 16px; left: 20px;
+      background: #27272A; color: white;
+      border: 1px solid #3F3F46; padding: 10px 20px;
+      border-radius: 30px; cursor: pointer; font-size: 13px; font-weight: 600;
+      z-index: 200; transition: all 0.2s;
+    }
+    .nav-btn-top:hover { background: var(--pink-primary); border-color: var(--pink-primary); }
+
+    /* Book Spread Shell */
+    #book-shell {
+      position: relative;
+      width: 960px;
+      height: 640px;
+      background: #18181B;
+      border-radius: 12px;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.8);
+      display: flex;
+    }
+
+    /* Center Spine Shadow */
+    #book-shell::after {
+      content: '';
+      position: absolute;
+      left: 50%; top: 0;
+      width: 30px; height: 100%;
+      transform: translateX(-50%);
+      background: linear-gradient(90deg, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.25) 100%);
+      z-index: 50;
+      pointer-events: none;
+    }
+
+    .leaf {
+      position: absolute;
+      top: 0; left: 50%;
+      width: 50%; height: 100%;
+      transform-origin: left center;
+      transform-style: preserve-3d;
+      transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
+    }
+
+    .leaf.flipped { transform: rotateY(-180deg); }
+
+    .page {
+      position: absolute;
+      width: 100%; height: 100%;
+      backface-visibility: hidden;
+      background-color: var(--book-bg);
+      padding: 30px 26px;
+      overflow-y: auto;
+    }
+
+    .page.front {
+      transform: rotateY(0deg);
+      border-radius: 0 12px 12px 0;
+      background: linear-gradient(to right, #E7E2DC 0%, var(--book-bg) 4%, var(--book-bg) 100%);
+    }
+
+    .page.back {
+      transform: rotateY(180deg);
+      border-radius: 12px 0 0 12px;
+      background: linear-gradient(to left, #E7E2DC 0%, var(--book-bg) 4%, var(--book-bg) 100%);
+    }
+
+    .page.cover-page {
+      background: linear-gradient(145deg, #18181B, #27272A) !important;
+      color: white;
+    }
+
+    .cover-content {
+      border: 2px solid var(--pink-primary);
+      height: 100%; border-radius: 8px; padding: 28px;
+      display: flex; flex-direction: column; align-items: center; justify-content: space-between;
+      text-align: center;
+      background: radial-gradient(circle at center, rgba(255,46,147,0.15) 0%, transparent 70%);
+    }
+
+    /* Page Controls at Bottom */
+    .bottom-controls {
+      position: fixed;
+      bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      background: #18181B;
+      padding: 10px 24px;
+      border-radius: 40px;
+      border: 1px solid #27272A;
+      z-index: 200;
+    }
+
+    .control-btn {
+      background: var(--pink-primary);
+      color: white; border: none;
+      padding: 8px 18px; border-radius: 20px;
+      cursor: pointer; font-weight: 600; font-size: 13px;
+      transition: opacity 0.2s;
+    }
+    .control-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+    .page-indicator { color: #A1A1AA; font-size: 13px; font-weight: 600; }
+
+    /* =========================================
+       3. CARDS & MAGNIFIER HOVER EFFECT
+       ========================================= */
+    .mag-card {
+      background: var(--card-bg);
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid #E5E7EB;
+      margin-bottom: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+      position: relative;
+      cursor: zoom-in;
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    }
+
+    .mag-card:hover {
+      transform: scale(1.02);
+      box-shadow: 0 10px 25px rgba(255, 46, 147, 0.15);
+      border-color: var(--pink-primary);
+    }
+
+    .mag-card::after {
+      content: '🔍 Click to expand';
+      position: absolute;
+      top: 8px; right: 10px;
+      font-size: 10px; color: var(--pink-primary);
+      font-weight: 700; opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .mag-card:hover::after { opacity: 1; }
+
+    /* Magnifier Modal Pop-up */
+    #mag-modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(5px);
+      z-index: 1000;
+      align-items: center; justify-content: center;
+    }
+
+    .modal-content-box {
+      background: white;
+      width: 90%; max-width: 650px;
+      padding: 30px; border-radius: 16px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+      position: relative;
+      animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0.7); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .close-modal-btn {
+      position: absolute;
+      top: 12px; right: 16px;
+      background: #F3F4F6; border: none;
+      width: 32px; height: 32px; border-radius: 50%;
+      font-weight: bold; cursor: pointer; color: #374151;
+    }
+
+    /* Content UI Styling */
+    .header-branding { text-align: center; border-bottom: 2px solid var(--text-dark); padding-bottom: 6px; margin-bottom: 12px; }
+    .header-branding h2 { font-family: 'Playfair Display', serif; font-size: 19px; font-weight: 800; }
+    .header-branding p { font-size: 9px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+
+    .metric-card { text-align: center; background: #F9FAFB; padding: 8px 4px; border-radius: 6px; border: 1px solid #F3F4F6; }
+    .metric-val { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: var(--pink-primary); }
+    .metric-lbl { font-size: 8px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
+
+    .section-title { font-family: 'Playfair Display', serif; font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+    .chart-box { position: relative; height: 150px; width: 100%; }
+
+    .alert-box { padding: 8px; border-radius: 6px; font-size: 10.5px; margin-bottom: 10px; line-height: 1.4; }
+    .alert-danger { background: #FFEBEB; border-left: 4px solid var(--alert-red); color: #991B1B; }
+
+    .page-num { position: absolute; bottom: 10px; font-size: 10px; color: var(--text-muted); font-weight: 600; }
+    .page.front .page-num { right: 14px; }
+    .page.back .page-num { left: 14px; }
+
+    .priority-list { list-style: none; padding: 0; }
+    .priority-list li { font-size: 11px; line-height: 1.5; margin-bottom: 6px; color: #27272A; }
+  </style>
+</head>
+<body>
+
+  <!-- =========================================
+       1. TEASER SCREEN
+       ========================================= -->
+  <div id="teaser-screen" onclick="openBook()">
+    <div class="highway-container">
+      <div class="road-line"></div>
+      
+      <div class="scooter-glider">
+        <svg viewBox="0 0 300 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Back Wheel -->
+          <g class="wheel" style="transform-origin: 80px 150px;">
+            <circle cx="80" cy="150" r="22" fill="#27272A" stroke="#E4E4E7" stroke-width="6"/>
+            <line x1="80" y1="128" x2="80" y2="172" stroke="#E4E4E7" stroke-width="2"/>
+            <line x1="58" y1="150" x2="102" y2="150" stroke="#E4E4E7" stroke-width="2"/>
+          </g>
+          <!-- Front Wheel -->
+          <g class="wheel" style="transform-origin: 220px 150px;">
+            <circle cx="220" cy="150" r="22" fill="#27272A" stroke="#E4E4E7" stroke-width="6"/>
+            <line x1="220" y1="128" x2="220" y2="172" stroke="#E4E4E7" stroke-width="2"/>
+            <line x1="198" y1="150" x2="242" y2="150" stroke="#E4E4E7" stroke-width="2"/>
+          </g>
+          <!-- Body -->
+          <path d="M80 150 L110 100 L160 100 L180 150 Z" fill="#FF2E93"/>
+          <rect x="45" y="55" width="60" height="55" rx="6" fill="#FF2E93" stroke="#FFFFFF" stroke-width="2"/>
+          <text x="52" y="72" fill="#FFFFFF" font-size="11" font-weight="bold" font-family="sans-serif">OWNLY</text>
+          <path d="M220 150 L200 80 L180 75" stroke="#D4D4D8" stroke-width="6" stroke-linecap="round"/>
+          <circle cx="180" cy="75" r="8" fill="#FF2E93"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="teaser-banner">🛵 Ownly News Letter</div>
+    <div class="teaser-hint">Click anywhere to open interactive edition</div>
+  </div>
+
+
+  <!-- =========================================
+       2. INTERACTIVE 3D BOOK
+       ========================================= -->
+  <div id="book-viewport">
+    <button class="nav-btn-top" onclick="closeBook()">← Back to Scooter</button>
+    <div class="top-header-title">TECH ROADMAP & STRATEGIC PRIORITIES</div>
+
+    <div id="book-shell">
+
+      <!-- LEAF 1 -->
+      <div class="leaf" id="leaf-1">
+        <!-- FRONT COVER -->
+        <div class="page front cover-page">
+          <div class="cover-content">
+            <div>
+              <div style="font-size: 10px; letter-spacing: 2px; color: #A1A1AA;">EXECUTIVE EDITION</div>
+              <h1 style="font-family: 'Playfair Display', serif; font-size: 30px; font-weight: 900; margin-top: 12px;">THE OPERATIONS GAZETTE</h1>
+              <div style="font-size: 13px; color: var(--pink-primary); font-weight: 600; margin-top: 6px;">August 2026 Digest</div>
+            </div>
+            <p style="color: #D4D4D8; font-size: 11.5px; line-height: 1.5; max-width: 300px;">
+              Operational performance, customer support trends, fleet health, and tech roadmap priorities.
+            </p>
+            <div style="font-size: 11px; color: #A1A1AA;">Click Next below to flip page →</div>
+          </div>
+        </div>
+        <!-- BACK COVER -->
+        <div class="page back"><div style="height:100%; display:flex; align-items:center; justify-content:center; color:#A1A1AA;">[ Executive Overview ]</div><div class="page-num">2</div></div>
+      </div>
+
+      <!-- LEAF 2 -->
+      <div class="leaf" id="leaf-2">
+        <!-- PAGE 3 -->
+        <div class="page front">
+          <div class="header-branding"><h2>August at a Glance</h2><p>Platform Operations Snapshot</p></div>
+          <div class="mag-card grid-3" onclick="zoomCard(this)">
+            <div class="metric-card"><div class="metric-val">4.85M</div><div class="metric-lbl">Total Orders</div></div>
+            <div class="metric-card"><div class="metric-val">341K</div><div class="metric-lbl">Chats Offered</div></div>
+            <div class="metric-card"><div class="metric-val">127.5K</div><div class="metric-lbl">Calls Handled</div></div>
+          </div>
+          <div class="mag-card" onclick="zoomCard(this)">
+            <div class="section-title">📊 Contact Breakdown by Channel</div>
+            <div class="chart-box"><canvas id="chart1"></canvas></div>
+          </div>
+          <div class="page-num">3</div>
+        </div>
+        <!-- PAGE 4 -->
+        <div class="page back">
+          <div class="header-branding"><h2>Customer Support</h2><p>Chat & Wait Time Performance</p></div>
+          <div class="mag-card grid-2" onclick="zoomCard(this)">
+            <div class="metric-card"><div class="metric-val">341,216</div><div class="metric-lbl">Chats Offered</div></div>
+            <div class="metric-card"><div class="metric-val">171,542</div><div class="metric-lbl">Handled (50.3%)</div></div>
+          </div>
+          <div class="mag-card" onclick="zoomCard(this)">
+            <div class="section-title">📉 Average Wait Time (AWT) Weekly Trend</div>
+            <div class="chart-box"><canvas id="chart2"></canvas></div>
+          </div>
+          <div class="page-num">4</div>
+        </div>
+      </div>
+
+      <!-- LEAF 3 -->
+      <div class="leaf" id="leaf-3">
+        <!-- PAGE 5 -->
+        <div class="page front">
+          <div class="header-branding"><h2>CSAT Emergency Alert</h2><p>Quality & Resolution Analysis</p></div>
+          <div class="alert-box alert-danger mag-card" onclick="zoomCard(this)">
+            <strong>⚠️ CRITICAL ALERT:</strong> CSAT dropped from 17% in Week 1 down to 10% in Week 4. Root cause analysis underway to fix response SLA breaches.
+          </div>
+          <div class="mag-card" onclick="zoomCard(this)">
+            <div class="section-title">🔻 Weekly CSAT Trend (% Positive)</div>
+            <div class="chart-box"><canvas id="chart3"></canvas></div>
+          </div>
+          <div class="page-num">5</div>
+        </div>
+        <!-- PAGE 6 -->
+        <div class="page back">
+          <div class="header-branding"><h2>Merchant Support</h2><p>Call Volume & Satisfaction</p></div>
+          <div class="mag-card grid-2" onclick="zoomCard(this)">
+            <div class="metric-card"><div class="metric-val">18,920</div><div class="metric-lbl">Calls Offered</div></div>
+            <div class="metric-card"><div class="metric-val" style="color:#10B981;">92%</div><div class="metric-lbl">Merchant CSAT</div></div>
+          </div>
+          <div class="mag-card" onclick="zoomCard(this)">
+            <div class="section-title">📊 Answered vs Offered Calls</div>
+            <div class="chart-box"><canvas id="chart4"></canvas></div>
+          </div>
+          <div class="page-num">6</div>
+        </div>
+      </div>
+
+      <!-- LEAF 4 -->
+      <div class="leaf" id="leaf-4">
+        <!-- PAGE 7 -->
+        <div class="page front">
+          <div class="header-branding"><h2>Delivery Support</h2><p>Rider Fleet Operations</p></div>
+          <div class="mag-card grid-2" onclick="zoomCard(this)">
+            <div class="metric-card"><div class="metric-val">108,610</div><div class="metric-lbl">Rider Calls Handled</div></div>
+            <div class="metric-card"><div class="metric-val" style="color:#10B981;">95%</div><div class="metric-lbl">Rider CSAT</div></div>
+          </div>
+          <div class="mag-card" onclick="zoomCard(this)">
+            <div class="section-title">⚡ Operational Highlights</div>
+            <p style="font-size: 11px; line-height: 1.5; color: #374151;">
+              • Rider resolution SLA achieved 94.2% within 2 minutes.<br>
+              • Onboarding queue backlog reduction plan underway for September.<br>
+              • Hyderabad fleet readiness complete for post-Sep 7 launch.
+            </p>
+          </div>
+          <div class="page-num">7</div>
+        </div>
+
+        <!-- PAGE 8 (FINAL ROADMAP & STRATEGIC PRIORITIES) -->
+        <div class="page back">
+          <div class="mag-card" onclick="zoomCard(this)">
+            <div class="section-title">🎯 September Key Priorities</div>
+            <ul class="priority-list">
+              <li><strong>• #1 CSAT Investigation:</strong> Resolve root drivers for the 17% → 10% CSAT dip.</li>
+              <li><strong>• #2 Clear Onboarding Backlog:</strong> Activate 10.7K stuck merchant queue.</li>
+              <li><strong>• #3 Stabilize Week 4 Peaks:</strong> Enhance shift scheduling for Merchant & Driver channels.</li>
+              <li><strong>• #4 Hyderabad Operations:</strong> Ensure smooth ops post-Sep 7 launch.</li>
+            </ul>
+          </div>
+
+          <div class="mag-card" onclick="zoomCard(this)">
+            <div class="section-title">🚀 Tech Roadmap Highlights</div>
+            <ul class="priority-list" style="color: #4B5563;">
+              <li>• Real-Time Operational Dashboards</li>
+              <li>• SLA Breach Automated Alerting</li>
+              <li>• Chatwoot Calling & Profile Integration</li>
+              <li>• AI-Powered Customer Refund Automations</li>
+            </ul>
+          </div>
+          <div class="page-num">8</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- BOTTOM PAGE FLIP CONTROLS -->
+    <div class="bottom-controls">
+      <button class="control-btn" id="prev-btn" onclick="flipPrev()" disabled>◀ Previous</button>
+      <span class="page-indicator" id="spread-label">Spread 1 of 4</span>
+      <button class="control-btn" id="next-btn" onclick="flipNext()">Next ▶</button>
+    </div>
+  </div>
+
+
+  <!-- =========================================
+       4. MAGNIFIER ZOOM MODAL
+       ========================================= -->
+  <div id="mag-modal" onclick="closeModal()">
+    <div class="modal-content-box" onclick="event.stopPropagation()">
+      <button class="close-modal-btn" onclick="closeModal()">✕</button>
+      <div id="modal-body-target"></div>
+    </div>
+  </div>
+
+
+  <!-- =========================================
+       5. JAVASCRIPT LOGIC & CHARTS ENGINE
+       ========================================= -->
+  <script>
+    let currentLeaf = 0;
+    const totalLeaves = 4;
+    const chartConfigs = {};
+    let modalChartInstance = null;
+
+    function updateZIndex() {
+      for (let i = 1; i <= totalLeaves; i++) {
+        const leaf = document.getElementById(`leaf-${i}`);
+        if (i <= currentLeaf) {
+          leaf.style.zIndex = i;
+        } else {
+          leaf.style.zIndex = totalLeaves - i + 1;
+        }
+      }
+      
+      document.getElementById('prev-btn').disabled = (currentLeaf === 0);
+      document.getElementById('next-btn').disabled = (currentLeaf === totalLeaves);
+      document.getElementById('spread-label').innerText = `Spread ${currentLeaf + 1} of ${totalLeaves}`;
+    }
+    updateZIndex();
+
+    function flipNext() {
+      if (currentLeaf < totalLeaves) {
+        currentLeaf++;
+        const leaf = document.getElementById(`leaf-${currentLeaf}`);
+        leaf.style.zIndex = 100;
+        leaf.classList.add('flipped');
+        setTimeout(updateZIndex, 800);
+      }
+    }
+
+    function flipPrev() {
+      if (currentLeaf > 0) {
+        const leaf = document.getElementById(`leaf-${currentLeaf}`);
+        leaf.style.zIndex = 100;
+        leaf.classList.remove('flipped');
+        currentLeaf--;
+        setTimeout(updateZIndex, 800);
+      }
+    }
+
+    function zoomCard(cardElem) {
+      const modal = document.getElementById('mag-modal');
+      const target = document.getElementById('modal-body-target');
+      
+      if (modalChartInstance) {
+        modalChartInstance.destroy();
+        modalChartInstance = null;
+      }
+
+      const canvasElem = cardElem.querySelector('canvas');
+      if (canvasElem && chartConfigs[canvasElem.id]) {
+        const config = chartConfigs[canvasElem.id];
+        const titleHTML = cardElem.querySelector('.section-title')?.outerHTML || '';
+        
+        target.innerHTML = `${titleHTML}<div style="height: 320px; width: 100%; margin-top: 15px;"><canvas id="modal-canvas"></canvas></div>`;
+        modal.style.display = 'flex';
+        
+        const ctx = document.getElementById('modal-canvas');
+        modalChartInstance = new Chart(ctx, {
+          type: config.type,
+          data: JSON.parse(JSON.stringify(config.data)),
+          options: { ...config.options, responsive: true, maintainAspectRatio: false }
+        });
+      } else {
+        target.innerHTML = `<div style="font-size: 110%; line-height: 1.6;">${cardElem.innerHTML}</div>`;
+        modal.style.display = 'flex';
+      }
+    }
+
+    function closeModal() {
+      document.getElementById('mag-modal').style.display = 'none';
+    }
+
+    let chartsDrawn = false;
+
+    function openBook() {
+      document.getElementById('teaser-screen').style.opacity = '0';
+      setTimeout(() => {
+        document.getElementById('teaser-screen').style.display = 'none';
+        document.getElementById('book-viewport').style.display = 'flex';
+        if (!chartsDrawn) setTimeout(renderCharts, 150);
+      }, 500);
+    }
+
+    function closeBook() {
+      while(currentLeaf > 0) flipPrev();
+      document.getElementById('book-viewport').style.display = 'none';
+      document.getElementById('teaser-screen').style.display = 'flex';
+      setTimeout(() => { document.getElementById('teaser-screen').style.opacity = '1'; }, 50);
+    }
+
+    function createChart(id, type, data, options) {
+      chartConfigs[id] = { type, data, options };
+      const ctx = document.getElementById(id);
+      if (ctx) {
+        return new Chart(ctx, { type, data, options: { ...options, responsive: true, maintainAspectRatio: false } });
+      }
+    }
+
+    function renderCharts() {
+      chartsDrawn = true;
+      Chart.defaults.font.family = "'Plus Jakarta Sans', sans-serif";
+
+      createChart('chart1', 'doughnut', {
+        labels: ['Customer Support', 'Rider Fleet', 'Merchant Support'],
+        datasets: [{ data: [72.8, 23.2, 4.0], backgroundColor: ['#FF2E93', '#3B82F6', '#10B981'] }]
+      }, { plugins: { legend: { position: 'right' } } });
+
+      createChart('chart2', 'line', {
+        labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+        datasets: [{ label: 'AWT (mins)', data: [13.2, 12.1, 11.0, 7.8], borderColor: '#FF2E93', backgroundColor: 'rgba(255,46,147,0.1)', fill: true }]
+      }, {});
+
+      createChart('chart3', 'line', {
+        labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+        datasets: [{ label: 'CSAT %', data: [17, 15, 12, 10], borderColor: '#EF4444', backgroundColor: 'rgba(239,68,68,0.1)', fill: true }]
+      }, {});
+
+      createChart('chart4', 'bar', {
+        labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+        datasets: [
+          { label: 'Offered', data: [4200, 4500, 5000, 5220], backgroundColor: '#3B82F6' },
+          { label: 'Answered', data: [3700, 3900, 4300, 4140], backgroundColor: '#10B981' }
+        ]
+      }, {});
+    }
+  </script>
+</body>
+</html>
