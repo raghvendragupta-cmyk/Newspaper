@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ownly Operations Gazette - Interactive Edition</title>
+  <title>Ownly Operations Gazette - August 2026 Edition</title>
   
   <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
@@ -182,7 +182,7 @@
       width: 100%; height: 100%;
       backface-visibility: hidden;
       background-color: var(--book-bg);
-      padding: 32px 28px;
+      padding: 30px 26px;
       overflow-y: auto;
     }
 
@@ -240,10 +240,10 @@
        ========================================= */
     .mag-card {
       background: var(--card-bg);
-      padding: 14px;
+      padding: 12px;
       border-radius: 10px;
       border: 1px solid #E5E7EB;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.03);
       position: relative;
       cursor: zoom-in;
@@ -299,22 +299,22 @@
       font-weight: bold; cursor: pointer; color: #374151;
     }
 
-    /* Content UI */
+    /* Content UI Styling */
     .header-branding { text-align: center; border-bottom: 2px solid var(--text-dark); padding-bottom: 6px; margin-bottom: 12px; }
-    .header-branding h2 { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 800; }
+    .header-branding h2 { font-family: 'Playfair Display', serif; font-size: 19px; font-weight: 800; }
     .header-branding p { font-size: 9px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
 
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
     .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
 
-    .metric-card { text-align: center; background: #F9FAFB; padding: 8px; border-radius: 6px; border: 1px solid #F3F4F6; }
-    .metric-val { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: var(--pink-primary); }
-    .metric-lbl { font-size: 9px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
+    .metric-card { text-align: center; background: #F9FAFB; padding: 8px 4px; border-radius: 6px; border: 1px solid #F3F4F6; }
+    .metric-val { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: var(--pink-primary); }
+    .metric-lbl { font-size: 8px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
 
-    .section-title { font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 700; margin-bottom: 8px; }
-    .chart-box { position: relative; height: 160px; width: 100%; }
+    .section-title { font-family: 'Playfair Display', serif; font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+    .chart-box { position: relative; height: 150px; width: 100%; }
 
-    .alert-box { padding: 10px; border-radius: 6px; font-size: 11px; margin-bottom: 12px; line-height: 1.4; }
+    .alert-box { padding: 8px; border-radius: 6px; font-size: 10.5px; margin-bottom: 10px; line-height: 1.4; }
     .alert-danger { background: #FFEBEB; border-left: 4px solid var(--alert-red); color: #991B1B; }
 
     .page-num { position: absolute; bottom: 10px; font-size: 10px; color: var(--text-muted); font-weight: 600; }
@@ -322,7 +322,7 @@
     .page.back .page-num { left: 14px; }
 
     .priority-list { list-style: none; padding: 0; }
-    .priority-list li { font-size: 11px; line-height: 1.6; margin-bottom: 6px; color: #27272A; }
+    .priority-list li { font-size: 11px; line-height: 1.5; margin-bottom: 6px; color: #27272A; }
   </style>
 </head>
 <body>
@@ -379,44 +379,44 @@
           <div class="cover-content">
             <div>
               <div style="font-size: 10px; letter-spacing: 2px; color: #A1A1AA;">EXECUTIVE EDITION</div>
-              <h1 style="font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 900; margin-top: 12px;">THE OPERATIONS GAZETTE</h1>
+              <h1 style="font-family: 'Playfair Display', serif; font-size: 30px; font-weight: 900; margin-top: 12px;">THE OPERATIONS GAZETTE</h1>
               <div style="font-size: 13px; color: var(--pink-primary); font-weight: 600; margin-top: 6px;">August 2026 Digest</div>
             </div>
-            <p style="color: #D4D4D8; font-size: 12px; line-height: 1.5; max-width: 300px;">
-              Operational metrics, support trends, and priority roadmap.
+            <p style="color: #D4D4D8; font-size: 11.5px; line-height: 1.5; max-width: 300px;">
+              Operational performance, customer support trends, fleet health, and tech roadmap priorities.
             </p>
             <div style="font-size: 11px; color: #A1A1AA;">Click Next below to flip page →</div>
           </div>
         </div>
         <!-- BACK COVER -->
-        <div class="page back"><div style="height:100%; display:flex; align-items:center; justify-content:center; color:#A1A1AA;">[ Page Intentionally Left Blank ]</div><div class="page-num">2</div></div>
+        <div class="page back"><div style="height:100%; display:flex; align-items:center; justify-content:center; color:#A1A1AA;">[ Executive Overview ]</div><div class="page-num">2</div></div>
       </div>
 
       <!-- LEAF 2 -->
       <div class="leaf" id="leaf-2">
         <!-- PAGE 3 -->
         <div class="page front">
-          <div class="header-branding"><h2>August at a Glance</h2><p>Platform Snapshot</p></div>
+          <div class="header-branding"><h2>August at a Glance</h2><p>Platform Operations Snapshot</p></div>
           <div class="mag-card grid-3" onclick="zoomCard(this)">
             <div class="metric-card"><div class="metric-val">4.85M</div><div class="metric-lbl">Total Orders</div></div>
-            <div class="metric-card"><div class="metric-val">341K</div><div class="metric-lbl">Chats</div></div>
-            <div class="metric-card"><div class="metric-val">127K</div><div class="metric-lbl">Calls</div></div>
+            <div class="metric-card"><div class="metric-val">341K</div><div class="metric-lbl">Chats Offered</div></div>
+            <div class="metric-card"><div class="metric-val">127.5K</div><div class="metric-lbl">Calls Handled</div></div>
           </div>
           <div class="mag-card" onclick="zoomCard(this)">
-            <div class="section-title">📊 Contact Distribution</div>
+            <div class="section-title">📊 Contact Breakdown by Channel</div>
             <div class="chart-box"><canvas id="chart1"></canvas></div>
           </div>
           <div class="page-num">3</div>
         </div>
         <!-- PAGE 4 -->
         <div class="page back">
-          <div class="header-branding"><h2>Customer Support</h2><p>Chat & Call Volumes</p></div>
+          <div class="header-branding"><h2>Customer Support</h2><p>Chat & Wait Time Performance</p></div>
           <div class="mag-card grid-2" onclick="zoomCard(this)">
             <div class="metric-card"><div class="metric-val">341,216</div><div class="metric-lbl">Chats Offered</div></div>
-            <div class="metric-card"><div class="metric-val">171,542</div><div class="metric-lbl">Handled</div></div>
+            <div class="metric-card"><div class="metric-val">171,542</div><div class="metric-lbl">Handled (50.3%)</div></div>
           </div>
           <div class="mag-card" onclick="zoomCard(this)">
-            <div class="section-title">📉 Wait Time Trend (AWT)</div>
+            <div class="section-title">📉 Average Wait Time (AWT) Weekly Trend</div>
             <div class="chart-box"><canvas id="chart2"></canvas></div>
           </div>
           <div class="page-num">4</div>
@@ -427,25 +427,25 @@
       <div class="leaf" id="leaf-3">
         <!-- PAGE 5 -->
         <div class="page front">
-          <div class="header-branding"><h2>CSAT Emergency Alert</h2><p>Critical Priority</p></div>
+          <div class="header-branding"><h2>CSAT Emergency Alert</h2><p>Quality & Resolution Analysis</p></div>
           <div class="alert-box alert-danger mag-card" onclick="zoomCard(this)">
-            <strong>⚠️ CRITICAL ALERT:</strong> CSAT dropped from 17% to 10% in August. Root cause investigation is mandatory.
+            <strong>⚠️ CRITICAL ALERT:</strong> CSAT dropped from 17% in Week 1 down to 10% in Week 4. Root cause analysis underway to fix response SLA breaches.
           </div>
           <div class="mag-card" onclick="zoomCard(this)">
-            <div class="section-title">🔻 CSAT Weekly Decline</div>
+            <div class="section-title">🔻 Weekly CSAT Trend (% Positive)</div>
             <div class="chart-box"><canvas id="chart3"></canvas></div>
           </div>
           <div class="page-num">5</div>
         </div>
         <!-- PAGE 6 -->
         <div class="page back">
-          <div class="header-branding"><h2>Merchant Support</h2><p>Call Center Performance</p></div>
+          <div class="header-branding"><h2>Merchant Support</h2><p>Call Volume & Satisfaction</p></div>
           <div class="mag-card grid-2" onclick="zoomCard(this)">
-            <div class="metric-card"><div class="metric-val">18.9K</div><div class="metric-lbl">Offered</div></div>
-            <div class="metric-card"><div class="metric-val" style="color:#10B981;">92%</div><div class="metric-lbl">CSAT</div></div>
+            <div class="metric-card"><div class="metric-val">18,920</div><div class="metric-lbl">Calls Offered</div></div>
+            <div class="metric-card"><div class="metric-val" style="color:#10B981;">92%</div><div class="metric-lbl">Merchant CSAT</div></div>
           </div>
           <div class="mag-card" onclick="zoomCard(this)">
-            <div class="section-title">📊 Answer vs Offered Calls</div>
+            <div class="section-title">📊 Answered vs Offered Calls</div>
             <div class="chart-box"><canvas id="chart4"></canvas></div>
           </div>
           <div class="page-num">6</div>
@@ -458,13 +458,21 @@
         <div class="page front">
           <div class="header-branding"><h2>Delivery Support</h2><p>Rider Fleet Operations</p></div>
           <div class="mag-card grid-2" onclick="zoomCard(this)">
-            <div class="metric-card"><div class="metric-val">108.6K</div><div class="metric-lbl">Calls Handled</div></div>
+            <div class="metric-card"><div class="metric-val">108,610</div><div class="metric-lbl">Rider Calls Handled</div></div>
             <div class="metric-card"><div class="metric-val" style="color:#10B981;">95%</div><div class="metric-lbl">Rider CSAT</div></div>
+          </div>
+          <div class="mag-card" onclick="zoomCard(this)">
+            <div class="section-title">⚡ Operational Highlights</div>
+            <p style="font-size: 11px; line-height: 1.5; color: #374151;">
+              • Rider resolution SLA achieved 94.2% within 2 minutes.<br>
+              • Onboarding queue backlog reduction plan underway for September.<br>
+              • Hyderabad fleet readiness complete for post-Sep 7 launch.
+            </p>
           </div>
           <div class="page-num">7</div>
         </div>
 
-        <!-- PAGE 8 (FINAL ROADMAP - EXACT MATCH) -->
+        <!-- PAGE 8 (FINAL ROADMAP & STRATEGIC PRIORITIES) -->
         <div class="page back">
           <div class="mag-card" onclick="zoomCard(this)">
             <div class="section-title">🎯 September Key Priorities</div>
@@ -540,7 +548,7 @@
       if (currentLeaf < totalLeaves) {
         currentLeaf++;
         const leaf = document.getElementById(`leaf-${currentLeaf}`);
-        leaf.style.zIndex = 100; // Elevate during transition
+        leaf.style.zIndex = 100;
         leaf.classList.add('flipped');
         setTimeout(updateZIndex, 800);
       }
@@ -549,14 +557,13 @@
     function flipPrev() {
       if (currentLeaf > 0) {
         const leaf = document.getElementById(`leaf-${currentLeaf}`);
-        leaf.style.zIndex = 100; // Elevate during transition
+        leaf.style.zIndex = 100;
         leaf.classList.remove('flipped');
         currentLeaf--;
         setTimeout(updateZIndex, 800);
       }
     }
 
-    // MAGNIFIER ZOOM ENGINE
     function zoomCard(cardElem) {
       const modal = document.getElementById('mag-modal');
       const target = document.getElementById('modal-body-target');
@@ -590,7 +597,6 @@
       document.getElementById('mag-modal').style.display = 'none';
     }
 
-    // SCENE TRANSITION
     let chartsDrawn = false;
 
     function openBook() {
@@ -609,7 +615,6 @@
       setTimeout(() => { document.getElementById('teaser-screen').style.opacity = '1'; }, 50);
     }
 
-    // RELIABLE CHART CREATOR
     function createChart(id, type, data, options) {
       chartConfigs[id] = { type, data, options };
       const ctx = document.getElementById(id);
@@ -623,24 +628,24 @@
       Chart.defaults.font.family = "'Plus Jakarta Sans', sans-serif";
 
       createChart('chart1', 'doughnut', {
-        labels: ['Customer', 'Driver', 'Merchant'],
+        labels: ['Customer Support', 'Rider Fleet', 'Merchant Support'],
         datasets: [{ data: [72.8, 23.2, 4.0], backgroundColor: ['#FF2E93', '#3B82F6', '#10B981'] }]
       }, { plugins: { legend: { position: 'right' } } });
 
       createChart('chart2', 'line', {
-        labels: ['W1', 'W2', 'W3', 'W4'],
+        labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
         datasets: [{ label: 'AWT (mins)', data: [13.2, 12.1, 11.0, 7.8], borderColor: '#FF2E93', backgroundColor: 'rgba(255,46,147,0.1)', fill: true }]
       }, {});
 
       createChart('chart3', 'line', {
-        labels: ['W1', 'W2', 'W3', 'W4'],
+        labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
         datasets: [{ label: 'CSAT %', data: [17, 15, 12, 10], borderColor: '#EF4444', backgroundColor: 'rgba(239,68,68,0.1)', fill: true }]
       }, {});
 
       createChart('chart4', 'bar', {
-        labels: ['W1', 'W2', 'W3', 'W4'],
+        labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
         datasets: [
-          { label: 'Offered', data: [4200, 4500, 5000, 5230], backgroundColor: '#3B82F6' },
+          { label: 'Offered', data: [4200, 4500, 5000, 5220], backgroundColor: '#3B82F6' },
           { label: 'Answered', data: [3700, 3900, 4300, 4140], backgroundColor: '#10B981' }
         ]
       }, {});
