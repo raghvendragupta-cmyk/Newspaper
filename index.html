@@ -1,671 +1,165 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2685.7">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ownly Operations Gazette</title>
+  
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body, html { width: 100%; height: 100%; overflow: hidden; font-family: 'Plus Jakarta Sans', sans-serif; background-color: #121214; }
+
+    /* =========================================
+       1. TEASER SCREEN (SCOOTER HIGHWAY)
+       ========================================= */
+    #teaser-screen {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: #121214;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      cursor: pointer;
+      transition: opacity 0.8s ease, visibility 0.8s ease;
+    }
+
+    .highway-container {
+      position: relative;
+      width: 100vw;
+      height: 250px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+    }
+
+    .road-line {
+      position: absolute;
+      bottom: 30px;
+      width: 100%;
+      height: 3px;
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .scooter-glider {
+      position: absolute;
+      bottom: 25px;
+      width: 280px;
+      height: 180px;
+      animation: driveSmooth 6s linear infinite;
+    }
+
+    @keyframes driveSmooth {
+      0%   { left: -300px; }
+      100% { left: 100vw; }
+    }
+
+    .wheel { animation: spinWheel 0.3s linear infinite; transform-origin: center; }
+    @keyframes spinWheel { 100% { transform: rotate(360deg); } }
+
+    .teaser-banner {
+      margin-top: 25px;
+      background: linear-gradient(135deg, #FF2E93, #FF6B00);
+      color: white;
+      padding: 16px 44px;
+      border-radius: 50px;
+      font-size: 22px;
+      font-weight: 700;
+      box-shadow: 0 10px 30px rgba(255, 46, 147, 0.4);
+      transition: transform 0.3s ease;
+      z-index: 10;
+    }
+
+    #teaser-screen:hover .teaser-banner { transform: scale(1.06); }
+    .teaser-hint { color: #A1A1AA; margin-top: 14px; font-size: 14px; z-index: 10; letter-spacing: 0.5px; }
+
+    /* =========================================
+       2. FLIPHTML5 CONTAINER
+       ========================================= */
+    #flipbook-wrapper {
+      width: 100vw;
+      height: 100vh;
+      position: absolute;
+      top: 0; left: 0;
+      z-index: 1;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
   </style>
 </head>
 <body>
-<p class="p1">&lt;!DOCTYPE html&gt;</p>
-<p class="p1">&lt;html lang="en"&gt;</p>
-<p class="p1">&lt;head&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;meta charset="UTF-8"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;title&gt;Ownly Operations Gazette - August 2026 Edition&lt;/title&gt;</p>
-<p class="p2"><span class="Apple-converted-space">  </span></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;!-- Chart.js CDN --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"&gt;&lt;/script&gt;</p>
-<p class="p2"><span class="Apple-converted-space">  </span></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;!-- Google Fonts --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,900;1,400&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">  </span></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;style&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>:root {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>--bg-canvas: #121214;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>--pink-primary: #FF2E93;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>--pink-glow: rgba(255, 46, 147, 0.4);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>--text-dark: #1E1B18;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>--text-muted: #66605C;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>--card-bg: #FFFFFF;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>--book-bg: #FAF8F5;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>--alert-red: #EF4444;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>--alert-yellow: #F59E0B;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>* { box-sizing: border-box; margin: 0; padding: 0; }</p>
-<p class="p2"><span class="Apple-converted-space">    </span></p>
-<p class="p1"><span class="Apple-converted-space">    </span>body {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background-color: var(--bg-canvas);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-family: 'Plus Jakarta Sans', sans-serif;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>min-height: 100vh;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>display: flex;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>flex-direction: column;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>align-items: center;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>justify-content: center;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>overflow: hidden;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color: var(--text-dark);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>user-select: none;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>/* =========================================</p>
-<p class="p1"><span class="Apple-converted-space">       </span>1. TEASER SCREEN (SCOOTER HIGHWAY)</p>
-<p class="p1"><span class="Apple-converted-space">       </span>========================================= */</p>
-<p class="p1"><span class="Apple-converted-space">    </span>#teaser-screen {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>display: flex;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>flex-direction: column;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>align-items: center;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>justify-content: center;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>min-height: 100vh;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>width: 100vw;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>cursor: pointer;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>position: absolute;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>top: 0; left: 0;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>z-index: 1000;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: var(--bg-canvas);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>transition: opacity 0.5s ease;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>overflow: hidden;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.highway-container {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>position: relative;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>width: 100vw;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>height: 200px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>overflow: hidden;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>display: flex;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>align-items: center;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.road-line {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>position: absolute;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>bottom: 20px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>width: 100%;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>height: 2px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: rgba(255, 255, 255, 0.1);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.scooter-glider {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>position: absolute;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>bottom: 18px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>width: 240px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>height: 160px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>animation: driveSmooth 6s linear infinite;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>@keyframes driveSmooth {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>0% <span class="Apple-converted-space">  </span>{ left: -260px; }</p>
-<p class="p1"><span class="Apple-converted-space">      </span>100% { left: 100vw; }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.wheel { animation: spinWheel 0.3s linear infinite; transform-origin: center; }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>@keyframes spinWheel { 100% { transform: rotate(360deg); } }</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.teaser-banner {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin-top: 20px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: linear-gradient(135deg, #FF2E93, #FF6B00);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color: white;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding: 16px 44px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-radius: 50px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-family: 'Playfair Display', serif;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size: 24px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-weight: 700;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>box-shadow: 0 10px 30px var(--pink-glow);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>transition: transform 0.3s ease;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>z-index: 10;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>#teaser-screen:hover .teaser-banner { transform: scale(1.06); }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.teaser-hint { color: #A1A1AA; margin-top: 14px; font-size: 14px; z-index: 10; }</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>/* =========================================</p>
-<p class="p1"><span class="Apple-converted-space">       </span>2. 3D BOOK &amp; PAGE FLIP ENGINE</p>
-<p class="p1"><span class="Apple-converted-space">       </span>========================================= */</p>
-<p class="p1"><span class="Apple-converted-space">    </span>#book-viewport {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>display: none;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>perspective: 2200px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>width: 100vw;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>height: 100vh;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>align-items: center;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>justify-content: center;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>position: relative;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: #0D0D0F;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.top-header-title {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>position: fixed;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>top: 20px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color: #A1A1AA;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size: 12px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>letter-spacing: 2px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-weight: 700;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>text-transform: uppercase;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>z-index: 100;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.nav-btn-top {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>position: fixed;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>top: 16px; left: 20px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: #27272A; color: white;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border: 1px solid #3F3F46; padding: 10px 20px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-radius: 30px; cursor: pointer; font-size: 13px; font-weight: 600;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>z-index: 200; transition: all 0.2s;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.nav-btn-top:hover { background: var(--pink-primary); border-color: var(--pink-primary); }</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>/* Book Spread Shell */</p>
-<p class="p1"><span class="Apple-converted-space">    </span>#book-shell {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>position: relative;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>width: 960px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>height: 640px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: #18181B;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-radius: 12px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>box-shadow: 0 30px 80px rgba(0,0,0,0.8);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>display: flex;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>/* Center Spine Shadow */</p>
-<p class="p1"><span class="Apple-converted-space">    </span>#book-shell::after {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>content: '';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>position: absolute;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>left: 50%; top: 0;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>width: 30px; height: 100%;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>transform: translateX(-50%);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: linear-gradient(90deg, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.25) 100%);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>z-index: 50;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>pointer-events: none;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.leaf {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>position: absolute;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>top: 0; left: 50%;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>width: 50%; height: 100%;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>transform-origin: left center;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>transform-style: preserve-3d;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.leaf.flipped { transform: rotateY(-180deg); }</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.page {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>position: absolute;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>width: 100%; height: 100%;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>backface-visibility: hidden;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background-color: var(--book-bg);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding: 30px 26px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>overflow-y: auto;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.page.front {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>transform: rotateY(0deg);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-radius: 0 12px 12px 0;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: linear-gradient(to right, #E7E2DC 0%, var(--book-bg) 4%, var(--book-bg) 100%);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.page.back {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>transform: rotateY(180deg);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-radius: 12px 0 0 12px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: linear-gradient(to left, #E7E2DC 0%, var(--book-bg) 4%, var(--book-bg) 100%);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.page.cover-page {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: linear-gradient(145deg, #18181B, #27272A) !important;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color: white;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.cover-content {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border: 2px solid var(--pink-primary);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>height: 100%; border-radius: 8px; padding: 28px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>display: flex; flex-direction: column; align-items: center; justify-content: space-between;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>text-align: center;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: radial-gradient(circle at center, rgba(255,46,147,0.15) 0%, transparent 70%);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>/* Page Controls at Bottom */</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.bottom-controls {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>position: fixed;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>bottom: 20px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>display: flex;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>align-items: center;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>gap: 20px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: #18181B;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding: 10px 24px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-radius: 40px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border: 1px solid #27272A;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>z-index: 200;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.control-btn {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: var(--pink-primary);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color: white; border: none;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding: 8px 18px; border-radius: 20px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>cursor: pointer; font-weight: 600; font-size: 13px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>transition: opacity 0.2s;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.control-btn:disabled { opacity: 0.3; cursor: not-allowed; }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.page-indicator { color: #A1A1AA; font-size: 13px; font-weight: 600; }</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>/* =========================================</p>
-<p class="p1"><span class="Apple-converted-space">       </span>3. CARDS &amp; MAGNIFIER HOVER EFFECT</p>
-<p class="p1"><span class="Apple-converted-space">       </span>========================================= */</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.mag-card {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: var(--card-bg);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding: 12px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-radius: 10px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border: 1px solid #E5E7EB;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin-bottom: 12px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>box-shadow: 0 4px 10px rgba(0,0,0,0.03);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>position: relative;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>cursor: zoom-in;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.mag-card:hover {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>transform: scale(1.02);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>box-shadow: 0 10px 25px rgba(255, 46, 147, 0.15);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-color: var(--pink-primary);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.mag-card::after {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>content: '🔍 Click to expand';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>position: absolute;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>top: 8px; right: 10px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size: 10px; color: var(--pink-primary);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-weight: 700; opacity: 0;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>transition: opacity 0.2s;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.mag-card:hover::after { opacity: 1; }</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>/* Magnifier Modal Pop-up */</p>
-<p class="p1"><span class="Apple-converted-space">    </span>#mag-modal {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>display: none;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>position: fixed;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>top: 0; left: 0; width: 100vw; height: 100vh;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: rgba(0,0,0,0.85);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>backdrop-filter: blur(5px);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>z-index: 1000;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>align-items: center; justify-content: center;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.modal-content-box {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: white;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>width: 90%; max-width: 650px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding: 30px; border-radius: 16px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>box-shadow: 0 20px 50px rgba(0,0,0,0.5);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>position: relative;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>@keyframes popIn {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>0% { transform: scale(0.7); opacity: 0; }</p>
-<p class="p1"><span class="Apple-converted-space">      </span>100% { transform: scale(1); opacity: 1; }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.close-modal-btn {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>position: absolute;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>top: 12px; right: 16px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: #F3F4F6; border: none;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>width: 32px; height: 32px; border-radius: 50%;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-weight: bold; cursor: pointer; color: #374151;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>/* Content UI Styling */</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.header-branding { text-align: center; border-bottom: 2px solid var(--text-dark); padding-bottom: 6px; margin-bottom: 12px; }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.header-branding h2 { font-family: 'Playfair Display', serif; font-size: 19px; font-weight: 800; }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.header-branding p { font-size: 9px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.metric-card { text-align: center; background: #F9FAFB; padding: 8px 4px; border-radius: 6px; border: 1px solid #F3F4F6; }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.metric-val { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: var(--pink-primary); }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.metric-lbl { font-size: 8px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.section-title { font-family: 'Playfair Display', serif; font-size: 14px; font-weight: 700; margin-bottom: 6px; }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.chart-box { position: relative; height: 150px; width: 100%; }</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.alert-box { padding: 8px; border-radius: 6px; font-size: 10.5px; margin-bottom: 10px; line-height: 1.4; }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.alert-danger { background: #FFEBEB; border-left: 4px solid var(--alert-red); color: #991B1B; }</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.page-num { position: absolute; bottom: 10px; font-size: 10px; color: var(--text-muted); font-weight: 600; }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.page.front .page-num { right: 14px; }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.page.back .page-num { left: 14px; }</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.priority-list { list-style: none; padding: 0; }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.priority-list li { font-size: 11px; line-height: 1.5; margin-bottom: 6px; color: #27272A; }</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/style&gt;</p>
-<p class="p1">&lt;/head&gt;</p>
-<p class="p1">&lt;body&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;!-- =========================================</p>
-<p class="p1"><span class="Apple-converted-space">       </span>1. TEASER SCREEN</p>
-<p class="p1"><span class="Apple-converted-space">       </span>========================================= --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;div id="teaser-screen" onclick="openBook()"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="highway-container"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="road-line"&gt;&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span></p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="scooter-glider"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;svg viewBox="0 0 300 200" fill="none" xmlns="http://www.w3.org/2000/svg"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;!-- Back Wheel --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;g class="wheel" style="transform-origin: 80px 150px;"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;circle cx="80" cy="150" r="22" fill="#27272A" stroke="#E4E4E7" stroke-width="6"/&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;line x1="80" y1="128" x2="80" y2="172" stroke="#E4E4E7" stroke-width="2"/&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;line x1="58" y1="150" x2="102" y2="150" stroke="#E4E4E7" stroke-width="2"/&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/g&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;!-- Front Wheel --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;g class="wheel" style="transform-origin: 220px 150px;"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;circle cx="220" cy="150" r="22" fill="#27272A" stroke="#E4E4E7" stroke-width="6"/&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;line x1="220" y1="128" x2="220" y2="172" stroke="#E4E4E7" stroke-width="2"/&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;line x1="198" y1="150" x2="242" y2="150" stroke="#E4E4E7" stroke-width="2"/&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/g&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;!-- Body --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;path d="M80 150 L110 100 L160 100 L180 150 Z" fill="#FF2E93"/&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;rect x="45" y="55" width="60" height="55" rx="6" fill="#FF2E93" stroke="#FFFFFF" stroke-width="2"/&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;text x="52" y="72" fill="#FFFFFF" font-size="11" font-weight="bold" font-family="sans-serif"&gt;OWNLY&lt;/text&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;path d="M220 150 L200 80 L180 75" stroke="#D4D4D8" stroke-width="6" stroke-linecap="round"/&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;circle cx="180" cy="75" r="8" fill="#FF2E93"/&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/svg&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="teaser-banner"&gt;🛵 Ownly News Letter&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="teaser-hint"&gt;Click anywhere to open interactive edition&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;!-- =========================================</p>
-<p class="p1"><span class="Apple-converted-space">       </span>2. INTERACTIVE 3D BOOK</p>
-<p class="p1"><span class="Apple-converted-space">       </span>========================================= --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;div id="book-viewport"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;button class="nav-btn-top" onclick="closeBook()"&gt;← Back to Scooter&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="top-header-title"&gt;TECH ROADMAP &amp; STRATEGIC PRIORITIES&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div id="book-shell"&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;!-- LEAF 1 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="leaf" id="leaf-1"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;!-- FRONT COVER --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="page front cover-page"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="cover-content"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">              </span>&lt;div style="font-size: 10px; letter-spacing: 2px; color: #A1A1AA;"&gt;EXECUTIVE EDITION&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">              </span>&lt;h1 style="font-family: 'Playfair Display', serif; font-size: 30px; font-weight: 900; margin-top: 12px;"&gt;THE OPERATIONS GAZETTE&lt;/h1&gt;</p>
-<p class="p1"><span class="Apple-converted-space">              </span>&lt;div style="font-size: 13px; color: var(--pink-primary); font-weight: 600; margin-top: 6px;"&gt;August 2026 Digest&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;p style="color: #D4D4D8; font-size: 11.5px; line-height: 1.5; max-width: 300px;"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">              </span>Operational performance, customer support trends, fleet health, and tech roadmap priorities.</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div style="font-size: 11px; color: #A1A1AA;"&gt;Click Next below to flip page →&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;!-- BACK COVER --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="page back"&gt;&lt;div style="height:100%; display:flex; align-items:center; justify-content:center; color:#A1A1AA;"&gt;[ Executive Overview ]&lt;/div&gt;&lt;div class="page-num"&gt;2&lt;/div&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;!-- LEAF 2 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="leaf" id="leaf-2"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;!-- PAGE 3 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="page front"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="header-branding"&gt;&lt;h2&gt;August at a Glance&lt;/h2&gt;&lt;p&gt;Platform Operations Snapshot&lt;/p&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="mag-card grid-3" onclick="zoomCard(this)"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="metric-card"&gt;&lt;div class="metric-val"&gt;4.85M&lt;/div&gt;&lt;div class="metric-lbl"&gt;Total Orders&lt;/div&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="metric-card"&gt;&lt;div class="metric-val"&gt;341K&lt;/div&gt;&lt;div class="metric-lbl"&gt;Chats Offered&lt;/div&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="metric-card"&gt;&lt;div class="metric-val"&gt;127.5K&lt;/div&gt;&lt;div class="metric-lbl"&gt;Calls Handled&lt;/div&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="mag-card" onclick="zoomCard(this)"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="section-title"&gt;📊 Contact Breakdown by Channel&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="chart-box"&gt;&lt;canvas id="chart1"&gt;&lt;/canvas&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="page-num"&gt;3&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;!-- PAGE 4 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="page back"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="header-branding"&gt;&lt;h2&gt;Customer Support&lt;/h2&gt;&lt;p&gt;Chat &amp; Wait Time Performance&lt;/p&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="mag-card grid-2" onclick="zoomCard(this)"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="metric-card"&gt;&lt;div class="metric-val"&gt;341,216&lt;/div&gt;&lt;div class="metric-lbl"&gt;Chats Offered&lt;/div&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="metric-card"&gt;&lt;div class="metric-val"&gt;171,542&lt;/div&gt;&lt;div class="metric-lbl"&gt;Handled (50.3%)&lt;/div&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="mag-card" onclick="zoomCard(this)"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="section-title"&gt;📉 Average Wait Time (AWT) Weekly Trend&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="chart-box"&gt;&lt;canvas id="chart2"&gt;&lt;/canvas&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="page-num"&gt;4&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;!-- LEAF 3 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="leaf" id="leaf-3"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;!-- PAGE 5 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="page front"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="header-branding"&gt;&lt;h2&gt;CSAT Emergency Alert&lt;/h2&gt;&lt;p&gt;Quality &amp; Resolution Analysis&lt;/p&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="alert-box alert-danger mag-card" onclick="zoomCard(this)"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;strong&gt;⚠️ CRITICAL ALERT:&lt;/strong&gt; CSAT dropped from 17% in Week 1 down to 10% in Week 4. Root cause analysis underway to fix response SLA breaches.</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="mag-card" onclick="zoomCard(this)"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="section-title"&gt;🔻 Weekly CSAT Trend (% Positive)&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="chart-box"&gt;&lt;canvas id="chart3"&gt;&lt;/canvas&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="page-num"&gt;5&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;!-- PAGE 6 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="page back"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="header-branding"&gt;&lt;h2&gt;Merchant Support&lt;/h2&gt;&lt;p&gt;Call Volume &amp; Satisfaction&lt;/p&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="mag-card grid-2" onclick="zoomCard(this)"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="metric-card"&gt;&lt;div class="metric-val"&gt;18,920&lt;/div&gt;&lt;div class="metric-lbl"&gt;Calls Offered&lt;/div&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="metric-card"&gt;&lt;div class="metric-val" style="color:#10B981;"&gt;92%&lt;/div&gt;&lt;div class="metric-lbl"&gt;Merchant CSAT&lt;/div&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="mag-card" onclick="zoomCard(this)"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="section-title"&gt;📊 Answered vs Offered Calls&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="chart-box"&gt;&lt;canvas id="chart4"&gt;&lt;/canvas&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="page-num"&gt;6&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;!-- LEAF 4 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="leaf" id="leaf-4"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;!-- PAGE 7 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="page front"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="header-branding"&gt;&lt;h2&gt;Delivery Support&lt;/h2&gt;&lt;p&gt;Rider Fleet Operations&lt;/p&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="mag-card grid-2" onclick="zoomCard(this)"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="metric-card"&gt;&lt;div class="metric-val"&gt;108,610&lt;/div&gt;&lt;div class="metric-lbl"&gt;Rider Calls Handled&lt;/div&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="metric-card"&gt;&lt;div class="metric-val" style="color:#10B981;"&gt;95%&lt;/div&gt;&lt;div class="metric-lbl"&gt;Rider CSAT&lt;/div&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="mag-card" onclick="zoomCard(this)"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="section-title"&gt;⚡ Operational Highlights&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;p style="font-size: 11px; line-height: 1.5; color: #374151;"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">              </span>• Rider resolution SLA achieved 94.2% within 2 minutes.&lt;br&gt;</p>
-<p class="p1"><span class="Apple-converted-space">              </span>• Onboarding queue backlog reduction plan underway for September.&lt;br&gt;</p>
-<p class="p1"><span class="Apple-converted-space">              </span>• Hyderabad fleet readiness complete for post-Sep 7 launch.</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="page-num"&gt;7&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;!-- PAGE 8 (FINAL ROADMAP &amp; STRATEGIC PRIORITIES) --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="page back"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="mag-card" onclick="zoomCard(this)"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="section-title"&gt;🎯 September Key Priorities&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;ul class="priority-list"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">              </span>&lt;li&gt;&lt;strong&gt;• #1 CSAT Investigation:&lt;/strong&gt; Resolve root drivers for the 17% → 10% CSAT dip.&lt;/li&gt;</p>
-<p class="p1"><span class="Apple-converted-space">              </span>&lt;li&gt;&lt;strong&gt;• #2 Clear Onboarding Backlog:&lt;/strong&gt; Activate 10.7K stuck merchant queue.&lt;/li&gt;</p>
-<p class="p1"><span class="Apple-converted-space">              </span>&lt;li&gt;&lt;strong&gt;• #3 Stabilize Week 4 Peaks:&lt;/strong&gt; Enhance shift scheduling for Merchant &amp; Driver channels.&lt;/li&gt;</p>
-<p class="p1"><span class="Apple-converted-space">              </span>&lt;li&gt;&lt;strong&gt;• #4 Hyderabad Operations:&lt;/strong&gt; Ensure smooth ops post-Sep 7 launch.&lt;/li&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/ul&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="mag-card" onclick="zoomCard(this)"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="section-title"&gt;🚀 Tech Roadmap Highlights&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;ul class="priority-list" style="color: #4B5563;"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">              </span>&lt;li&gt;• Real-Time Operational Dashboards&lt;/li&gt;</p>
-<p class="p1"><span class="Apple-converted-space">              </span>&lt;li&gt;• SLA Breach Automated Alerting&lt;/li&gt;</p>
-<p class="p1"><span class="Apple-converted-space">              </span>&lt;li&gt;• Chatwoot Calling &amp; Profile Integration&lt;/li&gt;</p>
-<p class="p1"><span class="Apple-converted-space">              </span>&lt;li&gt;• AI-Powered Customer Refund Automations&lt;/li&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/ul&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="page-num"&gt;8&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- BOTTOM PAGE FLIP CONTROLS --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="bottom-controls"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;button class="control-btn" id="prev-btn" onclick="flipPrev()" disabled&gt;◀ Previous&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;span class="page-indicator" id="spread-label"&gt;Spread 1 of 4&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;button class="control-btn" id="next-btn" onclick="flipNext()"&gt;Next ▶&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;!-- =========================================</p>
-<p class="p1"><span class="Apple-converted-space">       </span>4. MAGNIFIER ZOOM MODAL</p>
-<p class="p1"><span class="Apple-converted-space">       </span>========================================= --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;div id="mag-modal" onclick="closeModal()"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="modal-content-box" onclick="event.stopPropagation()"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;button class="close-modal-btn" onclick="closeModal()"&gt;✕&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div id="modal-body-target"&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;!-- =========================================</p>
-<p class="p1"><span class="Apple-converted-space">       </span>5. JAVASCRIPT LOGIC &amp; CHARTS ENGINE</p>
-<p class="p1"><span class="Apple-converted-space">       </span>========================================= --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;script&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>let currentLeaf = 0;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const totalLeaves = 4;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const chartConfigs = {};</p>
-<p class="p1"><span class="Apple-converted-space">    </span>let modalChartInstance = null;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function updateZIndex() {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>for (let i = 1; i &lt;= totalLeaves; i++) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const leaf = document.getElementById(`leaf-${i}`);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>if (i &lt;= currentLeaf) {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>leaf.style.zIndex = i;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>} else {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>leaf.style.zIndex = totalLeaves - i + 1;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p2"><span class="Apple-converted-space">      </span></p>
-<p class="p1"><span class="Apple-converted-space">      </span>document.getElementById('prev-btn').disabled = (currentLeaf === 0);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>document.getElementById('next-btn').disabled = (currentLeaf === totalLeaves);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>document.getElementById('spread-label').innerText = `Spread ${currentLeaf + 1} of ${totalLeaves}`;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>updateZIndex();</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function flipNext() {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>if (currentLeaf &lt; totalLeaves) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>currentLeaf++;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const leaf = document.getElementById(`leaf-${currentLeaf}`);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>leaf.style.zIndex = 100;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>leaf.classList.add('flipped');</p>
-<p class="p1"><span class="Apple-converted-space">        </span>setTimeout(updateZIndex, 800);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function flipPrev() {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>if (currentLeaf &gt; 0) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const leaf = document.getElementById(`leaf-${currentLeaf}`);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>leaf.style.zIndex = 100;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>leaf.classList.remove('flipped');</p>
-<p class="p1"><span class="Apple-converted-space">        </span>currentLeaf--;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>setTimeout(updateZIndex, 800);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function zoomCard(cardElem) {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const modal = document.getElementById('mag-modal');</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const target = document.getElementById('modal-body-target');</p>
-<p class="p2"><span class="Apple-converted-space">      </span></p>
-<p class="p1"><span class="Apple-converted-space">      </span>if (modalChartInstance) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>modalChartInstance.destroy();</p>
-<p class="p1"><span class="Apple-converted-space">        </span>modalChartInstance = null;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>const canvasElem = cardElem.querySelector('canvas');</p>
-<p class="p1"><span class="Apple-converted-space">      </span>if (canvasElem &amp;&amp; chartConfigs[canvasElem.id]) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const config = chartConfigs[canvasElem.id];</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const titleHTML = cardElem.querySelector('.section-title')?.outerHTML || '';</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>target.innerHTML = `${titleHTML}&lt;div style="height: 320px; width: 100%; margin-top: 15px;"&gt;&lt;canvas id="modal-canvas"&gt;&lt;/canvas&gt;&lt;/div&gt;`;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>modal.style.display = 'flex';</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>const ctx = document.getElementById('modal-canvas');</p>
-<p class="p1"><span class="Apple-converted-space">        </span>modalChartInstance = new Chart(ctx, {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>type: config.type,</p>
-<p class="p1"><span class="Apple-converted-space">          </span>data: JSON.parse(JSON.stringify(config.data)),</p>
-<p class="p1"><span class="Apple-converted-space">          </span>options: { ...config.options, responsive: true, maintainAspectRatio: false }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>});</p>
-<p class="p1"><span class="Apple-converted-space">      </span>} else {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>target.innerHTML = `&lt;div style="font-size: 110%; line-height: 1.6;"&gt;${cardElem.innerHTML}&lt;/div&gt;`;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>modal.style.display = 'flex';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function closeModal() {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>document.getElementById('mag-modal').style.display = 'none';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>let chartsDrawn = false;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function openBook() {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>document.getElementById('teaser-screen').style.opacity = '0';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>setTimeout(() =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>document.getElementById('teaser-screen').style.display = 'none';</p>
-<p class="p1"><span class="Apple-converted-space">        </span>document.getElementById('book-viewport').style.display = 'flex';</p>
-<p class="p1"><span class="Apple-converted-space">        </span>if (!chartsDrawn) setTimeout(renderCharts, 150);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}, 500);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function closeBook() {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>while(currentLeaf &gt; 0) flipPrev();</p>
-<p class="p1"><span class="Apple-converted-space">      </span>document.getElementById('book-viewport').style.display = 'none';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>document.getElementById('teaser-screen').style.display = 'flex';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>setTimeout(() =&gt; { document.getElementById('teaser-screen').style.opacity = '1'; }, 50);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function createChart(id, type, data, options) {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>chartConfigs[id] = { type, data, options };</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const ctx = document.getElementById(id);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>if (ctx) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>return new Chart(ctx, { type, data, options: { ...options, responsive: true, maintainAspectRatio: false } });</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function renderCharts() {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>chartsDrawn = true;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>Chart.defaults.font.family = "'Plus Jakarta Sans', sans-serif";</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>createChart('chart1', 'doughnut', {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>labels: ['Customer Support', 'Rider Fleet', 'Merchant Support'],</p>
-<p class="p1"><span class="Apple-converted-space">        </span>datasets: [{ data: [72.8, 23.2, 4.0], backgroundColor: ['#FF2E93', '#3B82F6', '#10B981'] }]</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}, { plugins: { legend: { position: 'right' } } });</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>createChart('chart2', 'line', {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],</p>
-<p class="p1"><span class="Apple-converted-space">        </span>datasets: [{ label: 'AWT (mins)', data: [13.2, 12.1, 11.0, 7.8], borderColor: '#FF2E93', backgroundColor: 'rgba(255,46,147,0.1)', fill: true }]</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}, {});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>createChart('chart3', 'line', {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],</p>
-<p class="p1"><span class="Apple-converted-space">        </span>datasets: [{ label: 'CSAT %', data: [17, 15, 12, 10], borderColor: '#EF4444', backgroundColor: 'rgba(239,68,68,0.1)', fill: true }]</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}, {});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>createChart('chart4', 'bar', {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],</p>
-<p class="p1"><span class="Apple-converted-space">        </span>datasets: [</p>
-<p class="p1"><span class="Apple-converted-space">          </span>{ label: 'Offered', data: [4200, 4500, 5000, 5220], backgroundColor: '#3B82F6' },</p>
-<p class="p1"><span class="Apple-converted-space">          </span>{ label: 'Answered', data: [3700, 3900, 4300, 4140], backgroundColor: '#10B981' }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>]</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}, {});</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/script&gt;</p>
-<p class="p1">&lt;/body&gt;</p>
-<p class="p1">&lt;/html&gt;</p>
+
+  <!-- 1. INTRO / TEASER OVERLAY -->
+  <div id="teaser-screen" onclick="revealFlipbook()">
+    <div class="highway-container">
+      <div class="road-line"></div>
+      
+      <div class="scooter-glider">
+        <svg viewBox="0 0 320 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Back Wheel -->
+          <g class="wheel" style="transform-origin: 90px 155px;">
+            <circle cx="90" cy="155" r="22" fill="#18181B" stroke="#E4E4E7" stroke-width="6"/>
+            <line x1="90" y1="133" x2="90" y2="177" stroke="#E4E4E7" stroke-width="2"/>
+            <line x1="68" y1="155" x2="112" y2="155" stroke="#E4E4E7" stroke-width="2"/>
+          </g>
+          
+          <!-- Front Wheel -->
+          <g class="wheel" style="transform-origin: 230px 155px;">
+            <circle cx="230" cy="155" r="22" fill="#18181B" stroke="#E4E4E7" stroke-width="6"/>
+            <line x1="230" y1="133" x2="230" y2="177" stroke="#E4E4E7" stroke-width="2"/>
+            <line x1="208" y1="155" x2="252" y2="155" stroke="#E4E4E7" stroke-width="2"/>
+          </g>
+
+          <!-- Yellow Scooter Frame -->
+          <path d="M90 155 L120 105 L170 105 L190 155 Z" fill="#FACC15"/> <!-- Bright Yellow Body -->
+          <path d="M190 155 L210 100 L230 155 Z" fill="#EAB308"/>
+          <path d="M230 155 L210 85 L190 80" stroke="#D4D4D8" stroke-width="6" stroke-linecap="round"/>
+          <circle cx="190" cy="80" r="8" fill="#FACC15"/> <!-- Yellow Headlight -->
+
+          <!-- Scooter Seat -->
+          <rect x="110" y="95" width="55" height="12" rx="6" fill="#27272A"/>
+
+          <!-- Rider (Person in Pink Ownly T-Shirt) -->
+          <!-- Head / Helmet -->
+          <circle cx="130" cy="52" r="14" fill="#3F3F46"/>
+          <path d="M130 42 A12 12 0 0 1 144 54 L130 54 Z" fill="#FF2E93"/> <!-- Pink Helmet Accent -->
+          <!-- Body / Pink Ownly Shirt -->
+          <path d="M115 68 C115 62, 145 62, 145 68 L148 95 L112 95 Z" fill="#FF2E93"/> 
+          <!-- "OWNLY" text on t-shirt -->
+          <text x="118" y="82" fill="#FFFFFF" font-size="7" font-weight="900" font-family="sans-serif">OWNLY</text>
+          <!-- Arms holding handlebars -->
+          <path d="M138 72 L185 80" stroke="#FF2E93" stroke-width="8" stroke-linecap="round"/>
+          <circle cx="185" cy="80" r="4" fill="#FCA5A5"/> <!-- Hand -->
+
+          <!-- Newsletter Banner Bag Attached at Back -->
+          <rect x="50" y="70" width="60" height="50" rx="6" fill="#FF2E93" stroke="#FFFFFF" stroke-width="2"/>
+          <text x="56" y="92" fill="#FFFFFF" font-size="9" font-weight="bold" font-family="sans-serif">NEWS</text>
+          <text x="56" y="105" fill="#FFFFFF" font-size="8" font-weight="bold" font-family="sans-serif">LETTER</text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="teaser-banner">🛵 Ownly News Letter</div>
+    <div class="teaser-hint">Click anywhere to open the interactive magazine</div>
+  </div>
+
+  <!-- 2. FLIPHTML5 LIVE EMBED -->
+  <div id="flipbook-wrapper">
+    <iframe src="https://online.fliphtml5.com/hvxsc/1-SnF5/" allowfullscreen="true"></iframe>
+  </div>
+
+  <script>
+    function revealFlipbook() {
+      const teaser = document.getElementById('teaser-screen');
+      teaser.style.opacity = '0';
+      teaser.style.visibility = 'hidden';
+    }
+  </script>
 </body>
 </html>
