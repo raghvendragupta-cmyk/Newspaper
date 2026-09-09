@@ -7,16 +7,16 @@
   
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body, html { width: 100%; height: 100%; overflow: hidden; font-family: 'Plus Jakarta Sans', sans-serif; background-color: #121214; }
+    body, html { width: 100%; height: 100%; overflow: hidden; font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0c0d10; }
 
     /* =========================================
-       1. TEASER SCREEN (SCOOTER HIGHWAY)
+       1. TEASER SCREEN (DYNAMIC PATH)
        ========================================= */
     #teaser-screen {
       position: fixed;
       top: 0; left: 0;
       width: 100vw; height: 100vh;
-      background: #121214;
+      background: radial-gradient(circle at center, #1e1e24 0%, #090a0c 100%);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -24,56 +24,69 @@
       z-index: 9999;
       cursor: pointer;
       transition: opacity 0.8s ease, visibility 0.8s ease;
-    }
-
-    .highway-container {
-      position: relative;
-      width: 100vw;
-      height: 250px;
       overflow: hidden;
-      display: flex;
-      align-items: center;
     }
 
-    .road-line {
-      position: absolute;
-      bottom: 30px;
-      width: 100%;
-      height: 3px;
-      background: rgba(255, 255, 255, 0.15);
-    }
-
+    /* Curved Motion Container */
     .scooter-glider {
       position: absolute;
-      bottom: 25px;
-      width: 280px;
-      height: 180px;
-      animation: driveSmooth 6s linear infinite;
+      width: 400px; /* Scaled up significantly for realism & size */
+      height: 260px;
+      animation: driveWavyPath 10s ease-in-out infinite alternate;
+      filter: drop-shadow(0px 15px 25px rgba(0,0,0,0.6));
     }
 
-    @keyframes driveSmooth {
-      0%   { left: -300px; }
-      100% { left: 100vw; }
+    /* Natural curved motion path across screen */
+    @keyframes driveWavyPath {
+      0% {
+        transform: translate(-420px, 15vh) rotate(5deg) scale(0.9);
+      }
+      25% {
+        transform: translate(25vw, -10vh) rotate(-8deg) scale(1.1);
+      }
+      50% {
+        transform: translate(55vw, 20vh) rotate(10deg) scale(1.0);
+      }
+      75% {
+        transform: translate(75vw, -5vh) rotate(-5deg) scale(1.15);
+      }
+      100% {
+        transform: translate(105vw, 10vh) rotate(3deg) scale(0.95);
+      }
     }
 
-    .wheel { animation: spinWheel 0.3s linear infinite; transform-origin: center; }
+    /* Wheel Rotation */
+    .wheel { animation: spinWheel 0.25s linear infinite; transform-origin: center; }
     @keyframes spinWheel { 100% { transform: rotate(360deg); } }
 
+    /* Floating Banner Button */
     .teaser-banner {
-      margin-top: 25px;
+      position: relative;
+      z-index: 100;
       background: linear-gradient(135deg, #FF2E93, #FF6B00);
       color: white;
-      padding: 16px 44px;
+      padding: 18px 50px;
       border-radius: 50px;
-      font-size: 22px;
-      font-weight: 700;
-      box-shadow: 0 10px 30px rgba(255, 46, 147, 0.4);
-      transition: transform 0.3s ease;
-      z-index: 10;
+      font-size: 24px;
+      font-weight: 800;
+      box-shadow: 0 12px 35px rgba(255, 46, 147, 0.45);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      letter-spacing: 0.5px;
     }
 
-    #teaser-screen:hover .teaser-banner { transform: scale(1.06); }
-    .teaser-hint { color: #A1A1AA; margin-top: 14px; font-size: 14px; z-index: 10; letter-spacing: 0.5px; }
+    #teaser-screen:hover .teaser-banner { 
+      transform: scale(1.08); 
+      box-shadow: 0 15px 45px rgba(255, 46, 147, 0.65);
+    }
+    
+    .teaser-hint { 
+      position: relative;
+      z-index: 100;
+      color: #A1A1AA; 
+      margin-top: 16px; 
+      font-size: 15px; 
+      letter-spacing: 0.5px; 
+    }
 
     /* =========================================
        2. FLIPHTML5 CONTAINER
@@ -97,54 +110,90 @@
 
   <!-- 1. INTRO / TEASER OVERLAY -->
   <div id="teaser-screen" onclick="revealFlipbook()">
-    <div class="highway-container">
-      <div class="road-line"></div>
-      
-      <div class="scooter-glider">
-        <svg viewBox="0 0 320 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <!-- Back Wheel -->
-          <g class="wheel" style="transform-origin: 90px 155px;">
-            <circle cx="90" cy="155" r="22" fill="#18181B" stroke="#E4E4E7" stroke-width="6"/>
-            <line x1="90" y1="133" x2="90" y2="177" stroke="#E4E4E7" stroke-width="2"/>
-            <line x1="68" y1="155" x2="112" y2="155" stroke="#E4E4E7" stroke-width="2"/>
-          </g>
-          
-          <!-- Front Wheel -->
-          <g class="wheel" style="transform-origin: 230px 155px;">
-            <circle cx="230" cy="155" r="22" fill="#18181B" stroke="#E4E4E7" stroke-width="6"/>
-            <line x1="230" y1="133" x2="230" y2="177" stroke="#E4E4E7" stroke-width="2"/>
-            <line x1="208" y1="155" x2="252" y2="155" stroke="#E4E4E7" stroke-width="2"/>
-          </g>
+    
+    <!-- Realistic Detailed Scooter SVG -->
+    <div class="scooter-glider">
+      <svg viewBox="0 0 500 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="scooterYellow" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#FFE600"/>
+            <stop offset="100%" stop-color="#F59E0B"/>
+          </linearGradient>
+          <linearGradient id="pinkShirt" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#FF2E93"/>
+            <stop offset="100%" stop-color="#D9006C"/>
+          </linearGradient>
+          <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+            <feDropShadow dx="0" dy="4" stdDeviation="4" flood-opacity="0.3"/>
+          </filter>
+        </defs>
 
-          <!-- Yellow Scooter Frame -->
-          <path d="M90 155 L120 105 L170 105 L190 155 Z" fill="#FACC15"/> <!-- Bright Yellow Body -->
-          <path d="M190 155 L210 100 L230 155 Z" fill="#EAB308"/>
-          <path d="M230 155 L210 85 L190 80" stroke="#D4D4D8" stroke-width="6" stroke-linecap="round"/>
-          <circle cx="190" cy="80" r="8" fill="#FACC15"/> <!-- Yellow Headlight -->
+        <!-- Back Wheel -->
+        <g class="wheel" style="transform-origin: 120px 240px;">
+          <circle cx="120" cy="240" r="38" fill="#1C1917" stroke="#44403C" stroke-width="8"/>
+          <circle cx="120" cy="240" r="22" fill="#D6D3D1"/>
+          <circle cx="120" cy="240" r="8" fill="#1C1917"/>
+          <line x1="120" y1="202" x2="120" y2="278" stroke="#78716C" stroke-width="3"/>
+          <line x1="84" y1="240" x2="156" y2="240" stroke="#78716C" stroke-width="3"/>
+        </g>
+        
+        <!-- Front Wheel -->
+        <g class="wheel" style="transform-origin: 360px 240px;">
+          <circle cx="360" cy="240" r="38" fill="#1C1917" stroke="#44403C" stroke-width="8"/>
+          <circle cx="360" cy="240" r="22" fill="#D6D3D1"/>
+          <circle cx="360" cy="240" r="8" fill="#1C1917"/>
+          <line x1="360" y1="202" x2="360" y2="278" stroke="#78716C" stroke-width="3"/>
+          <line x1="324" y1="240" x2="396" y2="240" stroke="#78716C" stroke-width="3"/>
+        </g>
 
-          <!-- Scooter Seat -->
-          <rect x="110" y="95" width="55" height="12" rx="6" fill="#27272A"/>
+        <!-- Scooter Exhaust & Rear Engine Shield -->
+        <rect x="80" y="225" width="55" height="18" rx="9" fill="#57534E"/>
+        <path d="M 120 230 L 220 230 L 210 200 L 140 180 Z" fill="#27272A"/>
 
-          <!-- Rider (Person in Pink Ownly T-Shirt) -->
-          <!-- Head / Helmet -->
-          <circle cx="130" cy="52" r="14" fill="#3F3F46"/>
-          <path d="M130 42 A12 12 0 0 1 144 54 L130 54 Z" fill="#FF2E93"/> <!-- Pink Helmet Accent -->
-          <!-- Body / Pink Ownly Shirt -->
-          <path d="M115 68 C115 62, 145 62, 145 68 L148 95 L112 95 Z" fill="#FF2E93"/> 
-          <!-- "OWNLY" text on t-shirt -->
-          <text x="118" y="82" fill="#FFFFFF" font-size="7" font-weight="900" font-family="sans-serif">OWNLY</text>
-          <!-- Arms holding handlebars -->
-          <path d="M138 72 L185 80" stroke="#FF2E93" stroke-width="8" stroke-linecap="round"/>
-          <circle cx="185" cy="80" r="4" fill="#FCA5A5"/> <!-- Hand -->
+        <!-- Scooter Body Main Frame (Vespa Classic Style) -->
+        <path d="M 110 220 C 100 160, 160 140, 240 160 C 270 170, 290 220, 340 220 L 370 220 C 380 220, 385 210, 375 190 L 340 120 C 335 110, 325 105, 315 105 L 290 105" fill="url(#scooterYellow)" filter="url(#shadow)"/>
+        
+        <!-- Floorboard & Stand -->
+        <path d="M 200 235 L 310 235 L 320 220 L 210 220 Z" fill="#18181B"/>
 
-          <!-- Newsletter Banner Bag Attached at Back -->
-          <rect x="50" y="70" width="60" height="50" rx="6" fill="#FF2E93" stroke="#FFFFFF" stroke-width="2"/>
-          <text x="56" y="92" fill="#FFFFFF" font-size="9" font-weight="bold" font-family="sans-serif">NEWS</text>
-          <text x="56" y="105" fill="#FFFFFF" font-size="8" font-weight="bold" font-family="sans-serif">LETTER</text>
-        </svg>
-      </div>
+        <!-- Front Fender Mudguard -->
+        <path d="M 325 210 C 325 180, 385 180, 395 215 Z" fill="url(#scooterYellow)"/>
+
+        <!-- Steering Column & Handlebars -->
+        <path d="M 335 130 L 320 65 L 295 65" stroke="#A1A1AA" stroke-width="12" stroke-linecap="round"/>
+        <circle cx="325" cy="62" r="14" fill="url(#scooterYellow)"/>
+        <circle cx="333" cy="60" r="7" fill="#FEF08A"/> <!-- Headlight Glow -->
+
+        <!-- Seat -->
+        <path d="M 150 160 C 150 145, 230 145, 245 160 C 220 168, 170 168, 150 160 Z" fill="#18181B"/>
+
+        <!-- Rider (Realistic Proportion) -->
+        <!-- Legs -->
+        <path d="M 200 155 L 230 215 L 270 215" stroke="#27272A" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+        
+        <!-- Torso with Pink Ownly Shirt -->
+        <path d="M 180 155 C 175 110, 200 90, 220 90 C 240 90, 245 110, 235 155 Z" fill="url(#pinkShirt)"/>
+        <text x="188" y="125" fill="#FFFFFF" font-size="11" font-weight="900" font-family="sans-serif" letter-spacing="1">OWNLY</text>
+
+        <!-- Arms holding handles -->
+        <path d="M 210 100 L 290 70" stroke="url(#pinkShirt)" stroke-width="14" stroke-linecap="round"/>
+        <circle cx="292" cy="70" r="7" fill="#FCA5A5"/> <!-- Hand -->
+
+        <!-- Rider Head & Helmet -->
+        <circle cx="215" cy="65" r="22" fill="#27272A"/> <!-- Helmet -->
+        <path d="M 215 43 C 230 43, 237 53, 237 65 L 215 65 Z" fill="url(#pinkShirt)"/> <!-- Pink Visor Accent -->
+        <path d="M 225 60 L 236 60 L 233 72 L 222 72 Z" fill="#000000"/> <!-- Visor -->
+
+        <!-- Delivery Box / Newsletter Bag attached on back -->
+        <rect x="70" y="110" width="85" height="75" rx="10" fill="url(#pinkShirt)" stroke="#FFFFFF" stroke-width="3" filter="url(#shadow)"/>
+        <rect x="80" y="120" width="65" height="55" rx="6" fill="rgba(255,255,255,0.15)"/>
+        <text x="85" y="145" fill="#FFFFFF" font-size="12" font-weight="900" font-family="sans-serif">OWNLY</text>
+        <text x="85" y="160" fill="#FFFFFF" font-size="10" font-weight="700" font-family="sans-serif">GAZETTE</text>
+
+      </svg>
     </div>
 
+    <!-- Interactive Banner CTA -->
     <div class="teaser-banner">🛵 Ownly News Letter</div>
     <div class="teaser-hint">Click anywhere to open the interactive magazine</div>
   </div>
