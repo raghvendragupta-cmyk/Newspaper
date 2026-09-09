@@ -85,7 +85,6 @@
       z-index: 1;
     }
 
-    /* Larger, Pinkish Overlay Mask for Top-Left Logo */
     .brand-mask {
       position: absolute;
       top: 0;
@@ -111,6 +110,65 @@
       height: 100%;
       border: none;
     }
+
+    /* =========================================
+       3. FLOATING FEEDBACK BUTTON & MODAL
+       ========================================= */
+    .feedback-btn {
+      position: fixed;
+      bottom: 25px;
+      right: 25px;
+      background: linear-gradient(135deg, #FF2E93, #D9006C);
+      color: #FFF;
+      padding: 14px 26px;
+      border-radius: 30px;
+      font-weight: 800;
+      font-size: 15px;
+      cursor: pointer;
+      z-index: 100;
+      box-shadow: 0 8px 25px rgba(255, 46, 147, 0.5);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .feedback-btn:hover { 
+      transform: scale(1.06); 
+      box-shadow: 0 12px 30px rgba(255, 46, 147, 0.7);
+    }
+
+    #feedback-modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(5px);
+      z-index: 10000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      position: relative;
+      width: 90%;
+      max-width: 520px;
+      height: 80vh;
+      background: #FFFFFF;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    }
+
+    .close-modal {
+      position: absolute;
+      top: 12px; 
+      right: 18px;
+      font-size: 28px;
+      cursor: pointer;
+      color: #333;
+      font-weight: bold;
+      z-index: 11;
+    }
   </style>
 </head>
 <body>
@@ -133,7 +191,6 @@
           </filter>
         </defs>
 
-        <!-- Back Wheel -->
         <g class="wheel" style="transform-origin: 120px 240px;">
           <circle cx="120" cy="240" r="38" fill="#1C1917" stroke="#44403C" stroke-width="8"/>
           <circle cx="120" cy="240" r="22" fill="#D6D3D1"/>
@@ -142,7 +199,6 @@
           <line x1="84" y1="240" x2="156" y2="240" stroke="#78716C" stroke-width="3"/>
         </g>
         
-        <!-- Front Wheel -->
         <g class="wheel" style="transform-origin: 360px 240px;">
           <circle cx="360" cy="240" r="38" fill="#1C1917" stroke="#44403C" stroke-width="8"/>
           <circle cx="360" cy="240" r="22" fill="#D6D3D1"/>
@@ -151,28 +207,19 @@
           <line x1="324" y1="240" x2="396" y2="240" stroke="#78716C" stroke-width="3"/>
         </g>
 
-        <!-- Scooter Exhaust -->
         <rect x="80" y="225" width="55" height="18" rx="9" fill="#57534E"/>
         <path d="M 120 230 L 220 230 L 210 200 L 140 180 Z" fill="#27272A"/>
 
-        <!-- Scooter Body -->
         <path d="M 110 220 C 100 160, 160 140, 240 160 C 270 170, 290 220, 340 220 L 370 220 C 380 220, 385 210, 375 190 L 340 120 C 335 110, 325 105, 315 105 L 290 105" fill="url(#scooterYellow)" filter="url(#shadow)"/>
-        
-        <!-- Floorboard -->
         <path d="M 200 235 L 310 235 L 320 220 L 210 220 Z" fill="#18181B"/>
-
-        <!-- Mudguard -->
         <path d="M 325 210 C 325 180, 385 180, 395 215 Z" fill="url(#scooterYellow)"/>
 
-        <!-- Handlebars -->
         <path d="M 335 130 L 320 65 L 295 65" stroke="#A1A1AA" stroke-width="12" stroke-linecap="round"/>
         <circle cx="325" cy="62" r="14" fill="url(#scooterYellow)"/>
         <circle cx="333" cy="60" r="7" fill="#FEF08A"/>
 
-        <!-- Seat -->
         <path d="M 150 160 C 150 145, 230 145, 245 160 C 220 168, 170 168, 150 160 Z" fill="#18181B"/>
 
-        <!-- Rider -->
         <path d="M 200 155 L 230 215 L 270 215" stroke="#27272A" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
         <path d="M 180 155 C 175 110, 200 90, 220 90 C 240 90, 245 110, 235 155 Z" fill="url(#pinkShirt)"/>
         <text x="188" y="125" fill="#FFFFFF" font-size="11" font-weight="900" font-family="sans-serif" letter-spacing="1">OWNLY</text>
@@ -184,7 +231,6 @@
         <path d="M 215 43 C 230 43, 237 53, 237 65 L 215 65 Z" fill="url(#pinkShirt)"/>
         <path d="M 225 60 L 236 60 L 233 72 L 222 72 Z" fill="#000000"/>
 
-        <!-- Delivery Box -->
         <rect x="70" y="110" width="85" height="75" rx="10" fill="url(#pinkShirt)" stroke="#FFFFFF" stroke-width="3" filter="url(#shadow)"/>
         <rect x="80" y="120" width="65" height="55" rx="6" fill="rgba(255,255,255,0.15)"/>
         <text x="85" y="145" fill="#FFFFFF" font-size="12" font-weight="900" font-family="sans-serif">OWNLY</text>
@@ -202,11 +248,25 @@
     <iframe src="https://online.fliphtml5.com/hvxsc/1-SnF5/" allowfullscreen="true"></iframe>
   </div>
 
+  <!-- 3. FLOATING FEEDBACK BUTTON & MODAL -->
+  <button class="feedback-btn" onclick="toggleFeedback(true)">💬 Give Feedback</button>
+
+  <div id="feedback-modal">
+    <div class="modal-content">
+      <span class="close-modal" onclick="toggleFeedback(false)">&times;</span>
+      <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSd79x7zS1NlU-5eyI_v21SdrySaUCoaSSpfINgQ_tJCxJC9Bw/viewform?embedded=true" width="100%" height="100%" frameborder="0">Loading…</iframe>
+    </div>
+  </div>
+
   <script>
     function revealFlipbook() {
       const teaser = document.getElementById('teaser-screen');
       teaser.style.opacity = '0';
       teaser.style.visibility = 'hidden';
+    }
+
+    function toggleFeedback(show) {
+      document.getElementById('feedback-modal').style.display = show ? 'flex' : 'none';
     }
   </script>
 </body>
