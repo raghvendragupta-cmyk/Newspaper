@@ -85,23 +85,25 @@
       z-index: 1;
     }
 
-    /* Top Left Overlay Mask to hide "Made with FLIPHTML5" */
+    /* Larger, Pinkish Overlay Mask for Top-Left Logo */
     .brand-mask {
       position: absolute;
       top: 0;
       left: 0;
-      width: 240px;
-      height: 45px;
-      background-color: #333333;
+      width: 280px;
+      height: 52px;
+      background: linear-gradient(135deg, #FF2E93 0%, #D9006C 100%);
       z-index: 10;
       display: flex;
       align-items: center;
-      padding-left: 15px;
+      padding-left: 18px;
       color: #FFFFFF;
-      font-weight: 700;
-      font-size: 14px;
-      letter-spacing: 0.5px;
-      pointer-events: none; /* Allows clicks to pass through */
+      font-weight: 800;
+      font-size: 17px;
+      letter-spacing: 0.8px;
+      border-bottom-right-radius: 12px;
+      box-shadow: 0 6px 20px rgba(255, 46, 147, 0.4);
+      pointer-events: none;
     }
 
     iframe {
@@ -196,7 +198,6 @@
 
   <!-- 2. FLIPHTML5 LIVE EMBED -->
   <div id="flipbook-wrapper">
-    <!-- Brand overlay box that covers FlipHTML5 logo -->
     <div class="brand-mask">📰 Ownly Gazette</div>
     <iframe src="https://online.fliphtml5.com/hvxsc/1-SnF5/" allowfullscreen="true"></iframe>
   </div>
