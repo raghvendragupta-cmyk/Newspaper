@@ -27,39 +27,25 @@
       overflow: hidden;
     }
 
-    /* Curved Motion Container */
     .scooter-glider {
       position: absolute;
-      width: 400px; /* Scaled up significantly for realism & size */
+      width: 400px;
       height: 260px;
       animation: driveWavyPath 10s ease-in-out infinite alternate;
       filter: drop-shadow(0px 15px 25px rgba(0,0,0,0.6));
     }
 
-    /* Natural curved motion path across screen */
     @keyframes driveWavyPath {
-      0% {
-        transform: translate(-420px, 15vh) rotate(5deg) scale(0.9);
-      }
-      25% {
-        transform: translate(25vw, -10vh) rotate(-8deg) scale(1.1);
-      }
-      50% {
-        transform: translate(55vw, 20vh) rotate(10deg) scale(1.0);
-      }
-      75% {
-        transform: translate(75vw, -5vh) rotate(-5deg) scale(1.15);
-      }
-      100% {
-        transform: translate(105vw, 10vh) rotate(3deg) scale(0.95);
-      }
+      0% { transform: translate(-420px, 15vh) rotate(5deg) scale(0.9); }
+      25% { transform: translate(25vw, -10vh) rotate(-8deg) scale(1.1); }
+      50% { transform: translate(55vw, 20vh) rotate(10deg) scale(1.0); }
+      75% { transform: translate(75vw, -5vh) rotate(-5deg) scale(1.15); }
+      100% { transform: translate(105vw, 10vh) rotate(3deg) scale(0.95); }
     }
 
-    /* Wheel Rotation */
     .wheel { animation: spinWheel 0.25s linear infinite; transform-origin: center; }
     @keyframes spinWheel { 100% { transform: rotate(360deg); } }
 
-    /* Floating Banner Button */
     .teaser-banner {
       position: relative;
       z-index: 100;
@@ -89,7 +75,7 @@
     }
 
     /* =========================================
-       2. FLIPHTML5 CONTAINER
+       2. FLIPHTML5 CONTAINER & WATERMARK MASK
        ========================================= */
     #flipbook-wrapper {
       width: 100vw;
@@ -97,6 +83,25 @@
       position: absolute;
       top: 0; left: 0;
       z-index: 1;
+    }
+
+    /* Top Left Overlay Mask to hide "Made with FLIPHTML5" */
+    .brand-mask {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 240px;
+      height: 45px;
+      background-color: #333333;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      padding-left: 15px;
+      color: #FFFFFF;
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 0.5px;
+      pointer-events: none; /* Allows clicks to pass through */
     }
 
     iframe {
@@ -110,8 +115,6 @@
 
   <!-- 1. INTRO / TEASER OVERLAY -->
   <div id="teaser-screen" onclick="revealFlipbook()">
-    
-    <!-- Realistic Detailed Scooter SVG -->
     <div class="scooter-glider">
       <svg viewBox="0 0 500 320" fill="none" xmlns="http://www.w3.org/2000/svg">
         <defs>
@@ -146,60 +149,55 @@
           <line x1="324" y1="240" x2="396" y2="240" stroke="#78716C" stroke-width="3"/>
         </g>
 
-        <!-- Scooter Exhaust & Rear Engine Shield -->
+        <!-- Scooter Exhaust -->
         <rect x="80" y="225" width="55" height="18" rx="9" fill="#57534E"/>
         <path d="M 120 230 L 220 230 L 210 200 L 140 180 Z" fill="#27272A"/>
 
-        <!-- Scooter Body Main Frame (Vespa Classic Style) -->
+        <!-- Scooter Body -->
         <path d="M 110 220 C 100 160, 160 140, 240 160 C 270 170, 290 220, 340 220 L 370 220 C 380 220, 385 210, 375 190 L 340 120 C 335 110, 325 105, 315 105 L 290 105" fill="url(#scooterYellow)" filter="url(#shadow)"/>
         
-        <!-- Floorboard & Stand -->
+        <!-- Floorboard -->
         <path d="M 200 235 L 310 235 L 320 220 L 210 220 Z" fill="#18181B"/>
 
-        <!-- Front Fender Mudguard -->
+        <!-- Mudguard -->
         <path d="M 325 210 C 325 180, 385 180, 395 215 Z" fill="url(#scooterYellow)"/>
 
-        <!-- Steering Column & Handlebars -->
+        <!-- Handlebars -->
         <path d="M 335 130 L 320 65 L 295 65" stroke="#A1A1AA" stroke-width="12" stroke-linecap="round"/>
         <circle cx="325" cy="62" r="14" fill="url(#scooterYellow)"/>
-        <circle cx="333" cy="60" r="7" fill="#FEF08A"/> <!-- Headlight Glow -->
+        <circle cx="333" cy="60" r="7" fill="#FEF08A"/>
 
         <!-- Seat -->
         <path d="M 150 160 C 150 145, 230 145, 245 160 C 220 168, 170 168, 150 160 Z" fill="#18181B"/>
 
-        <!-- Rider (Realistic Proportion) -->
-        <!-- Legs -->
+        <!-- Rider -->
         <path d="M 200 155 L 230 215 L 270 215" stroke="#27272A" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
-        
-        <!-- Torso with Pink Ownly Shirt -->
         <path d="M 180 155 C 175 110, 200 90, 220 90 C 240 90, 245 110, 235 155 Z" fill="url(#pinkShirt)"/>
         <text x="188" y="125" fill="#FFFFFF" font-size="11" font-weight="900" font-family="sans-serif" letter-spacing="1">OWNLY</text>
 
-        <!-- Arms holding handles -->
         <path d="M 210 100 L 290 70" stroke="url(#pinkShirt)" stroke-width="14" stroke-linecap="round"/>
-        <circle cx="292" cy="70" r="7" fill="#FCA5A5"/> <!-- Hand -->
+        <circle cx="292" cy="70" r="7" fill="#FCA5A5"/>
 
-        <!-- Rider Head & Helmet -->
-        <circle cx="215" cy="65" r="22" fill="#27272A"/> <!-- Helmet -->
-        <path d="M 215 43 C 230 43, 237 53, 237 65 L 215 65 Z" fill="url(#pinkShirt)"/> <!-- Pink Visor Accent -->
-        <path d="M 225 60 L 236 60 L 233 72 L 222 72 Z" fill="#000000"/> <!-- Visor -->
+        <circle cx="215" cy="65" r="22" fill="#27272A"/>
+        <path d="M 215 43 C 230 43, 237 53, 237 65 L 215 65 Z" fill="url(#pinkShirt)"/>
+        <path d="M 225 60 L 236 60 L 233 72 L 222 72 Z" fill="#000000"/>
 
-        <!-- Delivery Box / Newsletter Bag attached on back -->
+        <!-- Delivery Box -->
         <rect x="70" y="110" width="85" height="75" rx="10" fill="url(#pinkShirt)" stroke="#FFFFFF" stroke-width="3" filter="url(#shadow)"/>
         <rect x="80" y="120" width="65" height="55" rx="6" fill="rgba(255,255,255,0.15)"/>
         <text x="85" y="145" fill="#FFFFFF" font-size="12" font-weight="900" font-family="sans-serif">OWNLY</text>
         <text x="85" y="160" fill="#FFFFFF" font-size="10" font-weight="700" font-family="sans-serif">GAZETTE</text>
-
       </svg>
     </div>
 
-    <!-- Interactive Banner CTA -->
     <div class="teaser-banner">🛵 Ownly News Letter</div>
     <div class="teaser-hint">Click anywhere to open the interactive magazine</div>
   </div>
 
   <!-- 2. FLIPHTML5 LIVE EMBED -->
   <div id="flipbook-wrapper">
+    <!-- Brand overlay box that covers FlipHTML5 logo -->
+    <div class="brand-mask">📰 Ownly Gazette</div>
     <iframe src="https://online.fliphtml5.com/hvxsc/1-SnF5/" allowfullscreen="true"></iframe>
   </div>
 
